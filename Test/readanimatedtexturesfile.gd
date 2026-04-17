@@ -2,8 +2,7 @@ extends Node2D
 
 func _ready():
 	var array = []
-	var file = File.new()
-	file.open("res://tmapanimDECOMPRESSED.dat",File.READ)
+	var file = FileAccess.open("res://tmapanimDECOMPRESSED.dat", FileAccess.READ)
 	
 	var dataWidth = 1000 # ???
 	for i in dataWidth:
@@ -15,8 +14,8 @@ func _ready():
 
 
 func save_text_file(text, path):
-	var f = File.new()
-	var err = f.open(path, File.WRITE)
+	var f = FileAccess.open(path, FileAccess.WRITE)
+	var err = OK if f != null else FAILED
 	if err != OK:
 		printerr("Could not write file, error code ", err)
 		return

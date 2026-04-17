@@ -6,8 +6,8 @@ extends Node
 
 #func test_write_to_file(data):
 #	print('WRITING TO CLM.TXT')
-#	var file = File.new()
-#	file.open("clm.txt", File.WRITE)
+#	var file = FileAccess.new()
+#	file.open("clm.txt", FileAccess.WRITE)
 #	for i in data:
 #		file.store_line(str(i))
 #	file.close()
@@ -64,7 +64,7 @@ extends Node
 
 
 #func get_random_column_array(RNG_CLM):
-#	if randomColumns[RNG_CLM].empty() == true: # Only needs to do once!
+#	if randomColumns[RNG_CLM].is_empty() == true: # Only needs to do once!
 #		match RNG_CLM:
 #			RNG_CLM_GOLD:               randomColumns[RNG_CLM_GOLD] = rng_get_gold()
 #			RNG_CLM_GOLD_NEARBY_LAVA:   randomColumns[RNG_CLM_GOLD_NEARBY_LAVA] = rng_get_gold_nearby_lava()

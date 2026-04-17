@@ -1,23 +1,23 @@
 extends PanelContainer
 
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oConfirmScriptDeletion = Nodelist.list["oConfirmScriptDeletion"]
-onready var oScriptEditorWindow = Nodelist.list["oScriptEditorWindow"]
-onready var header_vbox = get_node("%HeaderVBoxContainer")
-onready var path_link_node = get_node("%PathLinkButton")
-onready var path_separator_node = get_node("%PathHSeparator")
-onready var hbox_create_node = get_node("%HBoxCreate")
-onready var hbox_generate_node = get_node("%HBoxGenerate")
-onready var hbox_delete_node = get_node("%HBoxDelete")
-onready var header_label_node = get_node("%HeaderLabel")
-onready var create_label_node = get_node("%CreateLabel")
-onready var delete_label_node = get_node("%DeleteLabel")
-onready var oScriptGeneratorWindow = Nodelist.list["oScriptGeneratorWindow"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oConfirmScriptDeletion = Nodelist.list["oConfirmScriptDeletion"]
+@onready var oScriptEditorWindow = Nodelist.list["oScriptEditorWindow"]
+@onready var header_vbox = get_node("%HeaderVBoxContainer")
+@onready var path_link_node = get_node("%PathLinkButton")
+@onready var path_separator_node = get_node("%PathHSeparator")
+@onready var hbox_create_node = get_node("%HBoxCreate")
+@onready var hbox_generate_node = get_node("%HBoxGenerate")
+@onready var hbox_delete_node = get_node("%HBoxDelete")
+@onready var header_label_node = get_node("%HeaderLabel")
+@onready var create_label_node = get_node("%CreateLabel")
+@onready var delete_label_node = get_node("%DeleteLabel")
+@onready var oScriptGeneratorWindow = Nodelist.list["oScriptGeneratorWindow"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
 
 var script_file_extension: String = ""
 
@@ -61,7 +61,7 @@ func build_script_path(mapDirectory: String, mapFilenameBasename: String, script
 	if mapFilenameBasename == "" or scriptBaseExtension == "":
 		oMessage.quick("Invalid parameters for building script path (filename or extension missing).")
 		return ""
-	return mapDirectory.plus_file(mapFilenameBasename + "." + scriptBaseExtension)
+	return mapDirectory.path_join(mapFilenameBasename + "." + scriptBaseExtension)
 
 func reset_user_display():
 	header_vbox.visible = false
@@ -91,8 +91,8 @@ func resolve_map_data(keyExtensionUppercase: String) -> String:
 	var pathFromData = oCurrentMap.currentFilePaths[keyExtensionUppercase][oCurrentMap.PATHSTRING]
 	if pathFromData == "":
 		return ""
-	var file = File.new()
-	if file.file_exists(pathFromData):
+	var file: FileAccess = null
+	if FileAccess.file_exists(pathFromData):
 		return pathFromData
 	var dir = pathFromData.get_base_dir()
 	var filename = pathFromData.get_file()
@@ -141,12 +141,12 @@ func record_script_entry(operatedFilePath: String, fileKeyExtensionUppercase: St
 		oMessage.quick("record_script_entry - Invalid state (oCurrentMap, currentFilePaths, or ext_upper empty)")
 		return
 	var scriptIsActive = false
-	var file = File.new()
-	if intendedToExist and operatedFilePath != "" and file.file_exists(operatedFilePath):
+	var file: FileAccess = null
+	if intendedToExist and operatedFilePath != "" and FileAccess.file_exists(operatedFilePath):
 		scriptIsActive = true
 	
 	if scriptIsActive:
-		var modifiedTime = file.get_modified_time(operatedFilePath)
+		var modifiedTime = FileAccess.get_modified_time(operatedFilePath)
 		oCurrentMap.currentFilePaths[fileKeyExtensionUppercase] = [operatedFilePath, modifiedTime]
 	elif oCurrentMap.currentFilePaths.has(fileKeyExtensionUppercase):
 		oCurrentMap.currentFilePaths.erase(fileKeyExtensionUppercase)
@@ -203,8 +203,8 @@ func select_script_path(baseDirectory: String, intendedPath: String) -> String:
 	return intendedPath
 
 func write_file_content(targetPath: String, content: String) -> bool:
-	var file = File.new()
-	var err = file.open(targetPath, File.WRITE)
+	var file = FileAccess.open(targetPath, FileAccess.WRITE)
+	var err = OK if file != null else FAILED
 	if err == OK:
 		file.store_string(content)
 		file.close()
@@ -250,13 +250,13 @@ func perform_write_action(mapBaseDirectory: String, mapFilenameBasename: String,
 		return false
 	var pathForOperation = select_script_path(mapBaseDirectory, intendedTargetPath)
 	var keyExtensionForMapPaths = baseExtension.to_upper()
-	var fileUtil = File.new()
-
-	if fileUtil.file_exists(pathForOperation):
+	var fileUtil: FileAccess = null
+	if FileAccess.file_exists(pathForOperation):
 		if baseExtension == "lua":
-			var existingFile = File.new()
+			var existingFile: FileAccess = null
 			var existingContent = ""
-			var err = existingFile.open(pathForOperation, File.READ)
+			existingFile = FileAccess.open(pathForOperation, FileAccess.READ)
+			var err = OK if existingFile != null else FAILED
 
 			if err == OK:
 				existingContent = existingFile.get_as_text()
@@ -349,7 +349,7 @@ func _on_CreateButton_pressed():
 func _on_DeleteButton_pressed():
 	oConfirmScriptDeletion.set_meta("requesting_script_section_id", get_instance_id())
 	Utils.popup_centered(oConfirmScriptDeletion)
-	yield(oConfirmScriptDeletion, "confirmed")
+	await oConfirmScriptDeletion.confirmed
 	var hasRequestingMeta = oConfirmScriptDeletion.has_meta("requesting_script_section_id")
 	var metaMatchesInstanceId = false
 	if hasRequestingMeta:

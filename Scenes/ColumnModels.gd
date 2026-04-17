@@ -12,7 +12,7 @@ extends Node
 #enum {NORTH, EAST, SOUTH, WEST, TOP, BOTTOM}
 #
 #func UNUSED_ready():
-#	yield(get_tree(),'idle_frame')
+#	await get_tree().process_frame
 #
 #	var CODETIME_START = OS.get_ticks_msec()
 #
@@ -83,11 +83,11 @@ extends Node
 #	CODETIME_START = OS.get_ticks_msec()
 #	var generatedMesh = ArrayMesh.new()
 #	meshArrays.resize(Mesh.ARRAY_MAX)
-#	meshArrays[Mesh.ARRAY_INDEX] = PoolIntArray(tempArrays[Mesh.ARRAY_INDEX])
-#	meshArrays[Mesh.ARRAY_VERTEX] = PoolVector3Array(tempArrays[Mesh.ARRAY_VERTEX])
-#	meshArrays[Mesh.ARRAY_TEX_UV] = PoolVector2Array(tempArrays[Mesh.ARRAY_TEX_UV])
-#	meshArrays[Mesh.ARRAY_TEX_UV2] = PoolVector2Array(tempArrays[Mesh.ARRAY_TEX_UV2])
-#	meshArrays[Mesh.ARRAY_NORMAL] = PoolVector3Array(tempArrays[Mesh.ARRAY_NORMAL])
+#	meshArrays[Mesh.ARRAY_INDEX] = PackedInt32Array(tempArrays[Mesh.ARRAY_INDEX])
+#	meshArrays[Mesh.ARRAY_VERTEX] = PackedVector3Array(tempArrays[Mesh.ARRAY_VERTEX])
+#	meshArrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array(tempArrays[Mesh.ARRAY_TEX_UV])
+#	meshArrays[Mesh.ARRAY_TEX_UV2] = PackedVector2Array(tempArrays[Mesh.ARRAY_TEX_UV2])
+#	meshArrays[Mesh.ARRAY_NORMAL] = PackedVector3Array(tempArrays[Mesh.ARRAY_NORMAL])
 #	generatedMesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, meshArrays)
 #	print('Finalize mesh : '+str(OS.get_ticks_msec()-CODETIME_START)+'ms')
 #
@@ -143,16 +143,16 @@ extends Node
 
 
 
-#			meshArrays[Mesh.ARRAY_INDEX] = PoolIntArray(tempArrays[Mesh.ARRAY_INDEX])
-#			meshArrays[Mesh.ARRAY_VERTEX] = PoolVector3Array(tempArrays[Mesh.ARRAY_VERTEX])
-#			meshArrays[Mesh.ARRAY_TEX_UV] = PoolVector2Array(tempArrays[Mesh.ARRAY_TEX_UV])
-#			meshArrays[Mesh.ARRAY_TEX_UV2] = PoolVector2Array(tempArrays[Mesh.ARRAY_TEX_UV2])
-#			meshArrays[Mesh.ARRAY_NORMAL] = PoolVector3Array(tempArrays[Mesh.ARRAY_NORMAL])
+#			meshArrays[Mesh.ARRAY_INDEX] = PackedInt32Array(tempArrays[Mesh.ARRAY_INDEX])
+#			meshArrays[Mesh.ARRAY_VERTEX] = PackedVector3Array(tempArrays[Mesh.ARRAY_VERTEX])
+#			meshArrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array(tempArrays[Mesh.ARRAY_TEX_UV])
+#			meshArrays[Mesh.ARRAY_TEX_UV2] = PackedVector2Array(tempArrays[Mesh.ARRAY_TEX_UV2])
+#			meshArrays[Mesh.ARRAY_NORMAL] = PackedVector3Array(tempArrays[Mesh.ARRAY_NORMAL])
 			
 #	var generatedMesh = ArrayMesh.new()
 #	generatedMesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, meshArrays)
 	
-			#TERRAIN_MAT.set_shader_param("animationDatabase", load("res://Shaders/textureanimationdatabase.png"))
+			#TERRAIN_MAT.set_shader_parameter("animationDatabase", load("res://Shaders/textureanimationdatabase.png"))
 			#generatedMesh.surface_set_material(0,TERRAIN_MAT)
 			#columnModels[idx] = generatedMesh
 

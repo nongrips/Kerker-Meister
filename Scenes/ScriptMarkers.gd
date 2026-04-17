@@ -1,12 +1,14 @@
 extends Node2D
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
 
-var SCRIPT_ICON_SIZE_MAX = 8 setget script_icon_size_max
-var SCRIPT_ICON_SIZE_BASE = 0.5 setget script_icon_size_base
+var SCRIPT_ICON_SIZE_MAX = 8:
 
+	set(_val): script_icon_size_max(_val)
+var SCRIPT_ICON_SIZE_BASE = 0.5:
+	set(_val): script_icon_size_base(_val)
 var scnScriptHelperObject = preload('res://Scenes/ScriptHelperObject.tscn')
 
 enum {
@@ -58,7 +60,7 @@ var commandsWithPositions = [
 ]
 
 func start():
-	yield(get_tree(),'idle_frame') # This is necessary to fix an issue (with positions) when switching maps
+	await get_tree().process_frame # This is necessary to fix an issue (with positions) when switching maps
 	clear()
 	
 	var CODETIME_START = OS.get_ticks_msec()
@@ -154,7 +156,7 @@ func create_helper_object(x,y,line,lineNumber):
 			return
 	
 	# Create new
-	var id = scnScriptHelperObject.instance()
+	var id = scnScriptHelperObject.instantiate()
 	id.position = Vector2(x, y)
 	id.set_meta('line', newString)
 	add_child(id)

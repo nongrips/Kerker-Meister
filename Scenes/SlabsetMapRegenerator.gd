@@ -1,11 +1,11 @@
 extends Node2D
 
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oUi = Nodelist.list["oUi"]
 
 func calculate_cursor_data():
 	var defaultData = {

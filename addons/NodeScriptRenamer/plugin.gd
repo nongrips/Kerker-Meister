@@ -7,7 +7,7 @@ var node_tracker = {}
 func _enter_tree():
 	scene_change_timer = Timer.new()
 	scene_change_timer.wait_time = 0.1
-	scene_change_timer.connect("timeout", self, "_check_node_changes")
+	scene_change_timer.timeout.connect(_check_node_changes)
 	add_child(scene_change_timer)
 	scene_change_timer.start()
 
@@ -42,7 +42,7 @@ func _handle_node_rename(node, old_name, new_name):
 		return
 	
 	var script_path = script.resource_path
-	if script_path.empty():
+	if script_path.is_empty():
 		return
 	
 	var script_filename = script_path.get_file().get_basename()
@@ -52,18 +52,18 @@ func _handle_node_rename(node, old_name, new_name):
 
 func _show_rename_dialog(node, script_path, old_name, new_name):
 	var dialog = ConfirmationDialog.new()
-	dialog.window_title = "Rename Script File?"
+	dialog.title = "Rename Script File?"
 	var script_open_warning = ""
 	if _is_script_open(script_path):
 		script_open_warning = "\n\nNote: Please close the script tab before confirming."
 	dialog.dialog_text = "Node '%s' was renamed to '%s'.\n\nDo you want to rename the script file from '%s.gd' to '%s.gd'?%s" % [old_name, new_name, old_name, new_name, script_open_warning]
-	dialog.popup_exclusive = true
+	dialog.exclusive = true
 	
 	get_editor_interface().get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2(450, 180))
 	
 	dialog.connect("confirmed", self, "_on_rename_confirmed", [node, script_path, new_name], CONNECT_ONESHOT)
-	dialog.connect("popup_hide", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT)
+	dialog.connect("close_requested", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT)
 
 func _on_rename_confirmed(node, old_script_path, new_name):
 	_rename_script_file(node, old_script_path, new_name)
@@ -73,9 +73,8 @@ func _on_dialog_closed(dialog):
 
 func _rename_script_file(node, old_script_path, new_name):
 	var file_system = get_editor_interface().get_resource_filesystem()
-	var file = File.new()
-	
-	if not file.file_exists(old_script_path):
+	var file: FileAccess = null
+	if not FileAccess.file_exists(old_script_path):
 		_show_error_dialog("Script file not found: " + old_script_path)
 		return
 	
@@ -87,11 +86,11 @@ func _rename_script_file(node, old_script_path, new_name):
 	var directory = old_script_path.get_base_dir()
 	var new_script_path = directory + "/" + new_name + ".gd"
 	
-	if file.file_exists(new_script_path):
+	if FileAccess.file_exists(new_script_path):
 		_show_error_dialog("File '%s' already exists!" % new_script_path)
 		return
 	
-	var dir = Directory.new()
+	var dir: DirAccess = null
 	var error = dir.copy(old_script_path, new_script_path)
 	
 	if error != OK:
@@ -119,11 +118,11 @@ func _rename_script_file(node, old_script_path, new_name):
 
 func _update_scene_references(old_path, new_path):
 	var current_scene_path = get_editor_interface().get_edited_scene_root().filename
-	if current_scene_path.empty():
+	if current_scene_path.is_empty():
 		return
 	
-	var file = File.new()
-	if file.open(current_scene_path, File.READ) != OK:
+	var file = FileAccess.open(current_scene_path, FileAccess.READ)
+	if file == null:
 		return
 	
 	var content = file.get_as_text()
@@ -135,7 +134,9 @@ func _update_scene_references(old_path, new_path):
 	if old_resource_ref in content:
 		content = content.replace(old_resource_ref, new_resource_ref)
 		
-		if file.open(current_scene_path, File.WRITE) == OK:
+		file = FileAccess.open(current_scene_path, FileAccess.WRITE)
+		
+		if file != null:
 			file.store_string(content)
 			file.close()
 			print("Updated scene references")
@@ -177,9 +178,9 @@ func _open_script_in_editor(script_path):
 
 func _show_error_dialog(message):
 	var dialog = AcceptDialog.new()
-	dialog.window_title = "Script Rename Error"
+	dialog.title = "Script Rename Error"
 	dialog.dialog_text = message
 	
 	get_editor_interface().get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2(400, 120))
-	dialog.connect("popup_hide", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT) 
+	dialog.connect("close_requested", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT) 

@@ -1,14 +1,14 @@
-extends WindowDialog
-onready var oChangelogMainVBox = Nodelist.list["oChangelogMainVBox"]
-onready var scene = preload("res://Scenes/ChangelogSection.tscn")
-onready var oGame = Nodelist.list["oGame"]
+extends Window
+@onready var oChangelogMainVBox = Nodelist.list["oChangelogMainVBox"]
+@onready var scene = preload("res://Scenes/ChangelogSection.tscn")
+@onready var oGame = Nodelist.list["oGame"]
 
 const txt = preload("res://changelog.gd").string
 
 func _ready():
 	# Wait for settings.gd to finish reading
 	for i in 50:
-		yield(get_tree(),'idle_frame')
+		await get_tree().process_frame
 	
 	var sections = parse_changelog_file()
 	if sections.size() > 0:
@@ -21,7 +21,7 @@ func parse_changelog_file():
 	var text = txt
 	var current_version = ""
 	var current_date = ""
-	var current_body = PoolStringArray()
+	var current_body = PackedStringArray()
 	var pos = 0
 	var text_length = text.length()
 	var line_start = 0
@@ -38,7 +38,7 @@ func parse_changelog_file():
 					"date": current_date,
 					"body": current_body.join("\n")
 				})
-				current_body = PoolStringArray()
+				current_body = PackedStringArray()
 			var dash_pos = line.find(" - ")
 			current_version = line.substr(0, dash_pos)
 			current_date = line.substr(dash_pos + 3)
@@ -87,7 +87,7 @@ func _on_ChangelogWindow_about_to_show():
 	
 	var sections = parse_changelog_file()
 	for section in sections:
-		var section_node = scene.instance()
+		var section_node = scene.instantiate()
 		oChangelogMainVBox.add_child(section_node)
 		section_node.set_name_text(section.version)
 		section_node.set_date_text(section.date)

@@ -1,9 +1,9 @@
 extends Node
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oGame3D = Nodelist.list["oGame3D"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oGame3D = Nodelist.list["oGame3D"]
 
 var blankArray = initalize_blank_array()
 
@@ -122,11 +122,11 @@ static func initalize_blank_array():
 static func temparray_to_mesharray(tempArrays):
 	var newMeshArray = []
 	newMeshArray.resize(Mesh.ARRAY_MAX)
-	newMeshArray[Mesh.ARRAY_INDEX] = PoolIntArray(tempArrays[Mesh.ARRAY_INDEX])
-	newMeshArray[Mesh.ARRAY_VERTEX] = PoolVector3Array(tempArrays[Mesh.ARRAY_VERTEX])
-	newMeshArray[Mesh.ARRAY_TEX_UV] = PoolVector2Array(tempArrays[Mesh.ARRAY_TEX_UV])
-	newMeshArray[Mesh.ARRAY_TEX_UV2] = PoolVector2Array(tempArrays[Mesh.ARRAY_TEX_UV2])
-	newMeshArray[Mesh.ARRAY_NORMAL] = PoolVector3Array(tempArrays[Mesh.ARRAY_NORMAL])
+	newMeshArray[Mesh.ARRAY_INDEX] = PackedInt32Array(tempArrays[Mesh.ARRAY_INDEX])
+	newMeshArray[Mesh.ARRAY_VERTEX] = PackedVector3Array(tempArrays[Mesh.ARRAY_VERTEX])
+	newMeshArray[Mesh.ARRAY_TEX_UV] = PackedVector2Array(tempArrays[Mesh.ARRAY_TEX_UV])
+	newMeshArray[Mesh.ARRAY_TEX_UV2] = PackedVector2Array(tempArrays[Mesh.ARRAY_TEX_UV2])
+	newMeshArray[Mesh.ARRAY_NORMAL] = PackedVector3Array(tempArrays[Mesh.ARRAY_NORMAL])
 	return newMeshArray
 
 const uv = [

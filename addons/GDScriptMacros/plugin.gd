@@ -52,14 +52,14 @@ func get_indentation(string: String) -> String:
 
 
 func _init_macro_file() -> void:
-	var file := File.new()
-
-	var date := file.get_modified_time(macroPath)
+	var date := FileAccess.get_modified_time(macroPath)
 	if date == macroDate:  # Prevent loading macro file twice by checking date
 		return
 	macroDate = date
 
-	file.open(macroPath, File.READ)
+	var file := FileAccess.open(macroPath, FileAccess.READ)
+	if file == null:
+		return
 	var keyword : String
 
 	while true:
@@ -91,7 +91,7 @@ func _init_macro_file() -> void:
 
 
 func _ready():
-	get_viewport().connect("gui_focus_changed", self, "_on_gui_focus_changed")
+	get_viewport().gui_focus_changed.connect(_on_gui_focus_changed)
 	_init_macro_file()
 
 
@@ -110,6 +110,6 @@ func _on_cursor_changed():
 func _on_gui_focus_changed(node: Node):
 	if node is TextEdit:
 		if is_instance_valid(script_editor):
-			script_editor.disconnect("cursor_changed", self, "_on_cursor_changed")
+			script_editor.cursor_changed.disconnect(_on_cursor_changed)
 		script_editor = node
-		script_editor.connect("cursor_changed", self, "_on_cursor_changed")
+		script_editor.cursor_changed.connect(_on_cursor_changed)

@@ -1,16 +1,18 @@
 extends Node2D
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oSelectionStatus = Nodelist.list["oSelectionStatus"]
-onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
-onready var oActionPointList = Nodelist.list["oActionPointList"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oSelectionStatus = Nodelist.list["oSelectionStatus"]
+@onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
+@onready var oActionPointList = Nodelist.list["oActionPointList"]
 
-onready var SUBTILE_SIZE = Constants.SUBTILE_SIZE
+@onready var SUBTILE_SIZE = Constants.SUBTILE_SIZE
 
-var inspectingInstance = null setget set_inspector_instance
-var inspectorSubtile = null setget set_inspector_subtile
+var inspectingInstance = null:
 
+	set(_val): set_inspector_instance(_val)
+var inspectorSubtile = null:
+	set(_val): set_inspector_subtile(_val)
 func _ready():
 	set_inspector_subtile(Vector2(-1000000,-1000000))
 
@@ -54,5 +56,5 @@ func deselect():
 	set_inspector_instance(null)
 	set_inspector_subtile(Vector2(-1000000,-1000000))
 	oSelectionStatus.visible = false
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	oThingDetails.update_details()

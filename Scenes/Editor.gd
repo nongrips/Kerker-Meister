@@ -1,21 +1,21 @@
 extends Node
-onready var oUi3D = Nodelist.list["oUi3D"]
-onready var oGame2D = Nodelist.list["oGame2D"]
-onready var oGame3D = Nodelist.list["oGame3D"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oCamera3D = Nodelist.list["oCamera3D"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oConfirmQuit = Nodelist.list["oConfirmQuit"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
-onready var oEditingMode = Nodelist.list["oEditingMode"]
-onready var oEditableBordersCheckbox = Nodelist.list["oEditableBordersCheckbox"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oConfirmSaveBeforeQuit = Nodelist.list["oConfirmSaveBeforeQuit"]
-onready var oExportPreview = Nodelist.list["oExportPreview"]
-onready var oUndoStates = Nodelist.list["oUndoStates"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oUi3D = Nodelist.list["oUi3D"]
+@onready var oGame2D = Nodelist.list["oGame2D"]
+@onready var oGame3D = Nodelist.list["oGame3D"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oCamera3D = Nodelist.list["oCamera3D"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oConfirmQuit = Nodelist.list["oConfirmQuit"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
+@onready var oEditingMode = Nodelist.list["oEditingMode"]
+@onready var oEditableBordersCheckbox = Nodelist.list["oEditableBordersCheckbox"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oConfirmSaveBeforeQuit = Nodelist.list["oConfirmSaveBeforeQuit"]
+@onready var oExportPreview = Nodelist.list["oExportPreview"]
+@onready var oUndoStates = Nodelist.list["oUndoStates"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
 	
 enum {
 	VIEW_2D = 0
@@ -25,15 +25,22 @@ enum {
 
 var currentView = VIEW_2D
 var fieldBoundary = Rect2()
-var mapHasBeenEdited = false setget set_map_has_been_edited
-var framerate_limit = 120 setget set_framerate_limit
-var ssaa_level = 4 setget set_ssaa_level
+var mapHasBeenEdited = false:
+	set(_val): set_map_has_been_edited(_val)
+var framerate_limit = 120:
+	set(_val): set_framerate_limit(_val)
+var ssaa_level = 4:
+	set(_val): set_ssaa_level(_val)
 var updating_screen = false
-var rendering_rate = 0.0 setget set_rendering_rate
+var rendering_rate = 0.0:
+	set(_val): set_rendering_rate(_val)
 var rendering_timer = 0.0
-var low_processor_sleep_value = 0 setget set_low_processor_sleep_value
-var low_processor_enabled = false setget set_low_processor_enabled
-var inputs_update_screen = false setget set_inputs_update_screen
+var low_processor_sleep_value = 0:
+	set(_val): set_low_processor_sleep_value(_val)
+var low_processor_enabled = false:
+	set(_val): set_low_processor_enabled(_val)
+var inputs_update_screen = false:
+	set(_val): set_inputs_update_screen(_val)
 var window_has_focus = true
 
 func set_inputs_update_screen(val):
@@ -51,11 +58,11 @@ func set_low_processor_enabled(val):
 func set_rendering_rate(val):
 	rendering_rate = val
 	if val > 0:
-		yield(get_tree(),'idle_frame')
-		VisualServer.render_loop_enabled = true
+		await get_tree().process_frame
+		RenderingServer.render_loop_enabled = true
 	else:
-		yield(get_tree(),'idle_frame')
-		VisualServer.render_loop_enabled = true
+		await get_tree().process_frame
+		RenderingServer.render_loop_enabled = true
 
 func set_map_has_been_edited(setVal):
 	if int(setVal) == oEditor.SET_EDITED_WITHOUT_SAVING_STATE: #If you save, then click Undo, it should mark as not saved but not create a new undo state when marking as edited.
@@ -94,11 +101,11 @@ func _unhandled_input(event):
 
 func _notification(what):
 	if (what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST):
-		if OS.window_size.x >= 720 and OS.window_size.y >= 720 and OS.is_window_minimized() == false:
-			Settings.write_cfg("editor_window_position", OS.window_position)
-			Settings.write_cfg("editor_window_maximized_state", OS.window_maximized)
-			Settings.write_cfg("editor_window_fullscreen_state", OS.window_fullscreen)
-			Settings.write_cfg("editor_window_size", OS.window_size)
+		if get_window().size.x >= 720 and get_window().size.y >= 720 and (get_window().mode == Window.MODE_MINIMIZED) == false:
+			Settings.write_cfg("editor_window_position", get_window().position)
+			Settings.write_cfg("editor_window_maximized_state", (get_window().mode == Window.MODE_MAXIMIZED))
+			Settings.write_cfg("editor_window_fullscreen_state", (get_window().mode == Window.MODE_FULLSCREEN))
+			Settings.write_cfg("editor_window_size", get_window().size)
 		
 		#if OS.has_feature("standalone") == true:
 		if mapHasBeenEdited == true:
@@ -107,14 +114,14 @@ func _notification(what):
 			get_tree().quit()
 	elif what == MainLoop.NOTIFICATION_WM_FOCUS_IN:
 		window_has_focus = true
-		VisualServer.render_loop_enabled = true
+		RenderingServer.render_loop_enabled = true
 	elif what == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
 		window_has_focus = false
 		if Settings.get_setting("pause_when_minimized") == true:
-			VisualServer.render_loop_enabled = false
+			RenderingServer.render_loop_enabled = false
 
 func just_opened_editor():
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	set_view_2d() # For when you load up the program and don't load a map
 
 func set_view_2d():
@@ -187,7 +194,7 @@ func update_screen():
 	if window_has_focus == false and Settings.get_setting("pause_when_minimized") == true:
 		return  # Don't render when unfocused and pause is enabled
 	updating_screen = true
-	VisualServer.render_loop_enabled = true
-	yield(get_tree(),'idle_frame')
-	VisualServer.render_loop_enabled = false
+	RenderingServer.render_loop_enabled = true
+	await get_tree().process_frame
+	RenderingServer.render_loop_enabled = false
 	updating_screen = false

@@ -1,5 +1,5 @@
 extends Control
-onready var oSelection = Nodelist.list["oSelection"]
+@onready var oSelection = Nodelist.list["oSelection"]
 
 var dataImage = Image.new()
 var dataTexture = ImageTexture.new()
@@ -31,10 +31,8 @@ func set_visual(columnArray):
 				$AspectRatioContainer.anchor_left -= 0.02
 				$AspectRatioContainer.anchor_right -= 0.02
 	
-	dataImage.create(3, 3, false, Image.FORMAT_RGB8)
-	dataTexture.create_from_image(dataImage, 0)
-	
-	dataImage.lock()
+	dataImage = Image.create(3, 3, false, Image.FORMAT_RGB8)
+	dataTexture.set_image(dataImage)
 	for y in 3:
 		for x in 3:
 			var cubeFace = 0
@@ -73,24 +71,21 @@ func set_visual(columnArray):
 				var cubeID = Columnset.cubes[clmIndex][sideViewZoffset-z]
 				var cubeFace = Cube.tex[cubeID][Cube.SIDE_SOUTH]
 				dataImage.set_pixel(x, z, Color8(cubeFace >> 16 & 255, cubeFace >> 8 & 255, cubeFace & 255))
-	
-	dataImage.unlock()
-	
-	dataTexture.set_data(dataImage)
+	dataTexture.set_image(dataImage)
 	
 	var oTextureAnimation = Nodelist.list["oTextureAnimation"]
 	
-	material.set_shader_param("showOnlySpecificStyle", 0)
-	material.set_shader_param("slxData", preload("res://Shaders/Black3x3.png"))
-	material.set_shader_param("fieldSizeInSubtiles", Vector2(3, 3))
-	material.set_shader_param("animationDatabase", oTextureAnimation.animation_database_texture)
-	material.set_shader_param("viewTextures", dataTexture)
+	material.set_shader_parameter("showOnlySpecificStyle", 0)
+	material.set_shader_parameter("slxData", preload("res://Shaders/Black3x3.png"))
+	material.set_shader_parameter("fieldSizeInSubtiles", Vector2(3, 3))
+	material.set_shader_parameter("animationDatabase", oTextureAnimation.animation_database_texture)
+	material.set_shader_parameter("viewTextures", dataTexture)
 	if slabID == 57:
-		material.set_shader_param("slabIdData", preload("res://Shaders/Bedrock3x3.png"))
+		material.set_shader_parameter("slabIdData", preload("res://Shaders/Bedrock3x3.png"))
 	else:
-		material.set_shader_param("slabIdData", preload("res://Shaders/Black3x3.png"))
+		material.set_shader_parameter("slabIdData", preload("res://Shaders/Black3x3.png"))
 
 func _process(delta):
 	accumulated_time += delta
 	if material != null:
-		material.set_shader_param("custom_time", accumulated_time)
+		material.set_shader_parameter("custom_time", accumulated_time)

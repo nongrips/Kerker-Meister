@@ -5,13 +5,15 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 	var comments = {}
 	var current_section = ""
 	
-	var file = File.new()
-	if not file.file_exists(file_path):
+	var file: FileAccess = null
+	if not FileAccess.file_exists(file_path):
 		return {"config": config, "comments": comments}
 	
 	var start_time = OS.get_ticks_msec()
 	
-	if file.open(file_path, File.READ) != OK:
+	file = FileAccess.open(file_path, FileAccess.READ)
+	
+	if file == null:
 		return {"config": config, "comments": comments}
 	
 	var content = file.get_as_text()
@@ -25,7 +27,7 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 	for line in lines:
 		var stripped = line.strip_edges()
 		
-		if stripped.empty():
+		if stripped.is_empty():
 			continue
 		if stripped.begins_with(";"):
 			pending_comments.append(stripped)
@@ -55,7 +57,7 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 				var sacrifice_array = [key, items[0]]
 				for i in range(1, items.size()):
 					var item = items[i].strip_edges()
-					if not item.empty():
+					if not item.is_empty():
 						sacrifice_array.append(item)
 				config[current_section].append(sacrifice_array)
 		elif is_rules_cfg and current_section == "research":
@@ -63,7 +65,7 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 			var filtered_items = []
 			for item in items:
 				var clean_item = item.strip_edges()
-				if not clean_item.empty():
+				if not clean_item.is_empty():
 					filtered_items.append(clean_item)
 			
 			if filtered_items.size() >= 3:
@@ -76,7 +78,7 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 				var result = []
 				for item in items:
 					var clean_item = item.strip_edges()
-					if not clean_item.empty():
+					if not clean_item.is_empty():
 						result.append(int(clean_item) if clean_item.is_valid_integer() else clean_item)
 				config[current_section][key] = result
 			else:

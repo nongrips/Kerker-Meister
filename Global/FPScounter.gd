@@ -13,5 +13,5 @@ func _notification(what): # Hide FPS counter while it goes crazy when alt-tabbin
 	if what == MainLoop.NOTIFICATION_WM_FOCUS_IN:
 		if visible == true and Settings.get_setting("pause_when_minimized") == true:
 			visible = false
-			yield(get_tree().create_timer(2.5), "timeout")
+			await get_tree().create_timer(2.5).timeout
 			visible = true

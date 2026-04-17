@@ -1,13 +1,13 @@
 extends VBoxContainer
-onready var oThingListData = Nodelist.list["oThingListData"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
-onready var oSelectionStatusButton = Nodelist.list["oSelectionStatusButton"]
-onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oThingListData = Nodelist.list["oThingListData"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
+@onready var oSelectionStatusButton = Nodelist.list["oSelectionStatusButton"]
+@onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
 
 
 #var rememberInstance = null

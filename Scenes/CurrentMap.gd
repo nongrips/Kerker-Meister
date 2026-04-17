@@ -1,32 +1,32 @@
 extends Node
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oOpenMap = Nodelist.list["oOpenMap"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oUiTools = Nodelist.list["oUiTools"]
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oDataLiquid = Nodelist.list["oDataLiquid"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oMain = Nodelist.list["oMain"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oScriptMarkers = Nodelist.list["oScriptMarkers"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oDataLof = Nodelist.list["oDataLof"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oDataLua = Nodelist.list["oDataLua"]
-onready var oScriptEditor = Nodelist.list["oScriptEditor"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oOpenMap = Nodelist.list["oOpenMap"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oUiTools = Nodelist.list["oUiTools"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oDataLiquid = Nodelist.list["oDataLiquid"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oMain = Nodelist.list["oMain"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oScriptMarkers = Nodelist.list["oScriptMarkers"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oDataLua = Nodelist.list["oDataLua"]
+@onready var oScriptEditor = Nodelist.list["oScriptEditor"]
 
 var path = ""
 var currentFilePaths = {} # [0] = pathString,  [1] = modified date
@@ -44,11 +44,11 @@ enum {
 
 
 func _init():
-	OS.set_window_title('Unearth v'+Version.full)
+	get_window().title = 'Unearth v'+Version.full
 
 func _ready():
 	var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-	oConfigFileManager.connect("config_file_status_changed", self, "_on_config_status_changed")
+	oConfigFileManager.config_file_status_changed.connect(_on_config_status_changed)
 
 func _on_config_status_changed():
 	update_config_paths()
@@ -59,10 +59,10 @@ func _on_ButtonNewMap_pressed():
 
 func set_path_and_title(newpath):
 	if newpath != "":
-		OS.set_window_title(newpath + ' - Unearth v'+Version.full)
+		get_window().title = newpath + ' - Unearth v'+Version.full
 		oMenu.add_recent(newpath) # Add saved maps to the recent menu
 	else:
-		OS.set_window_title('Unearth v'+Version.full)
+		get_window().title = 'Unearth v'+Version.full
 	path = newpath
 	
 	oGame.reconstruct_command_line() # Always update command line whenever the path changes
@@ -115,13 +115,14 @@ func check_script_file_modifications():
 		var file_info = currentFilePaths["TXT"]
 		var file_path = file_info[PATHSTRING]
 		var stored_modified_time = file_info[MODIFIED_DATE]
-		var current_modified_time = File.new().get_modified_time(file_path)
+		var current_modified_time = FileAccess.get_modified_time(file_path)
 
 		if stored_modified_time != current_modified_time:
 			file_info[MODIFIED_DATE] = current_modified_time
-			var file = File.new()
-			if file.file_exists(file_path):
-				var err = file.open(file_path, File.READ)
+			var file: FileAccess = null
+			if FileAccess.file_exists(file_path):
+				file = FileAccess.open(file_path, FileAccess.READ)
+				var err = OK if file != null else FAILED
 				if err == OK:
 					oDataScript.data = file.get_as_text()
 					file.close()
@@ -133,13 +134,14 @@ func check_script_file_modifications():
 		var file_info = currentFilePaths["LUA"]
 		var file_path = file_info[PATHSTRING]
 		var stored_modified_time = file_info[MODIFIED_DATE]
-		var current_modified_time = File.new().get_modified_time(file_path)
+		var current_modified_time = FileAccess.get_modified_time(file_path)
 
 		if stored_modified_time != current_modified_time:
 			file_info[MODIFIED_DATE] = current_modified_time
-			var file = File.new()
-			if file.file_exists(file_path):
-				var err = file.open(file_path, File.READ)
+			var file: FileAccess = null
+			if FileAccess.file_exists(file_path):
+				file = FileAccess.open(file_path, FileAccess.READ)
+				var err = OK if file != null else FAILED
 				if err == OK:
 					oDataLua.data = file.get_as_text()
 					file.close()

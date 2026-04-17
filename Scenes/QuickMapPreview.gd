@@ -1,10 +1,10 @@
 extends ColorRect
-onready var oOpenMap = Nodelist.list["oOpenMap"]
-onready var oRNC = Nodelist.list["oRNC"]
-onready var oReadData = Nodelist.list["oReadData"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oMapBrowserTabContainer = Nodelist.list["oMapBrowserTabContainer"]
-onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oOpenMap = Nodelist.list["oOpenMap"]
+@onready var oRNC = Nodelist.list["oRNC"]
+@onready var oReadData = Nodelist.list["oReadData"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oMapBrowserTabContainer = Nodelist.list["oMapBrowserTabContainer"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 var img = Image.new()
 var tex = ImageTexture.new()
@@ -25,7 +25,7 @@ var tex = ImageTexture.new()
 #end;
 
 const colourDict = {
-	0: Color.black,
+	0: Color.BLACK,
 	2 : Color("241800"),
 	3 : Color("241800"),
 	50 : Color("241800"),
@@ -73,7 +73,7 @@ const colourDict = {
 	
 	
 	52 : Color("D890BF"),
-	54 : Color.purple, #Color.fuchsia
+	54 : Color.PURPLE, #Color.FUCHSIA
 }
 const spoilerColor = Color8(20,16,0) #Color(0.125, 0.125, 0.175, 1.0)
 var spoiledSlabs = {
@@ -84,8 +84,8 @@ var spoiledSlabs = {
 
 func _ready():
 	visible = false
-	img.create(M.xSize, M.ySize, false, Image.FORMAT_RGB8)
-	tex.create_from_image(img, 0)
+	img = Image.create(M.xSize, M.ySize, false, Image.FORMAT_RGB8)
+	tex.set_image(img)
 
 
 func update_img(slbFilePath):
@@ -93,14 +93,14 @@ func update_img(slbFilePath):
 	if oMapBrowserTabContainer.current_tab == 1: # Play
 		hideSpoilers = true
 	
-	if File.new().file_exists(slbFilePath) == false:
+	if FileAccess.file_exists(slbFilePath) == false:
 		print("File not found : " + slbFilePath)
 		return
 	
 	var lofFilePath = ""
-	if File.new().file_exists(slbFilePath.get_basename()+".lof") == true:
+	if FileAccess.file_exists(slbFilePath.get_basename()+".lof") == true:
 		lofFilePath = slbFilePath.get_basename()+".lof"
-	elif File.new().file_exists(slbFilePath.get_basename()+".LOF") == true:
+	elif FileAccess.file_exists(slbFilePath.get_basename()+".LOF") == true:
 		lofFilePath = slbFilePath.get_basename()+".LOF"
 	
 	var lofBuffer = oBuffers.file_path_to_buffer(lofFilePath)
@@ -112,9 +112,9 @@ func update_img(slbFilePath):
 	#var CODETIME_START = OS.get_ticks_msec()
 	
 	var ownFilePath = ""
-	if File.new().file_exists(slbFilePath.get_basename()+".own") == true:
+	if FileAccess.file_exists(slbFilePath.get_basename()+".own") == true:
 		ownFilePath = slbFilePath.get_basename()+".own"
-	elif File.new().file_exists(slbFilePath.get_basename()+".OWN") == true:
+	elif FileAccess.file_exists(slbFilePath.get_basename()+".OWN") == true:
 		ownFilePath = slbFilePath.get_basename()+".OWN"
 	
 	if oRNC.check_for_rnc_compression(slbFilePath) == true: return
@@ -131,8 +131,7 @@ func update_img(slbFilePath):
 	var slabID
 	var ownership = 5
 	
-	img.create(xy.x, xy.y, false, Image.FORMAT_RGB8)
-	img.lock()
+	img = Image.create(xy.x, xy.y, false, Image.FORMAT_RGB8)
 	for y in xy.y:
 		for x in xy.x:
 			slabID = slbBuffer.get_u8()
@@ -178,19 +177,17 @@ func update_img(slbFilePath):
 
 
 	#if ownership < 5:
-	img.unlock()
-	
-	tex.set_data(img)
+	tex.set_image(img)
 	$QuickMapPreviewDisplay.texture = tex
-	$QuickMapPreviewDisplay.rect_size = Vector2(xy.x*96, xy.y*96)
-	#$QuickMapPreviewDisplay.rect_position = Vector2(xy.x*96*0.5, xy.y*96*0.5)
+	$QuickMapPreviewDisplay.size = Vector2(xy.x*96, xy.y*96)
+	#$QuickMapPreviewDisplay.position = Vector2(xy.x*96*0.5, xy.y*96*0.5)
 	
-	$QuickMapBorder.rect_position = Vector2(-96,-96)
-	$QuickMapBorder.rect_size = Vector2((xy.x*96) + (96*2), (xy.y*96) + (96*2))
+	$QuickMapBorder.position = Vector2(-96,-96)
+	$QuickMapBorder.size = Vector2((xy.x*96) + (96*2), (xy.y*96) + (96*2))
 	
 	oCamera2D.reset_camera(xy.x, xy.y)
 	#xy.x, xy.y
-	rect_size = Vector2(M.xSize*96, M.ySize*96) # Cover current map in darkness
+	size = Vector2(M.xSize*96, M.ySize*96) # Cover current map in darkness
 	
 	#print('Codetime: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
 	return OK

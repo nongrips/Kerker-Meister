@@ -612,13 +612,13 @@ func set_max_cubes():
 func get_cubescfg_modified_time():
 	var oGame = Nodelist.list["oGame"]
 	var path = Utils.case_insensitive_file(oGame.DK_FXDATA_DIRECTORY, "CUBES", "CFG")
-	var getModifiedTime = File.new().get_modified_time(path)
+	var getModifiedTime = FileAccess.get_modified_time(path)
 	return getModifiedTime
 
 #func _notification(what: int):
 #	if what == MainLoop.NOTIFICATION_WM_FOCUS_IN:
 #		var oDataClm = Nodelist.list["oDataClm"]
-#		if oDataClm.cubes.empty() == false: # fixes a crash when you've got no map loaded
+#		if oDataClm.cubes.is_empty() == false: # fixes a crash when you've got no map loaded
 #			if cubesCfgLastModifiedTime != get_cubescfg_modified_time():
 #				var oMessage = Nodelist.list["oMessage"]
 #				var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]

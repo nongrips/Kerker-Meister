@@ -1,26 +1,26 @@
-extends WindowDialog
-onready var oOpenMap = Nodelist.list["oOpenMap"]
-onready var oSaveMap = Nodelist.list["oSaveMap"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oLineEditFilter = Nodelist.list["oLineEditFilter"]
-onready var oBrowseButton = Nodelist.list["oBrowseButton"]
-onready var oDynamicMapTree = Nodelist.list["oDynamicMapTree"]
-onready var oSourceMapTree = Nodelist.list["oSourceMapTree"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oCannotDelete = Nodelist.list["oCannotDelete"]
-onready var oConfirmDelete = Nodelist.list["oConfirmDelete"]
-onready var oBrowserFilename = Nodelist.list["oBrowserFilename"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oQuickMapPreview = Nodelist.list["oQuickMapPreview"]
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oMapBrowserTabEdit = Nodelist.list["oMapBrowserTabEdit"]
-onready var oMapBrowserTabPlay = Nodelist.list["oMapBrowserTabPlay"]
-onready var oMapBrowserTabContainer = Nodelist.list["oMapBrowserTabContainer"]
-onready var oRandomMapContainer = Nodelist.list["oRandomMapContainer"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+extends Window
+@onready var oOpenMap = Nodelist.list["oOpenMap"]
+@onready var oSaveMap = Nodelist.list["oSaveMap"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oLineEditFilter = Nodelist.list["oLineEditFilter"]
+@onready var oBrowseButton = Nodelist.list["oBrowseButton"]
+@onready var oDynamicMapTree = Nodelist.list["oDynamicMapTree"]
+@onready var oSourceMapTree = Nodelist.list["oSourceMapTree"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oCannotDelete = Nodelist.list["oCannotDelete"]
+@onready var oConfirmDelete = Nodelist.list["oConfirmDelete"]
+@onready var oBrowserFilename = Nodelist.list["oBrowserFilename"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oQuickMapPreview = Nodelist.list["oQuickMapPreview"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oMapBrowserTabEdit = Nodelist.list["oMapBrowserTabEdit"]
+@onready var oMapBrowserTabPlay = Nodelist.list["oMapBrowserTabPlay"]
+@onready var oMapBrowserTabContainer = Nodelist.list["oMapBrowserTabContainer"]
+@onready var oRandomMapContainer = Nodelist.list["oRandomMapContainer"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
 
 
 func _ready():
@@ -38,7 +38,7 @@ func _on_MapBrowser_about_to_show():
 	if oCurrentMap.path == "": oDynamicMapTree.clear() # Just fixes a visual glitch when you don't have a map open, so don't mind this.
 	
 	for i in 2: # Needs to be 2
-		yield(get_tree(),'idle_frame')
+		await get_tree().process_frame
 	
 	oSourceMapTree.update_source_tree()
 	oDynamicMapTree.update_dynamic_tree()
@@ -71,7 +71,7 @@ func activate(path):
 	else: # Edit
 		path = path.get_basename()
 		oOpenMap.open_map(path)
-		yield(oOverheadGraphics, "column_graphics_completed")
+		await oOverheadGraphics.column_graphics_completed
 		toggle_map_preview(false)
 
 func _on_DynamicMapTree_item_selected():
@@ -82,8 +82,8 @@ func _on_DynamicMapTree_item_selected():
 	# Set modified time, if it's a file
 	if selectedTreeItem.get_metadata(1) == "is_a_file":
 		oBrowseButton.visible = true
-#		var file = File.new()
-#		var modifiedTime = file.get_modified_time(path + '.slb') # This might cause case-sensitive issues but I don't care right now.
+#		var file = FileAccess.new()
+#		var modifiedTime = FileAccess.get_modified_time(path + '.slb') # This might cause case-sensitive issues but I don't care right now.
 #		oDateSaved.text = convert_unix_time_to_readable(modifiedTime) #'Last modified: '+
 #		file.close()
 		
@@ -119,7 +119,7 @@ func _on_LineEdit_text_changed(new_text):
 #	oSourceMapTree.updateSourceMapTree()
 
 func convert_unix_time_to_readable(modifiedTime):
-	var dict = OS.get_datetime_from_unix_time(modifiedTime)
+	var dict = Time.get_datetime_dict_from_unix_time(modifiedTime)
 	var dateAndTime = ""
 	dateAndTime += str(dict["day"]) + "/"
 	dateAndTime += str(dict["month"]) + "/"
@@ -143,7 +143,7 @@ func _on_TextureButton_pressed():
 		if selectedTreeItem != null:
 			path = selectedTreeItem.get_metadata(0)
 	
-	if Directory.new().dir_exists(path) == true:
+	if DirAccess.dir_exists_absolute(path) == true:
 		# Open folder
 		OS.shell_open(path)
 	else:
@@ -177,8 +177,8 @@ func toggle_map_preview(togglePreview):
 			oQuickMapPreview.visible = false
 	
 #	match oQuickMapPreview.visible:
-#		true: VisualServer.set_default_clear_color(Color8(10,10,20))
-#		false: VisualServer.set_default_clear_color(Color8(0,0,0))
+#		true: RenderingServer.set_default_clear_color(Color8(10,10,20))
+#		false: RenderingServer.set_default_clear_color(Color8(0,0,0))
 
 func _on_MapBrowserTabContainer_tab_changed(tab):
 	match tab:

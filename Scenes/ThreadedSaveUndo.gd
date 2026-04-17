@@ -1,9 +1,9 @@
 extends Node
 
-onready var oBuffers = Nodelist.list["oBuffers"]
-onready var oUndoStates = Nodelist.list["oUndoStates"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oMessage = Nodelist.list["oMessage"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oUndoStates = Nodelist.list["oUndoStates"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 var semaphore = Semaphore.new()
 var thread = Thread.new()

@@ -11,7 +11,7 @@ func popup_centered(node):
 
 func _input(_event):
 	if Input.is_action_just_pressed("toggle_fullscreen"):
-		OS.window_fullscreen = !OS.window_fullscreen
+		get_window().mode = (Window.MODE_FULLSCREEN if !(get_window().mode == Window.MODE_FULLSCREEN) else Window.MODE_WINDOWED)
 
 
 var regex = RegEx.new()
@@ -39,18 +39,18 @@ func load_external_texture(path):
 	var img = Image.new()
 	img.load(path)
 	var texture = ImageTexture.new()
-	texture.create_from_image(img, Texture.FLAG_MIPMAPS+Texture.FLAG_ANISOTROPIC_FILTER)
+	texture.set_image(img)
 	return texture
 
 func get_filetype_in_directory(directory_path: String, file_extension: String) -> Array:
 	var files = []
-	var directory = Directory.new()
-	if directory.open(directory_path) == OK:
+	var directory = DirAccess.open(directory_path)
+	if directory != null:
 		directory.list_dir_begin()
 		var file_name = directory.get_next()
 		while file_name != "":
 			if not directory.current_is_dir() and file_name.get_extension().to_lower() == file_extension.to_lower():
-				files.append(directory_path.plus_file(file_name))
+				files.append(directory_path.path_join(file_name))
 			file_name = directory.get_next()
 		directory.list_dir_end()
 	else:
@@ -155,12 +155,12 @@ func _recursive_log_named_nodes(targetNode, linePrefix, isLastSibling):
 		_recursive_log_named_nodes(currentChild, childRecursivePrefix, index == childCount - 1)
 
 func case_insensitive_file(directoryPath: String, baseFileName: String, targetExtension: String) -> String:
-	var d = Directory.new()
-	if d.open(directoryPath) != OK:
+	var d = DirAccess.open(directoryPath)
+	if d == null:
 		printerr("Utils.case_insensitive_file: Could not open directory: ", directoryPath)
 		return ""
 	
-	d.list_dir_begin(true, false)
+	d.list_dir_begin()
 	var entryName = d.get_next()
 
 	var lowerExt = targetExtension
@@ -175,7 +175,7 @@ func case_insensitive_file(directoryPath: String, baseFileName: String, targetEx
 		if d.current_is_dir() == false:
 			if entryName.to_lower() == targetFileNameLower:
 				d.list_dir_end()
-				return directoryPath.plus_file(entryName)
+				return directoryPath.path_join(entryName)
 		entryName = d.get_next()
 	
 	d.list_dir_end()

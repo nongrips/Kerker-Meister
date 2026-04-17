@@ -1,32 +1,44 @@
 extends Node2D
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oInstanceOwnership = Nodelist.list["oInstanceOwnership"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
-onready var oActionPointList = Nodelist.list["oActionPointList"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oInstanceOwnership = Nodelist.list["oInstanceOwnership"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
+@onready var oActionPointList = Nodelist.list["oActionPointList"]
+@onready var oUi = Nodelist.list["oUi"]
 
 #onready var oSelection = $'../../Selector/Selection'
 #onready var oInstanceOwnership = $'../../OverheadOwnership/InstanceOwnership'
 
-var locationX = null setget set_location_x
-var locationY = null setget set_location_y
-var locationZ = null setget set_location_z
+var locationX = null:
+
+	set(_val): set_location_x(_val)
+var locationY = null:
+	set(_val): set_location_y(_val)
+var locationZ = null:
+	set(_val): set_location_z(_val)
 var thingType = null
 var subtype = null
-var ownership = null setget set_ownership
+var ownership = null:
+	set(_val): set_ownership(_val)
+var effectRange = null:
 
-var effectRange = null setget set_effectRange
-var parentTile = null setget set_parentTile
-var doorOrientation = null setget set_doorOrientation
-var creatureLevel = null setget set_creatureLevel
-var doorLocked = null setget set_doorLocked
-var herogateNumber = null setget set_herogateNumber
-var boxNumber = null setget set_boxNumber
-var index = null setget set_index
-
+	set(_val): set_effectRange(_val)
+var parentTile = null:
+	set(_val): set_parentTile(_val)
+var doorOrientation = null:
+	set(_val): set_doorOrientation(_val)
+var creatureLevel = null:
+	set(_val): set_creatureLevel(_val)
+var doorLocked = null:
+	set(_val): set_doorLocked(_val)
+var herogateNumber = null:
+	set(_val): set_herogateNumber(_val)
+var boxNumber = null:
+	set(_val): set_boxNumber(_val)
+var index = null:
+	set(_val): set_index(_val)
 var data9 = null
 var data10 = null
 var data11_12 = null
@@ -43,8 +55,10 @@ var baseZindex = 0
 # FX extended fields. Default initial values, important for when loading an old classic format map then switching it to KFX format in Map Settings.
 var creatureGold = null
 var creatureInitialHealth = null
-var creatureName = null setget set_creatureName
-var orientation = null setget set_orientation
+var creatureName = null:
+	set(_val): set_creatureName(_val)
+var orientation = null:
+	set(_val): set_orientation(_val)
 var goldValue = null
 
 func _enter_tree():
@@ -57,7 +71,7 @@ func _enter_tree():
 	load_default_kfx_values()
 	
 	var oCamera2D = Nodelist.list["oCamera2D"]
-	oCamera2D.connect("zoom_level_changed",self,"_on_zoom_level_changed")
+	oCamera2D.zoom_level_changed.connect(_on_zoom_level_changed)
 	_on_zoom_level_changed(oCamera2D.zoom)
 	
 	match thingType:
@@ -79,7 +93,7 @@ func _enter_tree():
 				add_to_group("Spellbook")
 			if subtype in Things.LIST_OF_HEROGATES:
 				add_to_group("HeroGate")
-				yield(get_tree(),'idle_frame')
+				await get_tree().process_frame
 				if oActionPointList:
 					oActionPointList.update_ap_list()
 		
@@ -196,7 +210,7 @@ func set_effectRange(setval):
 	data9 = null
 	data10 = null
 	effectRange = setval
-	update()
+	queue_redraw()
 
 func set_index(setval):
 	data11_12 = null
@@ -253,19 +267,19 @@ func set_texture_based_on_thingtype():
 			
 			var successOrFailure = Nodelist.list["oPickThingWindow"].add_workshop_item_sprite_overlay($"%ThingTexture", subtype)
 			if successOrFailure == true:
-				$"%ThingTexture".rect_position += Vector2(-1,9)
+				$"%ThingTexture".position += Vector2(-1,9)
 		Things.TYPE.CREATURE:
 			if tex != null:
-				#$"%ThingTexture".rect_position.y -= 12
-				$"%ThingTexture".rect_scale = Vector2(1.5,1.5)
+				#$"%ThingTexture".position.y -= 12
+				$"%ThingTexture".scale = Vector2(1.5,1.5)
 	if tex != null:
 		$"%ThingTexture".texture = tex
 	else:
 		$"%ThingTexture".texture = preload('res://Art/Thing.png')
 		$"%ThingTexture".expand = true
-		$"%ThingTexture".rect_scale = Vector2(0.5,0.5)
+		$"%ThingTexture".scale = Vector2(0.5,0.5)
 		$TextNameLabel.visible = true
-		yield(get_tree(),'idle_frame')
+		await get_tree().process_frame
 		
 		$TextNameLabel.text = Things.fetch_name(thingType, subtype)
 		
@@ -300,7 +314,7 @@ func _on_MouseDetection_mouse_entered():
 	
 	oSelection.clean_up_cursor_array()
 	oThingDetails.update_details()
-	update()
+	queue_redraw()
 	$TextNameLabel.modulate = Color(1,1,1,1)
 	z_index = baseZindex+1
 
@@ -310,7 +324,7 @@ func _on_MouseDetection_mouse_exited():
 		oSelection.cursorOnInstancesArray.erase(self)
 	oSelection.clean_up_cursor_array()
 	oThingDetails.update_details()
-	update()
+	queue_redraw()
 	$TextNameLabel.modulate = Color(1,1,1,0.5)
 	z_index = baseZindex
 
@@ -410,7 +424,7 @@ func _on_VisibilityNotifier2D_screen_exited():
 #func setOwnership():
 #	var value = data[OWNERSHIP]
 #	if value == 5:
-#		col = Color.cyan # White
+#		col = Color.CYAN # White
 #	else:
 #		col = Constants.ownerRoomCol[value]
 #

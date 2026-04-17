@@ -1,12 +1,12 @@
 extends Node
-onready var oGame = Nodelist.list["oGame"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oConfigFilesListWindow = Nodelist.list["oConfigFilesListWindow"]
-onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
-onready var oTextureAnimation = Nodelist.list["oTextureAnimation"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oReadCfg = Nodelist.list["oReadCfg"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oConfigFilesListWindow = Nodelist.list["oConfigFilesListWindow"]
+@onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
+@onready var oTextureAnimation = Nodelist.list["oTextureAnimation"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oReadCfg = Nodelist.list["oReadCfg"]
 
 # These are dictionaries containing dictionaries.
 # objects_cfg["section_name"]["key"] will return the "value"
@@ -18,8 +18,7 @@ onready var oReadCfg = Nodelist.list["oReadCfg"]
 #var creature_cfg : Dictionary
 #var trapdoor_cfg : Dictionary
 
-var file_exists_checker = File.new()
-
+var file_exists_checker: FileAccess = null
 func start(mapPath):
 	var CODETIME_LOADCFG_START = OS.get_ticks_msec()
 	Things.clear_dynamic_lists()
@@ -61,10 +60,10 @@ func load_cfgs(mapPath):
 			if load_cfg_type == oConfigFileManager.LOAD_CFG_CURRENT_MAP:
 				check_path = config_dirs[load_cfg_type] + "." + file_name_from_list
 			else:
-				check_path = config_dirs[load_cfg_type].plus_file(file_name_from_list)
+				check_path = config_dirs[load_cfg_type].path_join(file_name_from_list)
 			
 			var actual_filepath = ""
-			if file_exists_checker.file_exists(check_path):
+			if FileAccess.file_exists(check_path):
 				actual_filepath = check_path
 				oConfigFileManager.paths_loaded[load_cfg_type].append(actual_filepath)
 			
@@ -81,12 +80,12 @@ func load_cfgs(mapPath):
 					combined_cfg_data = super_merge_dictionaries(combined_cfg_data, result["config"])
 					
 					if load_cfg_type == oConfigFileManager.LOAD_CFG_FXDATA:
-						if not result["config"].empty():
+						if not result["config"].is_empty():
 							oConfigFileManager.default_data[file_name_from_list] = result["config"].duplicate(true)
-						if not result["comments"].empty():
+						if not result["comments"].is_empty():
 							oConfigFileManager.FXDATA_COMMENTS[file_name_from_list] = result["comments"]
 		# Load it
-		if combined_cfg_data.empty() == false:
+		if combined_cfg_data.is_empty() == false:
 			match file_name_from_list:
 				"objects.cfg": load_objects_data(combined_cfg_data)
 				"creature.cfg": load_creatures_data(combined_cfg_data)
@@ -114,7 +113,7 @@ func get_config_directories(mapPath):
 	return {
 		oConfigFileManager.LOAD_CFG_DATA: oGame.DK_DATA_DIRECTORY,
 		oConfigFileManager.LOAD_CFG_FXDATA: oGame.DK_FXDATA_DIRECTORY,
-		oConfigFileManager.LOAD_CFG_CAMPAIGN: oGame.GAME_DIRECTORY.plus_file(campaign_cfg_data.get("common", {}).get("CONFIGS_LOCATION", "")),
+		oConfigFileManager.LOAD_CFG_CAMPAIGN: oGame.GAME_DIRECTORY.path_join(campaign_cfg_data.get("common", {}).get("CONFIGS_LOCATION", "")),
 		oConfigFileManager.LOAD_CFG_CURRENT_MAP: mapPath.get_basename()
 	}
 
@@ -294,8 +293,8 @@ func load_campaign_boss_file(mapPath):
 	for campaignPath in list_of_main_campaign_files:
 		var cfgDictionary = oReadCfg.read_dkcfg_file(campaignPath)["config"]
 		var levelsLocation = cfgDictionary.get("common", {}).get("LEVELS_LOCATION", null)
-		if levelsLocation and oGame.GAME_DIRECTORY.plus_file(levelsLocation).to_lower() == mapPath.get_base_dir().to_lower():
-			#print(oGame.GAME_DIRECTORY.plus_file(levelsLocation).to_lower())
+		if levelsLocation and oGame.GAME_DIRECTORY.path_join(levelsLocation).to_lower() == mapPath.get_base_dir().to_lower():
+			#print(oGame.GAME_DIRECTORY.path_join(levelsLocation).to_lower())
 			oConfigFileManager.current_mappack_cfg_filename = campaignPath.get_file()
 			return cfgDictionary
 	oConfigFileManager.current_mappack_cfg_filename = ""

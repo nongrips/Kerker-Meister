@@ -1,6 +1,6 @@
 extends Node2D
-onready var oUi = Nodelist.list["oUi"]
-onready var oEditor = Nodelist.list["oEditor"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oEditor = Nodelist.list["oEditor"]
 
 var ts = Constants.TILE_SIZE
 
@@ -26,7 +26,7 @@ func update_positions(tilePos):
 	endTile = tilePos
 
 func _process(delta):
-	update()
+	queue_redraw()
 
 func _draw():
 	var rect = Rect2(beginTile*ts, ((endTile*ts) - (beginTile*ts))+Vector2(1,1))

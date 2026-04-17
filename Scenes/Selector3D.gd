@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 #
 #onready var oRayCastBlockMap = Nodelist.list["oRayCastBlockMap"]
 #onready var oPlayer = Nodelist.list["oPlayer"]
@@ -37,7 +37,7 @@ extends Spatial
 #			if collisionResult.normal.y < 0.9:
 #				visible = false
 #		else:
-#			translation = collisionResult.collider.translation
+#			translation = collisionResult.collider.position
 #
 #		if translation != previousTranslation:
 #			oColumnDetails.update_details()
@@ -72,4 +72,4 @@ extends Spatial
 #		newSize = 0.1
 #
 #	oSelectorMesh3D.mesh.size.y = newSize
-#	oSelectorMesh3D.translation.y = oSelectorMesh3D.mesh.size.y * 0.5
+#	oSelectorMesh3D.position.y = oSelectorMesh3D.mesh.size.y * 0.5

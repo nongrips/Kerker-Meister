@@ -2,7 +2,7 @@ extends Node
 
 func load_extra_images_from_harddrive():
 	var CODETIME_START = OS.get_ticks_msec()
-	var custom_images_dir = Settings.unearthdata.plus_file("custom-object-images")
+	var custom_images_dir = Settings.unearthdata.path_join("custom-object-images")
 	var image_paths = Utils.get_filetype_in_directory(custom_images_dir, "png")
 	for image_path in image_paths:
 		var texture = Utils.load_external_texture(image_path)
@@ -253,23 +253,23 @@ var sprite_id = {
 
 #func load_custom_images_into_array(DATA_ARRAY, thingtypeImageFolder):
 #	print("Loading /thing-images/" + thingtypeImageFolder + " directory ...")
-#	var arrayOfFilenames = get_png_files_in_dir(Settings.unearthdata.plus_file("thing-images").plus_file(thingtypeImageFolder))
+#	var arrayOfFilenames = get_png_files_in_dir(Settings.unearthdata.path_join("thing-images").path_join(thingtypeImageFolder))
 #	for i in arrayOfFilenames:
 #		var subtypeID = int(i.get_file().get_basename())
 #		var img = Image.new()
 #		var err = img.load(i)
 #		if err == OK:
 #			var tex = ImageTexture.new()
-#			tex.create_from_image(img)
+#			tex.set_image(img)
 #			if DATA_ARRAY.has(subtypeID):
 #				DATA_ARRAY[subtypeID][TEXTURE] = tex
 
 
 #func look_for_images_to_load(DATA_ARRAY, objectID, thingCfgName):
-#	if custom_images_list.empty() == true:
-#		custom_images_list = get_png_filenames_in_dir(Settings.unearthdata.plus_file("custom-object-images"))
+#	if custom_images_list.is_empty() == true:
+#		custom_images_list = get_png_filenames_in_dir(Settings.unearthdata.path_join("custom-object-images"))
 #
-#	var dir = Settings.unearthdata.plus_file("custom-object-images")
+#	var dir = Settings.unearthdata.path_join("custom-object-images")
 #
 #	var uppercaseImageFilename = thingCfgName+".PNG".to_upper()
 #	var uppercasePortraitFilename = thingCfgName+"_PORTRAIT.PNG".to_upper()
@@ -285,23 +285,23 @@ var sprite_id = {
 #
 #	if realImageFilename != "":
 #		var img = Image.new()
-#		var err = img.load(dir.plus_file(realImageFilename))
+#		var err = img.load(dir.path_join(realImageFilename))
 #		if err == OK:
 #			var tex = ImageTexture.new()
-#			tex.create_from_image(img, Texture.FLAG_MIPMAPS+Texture.FLAG_ANISOTROPIC_FILTER)
+#			tex.set_image(img)
 #			#DATA_ARRAY[objectID][Things.TEXTURE] = tex
 #
 #	if realPortraitFilename != "":
 #		var img = Image.new()
-#		var err = img.load(dir.plus_file(realPortraitFilename))
+#		var err = img.load(dir.path_join(realPortraitFilename))
 #		if err == OK:
 #			var tex = ImageTexture.new()
-#			tex.create_from_image(img, Texture.FLAG_MIPMAPS+Texture.FLAG_ANISOTROPIC_FILTER)
+#			tex.set_image(img)
 #			#DATA_ARRAY[objectID][Things.PORTRAIT] = tex
 #
 #func get_png_filenames_in_dir(path):
 #	var dictionary = {}
-#	var dir = Directory.new()
+#	var dir = DirAccess.new()
 #	if dir.open(path) == OK:
 #		dir.list_dir_begin()
 #		var file_name = dir.get_next()
@@ -318,7 +318,7 @@ var sprite_id = {
 #
 #func get_png_files_in_dir(path):
 #	var array = []
-#	var dir = Directory.new()
+#	var dir = DirAccess.new()
 #	if dir.open(path) == OK:
 #		dir.list_dir_begin()
 #		var file_name = dir.get_next()
@@ -329,7 +329,7 @@ var sprite_id = {
 #				if file_name.get_extension().to_upper() == "PNG":
 #					var fileNumber = file_name.get_file().get_basename()
 #					if Utils.string_has_letters(fileNumber) == false:
-#						array.append(path.plus_file(file_name))
+#						array.append(path.path_join(file_name))
 #			file_name = dir.get_next()
 #	else:
 #		print("An error occurred when trying to access the path.")

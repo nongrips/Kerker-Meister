@@ -1,32 +1,32 @@
-extends WindowDialog
-onready var oPlayer = Nodelist.list["oPlayer"]
-onready var oSavePreviewMipmapsCheckbox = Nodelist.list["oSavePreviewMipmapsCheckbox"]
-onready var oSavePreviewPngButton = Nodelist.list["oSavePreviewPngButton"]
-onready var oSavePreviewTrimBlackCheckbox = Nodelist.list["oSavePreviewTrimBlackCheckbox"]
-onready var oSavePreviewMsaaSlider = Nodelist.list["oSavePreviewMsaaSlider"]
-onready var oPreviewResizeGridContainer = Nodelist.list["oPreviewResizeGridContainer"]
-onready var oSavePreviewResizeCheckBox = Nodelist.list["oSavePreviewResizeCheckBox"]
-onready var oPreviewWidthSpinBox = Nodelist.list["oPreviewWidthSpinBox"]
-onready var oPreviewHeightSpinBox = Nodelist.list["oPreviewHeightSpinBox"]
-onready var oPreviewZoom = Nodelist.list["oPreviewZoom"]
-onready var oTooHighResErrorLabel = Nodelist.list["oTooHighResErrorLabel"]
+extends Window
+@onready var oPlayer = Nodelist.list["oPlayer"]
+@onready var oSavePreviewMipmapsCheckbox = Nodelist.list["oSavePreviewMipmapsCheckbox"]
+@onready var oSavePreviewPngButton = Nodelist.list["oSavePreviewPngButton"]
+@onready var oSavePreviewTrimBlackCheckbox = Nodelist.list["oSavePreviewTrimBlackCheckbox"]
+@onready var oSavePreviewMsaaSlider = Nodelist.list["oSavePreviewMsaaSlider"]
+@onready var oPreviewResizeGridContainer = Nodelist.list["oPreviewResizeGridContainer"]
+@onready var oSavePreviewResizeCheckBox = Nodelist.list["oSavePreviewResizeCheckBox"]
+@onready var oPreviewWidthSpinBox = Nodelist.list["oPreviewWidthSpinBox"]
+@onready var oPreviewHeightSpinBox = Nodelist.list["oPreviewHeightSpinBox"]
+@onready var oPreviewZoom = Nodelist.list["oPreviewZoom"]
+@onready var oTooHighResErrorLabel = Nodelist.list["oTooHighResErrorLabel"]
 
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oCamera3D = Nodelist.list["oCamera3D"]
-onready var oExportPreviewPngDialog = Nodelist.list["oExportPreviewPngDialog"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oUiMessages = Nodelist.list["oUiMessages"]
-onready var oUiSystem = Nodelist.list["oUiSystem"]
-onready var oUiTools = Nodelist.list["oUiTools"]
-onready var oUi3D = Nodelist.list["oUi3D"]
-onready var oGame3D = Nodelist.list["oGame3D"]
-onready var oPreviewRotX = Nodelist.list["oPreviewRotX"]
-onready var oPreviewRotY = Nodelist.list["oPreviewRotY"]
-onready var oPreviewRotZ = Nodelist.list["oPreviewRotZ"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oCamera3D = Nodelist.list["oCamera3D"]
+@onready var oExportPreviewPngDialog = Nodelist.list["oExportPreviewPngDialog"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oUiMessages = Nodelist.list["oUiMessages"]
+@onready var oUiSystem = Nodelist.list["oUiSystem"]
+@onready var oUiTools = Nodelist.list["oUiTools"]
+@onready var oUi3D = Nodelist.list["oUi3D"]
+@onready var oGame3D = Nodelist.list["oGame3D"]
+@onready var oPreviewRotX = Nodelist.list["oPreviewRotX"]
+@onready var oPreviewRotY = Nodelist.list["oPreviewRotY"]
+@onready var oPreviewRotZ = Nodelist.list["oPreviewRotZ"]
 #onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
 #onready var oPivotTerrainMesh = Nodelist.list["oPivotTerrainMesh"]
 
@@ -40,7 +40,7 @@ func _ready():
 	oPreviewRotY.value = previewRotation.y
 	oPreviewRotZ.value = previewRotation.z
 	oPreviewZoom.value = zoomAdjust
-	get_viewport().connect("size_changed",self, "_on_viewport_size_changed")
+	get_viewport().size_changed.connect(_on_viewport_size_changed)
 
 func _on_ExportPreview_about_to_show():
 	# Store the previous MSAA value
@@ -56,14 +56,14 @@ func _on_ExportPreview_about_to_show():
 	oUiTools.visible = false
 	oUi.hide_tools()
 	oUi3D.visible = false
-	yield(oGenerateTerrain, "terrain3D_finished_generating")
+	await oGenerateTerrain.terrain3D_finished_generating
 	oGame3D.visible = true
 	modulate.a = 1.0
 	_on_SavePreviewMipmapsCheckbox_toggled(oSavePreviewMipmapsCheckbox.pressed)
 	_on_SavePreviewMsaaSlider_sliderChanged()
 	set_basic_camera_stuff()
 	
-	rect_position = Vector2(0,0)
+	position = Vector2(0,0)
 
 func _on_ExportPreview_hide():
 	if is_instance_valid(oEditor) and modulate.a == 1.0:
@@ -74,9 +74,9 @@ func _on_ExportPreview_hide():
 		oUi3D.visible = true
 		oGame3D.enable_or_disable_mipmaps_on_all_materials(1)
 		get_viewport().msaa = remember_original_msaa
-		#oPivotTerrainMesh.translation = Vector3(0,0,0)
-		#oTerrainMesh.translation = Vector3(0,0,0)
-		oPlayer.oHead.translation = Vector3(0,0,0)
+		#oPivotTerrainMesh.position = Vector3(0,0,0)
+		#oTerrainMesh.position = Vector3(0,0,0)
+		oPlayer.oHead.position = Vector3(0,0,0)
 
 func set_basic_camera_stuff():
 	oCamera3D.set_orthogonal(oCamera3D.size, -1000000, 1000000)
@@ -86,12 +86,12 @@ func set_basic_camera_stuff():
 	var terrain_size = Vector3(M.xSize * 3, 8, M.ySize * 3)
 	var terrain_center:Vector3 = terrain_size/2.0
 	
-	#oTerrainMesh.translation = -terrain_center
-	#oPivotTerrainMesh.translation = Vector3(-terrain_center.x, 0, -terrain_center.y)
+	#oTerrainMesh.position = -terrain_center
+	#oPivotTerrainMesh.position = Vector3(-terrain_center.x, 0, -terrain_center.y)
 	
 	# Orthogonal camera position and rotation
-	oPlayer.translation = terrain_center
-	oPlayer.oHead.translation = Vector3(0, 0, 0)
+	oPlayer.position = terrain_center
+	oPlayer.oHead.position = Vector3(0, 0, 0)
 	
 	oPlayer.rotation_degrees = Vector3(0, 0, 0) # -45 is not the same as 270!
 	oPlayer.oHead.rotation_degrees = previewRotation
@@ -101,7 +101,7 @@ func set_basic_camera_stuff():
 func calculate_zoom():
 	var terrain_size = Vector3(M.xSize * 3, 8, M.ySize * 3)
 	# Calculate the window's aspect ratio
-	var window_aspect_ratio = OS.window_size.x / max(1, OS.window_size.y)
+	var window_aspect_ratio = get_window().size.x / max(1, get_window().size.y)
 
 	# Zoom out based on the dominant dimension
 	if window_aspect_ratio > 1:  # Landscape mode
@@ -112,8 +112,8 @@ func calculate_zoom():
 	if oCamera3D.size+zoomAdjust >= 0.001 and oCamera3D.size+zoomAdjust <= 16384: # Fixes an error with Camera Size.
 		oCamera3D.size += zoomAdjust
 	
-	if oPreviewHeightSpinBox.value > OS.window_size.y:
-		oPreviewHeightSpinBox.value = OS.window_size.y
+	if oPreviewHeightSpinBox.value > get_window().size.y:
+		oPreviewHeightSpinBox.value = get_window().size.y
 
 
 func _on_SavePreviewPngButton_pressed():
@@ -125,8 +125,8 @@ func _on_SavePreviewPngButton_pressed():
 func _on_ExportPreviewPngDialog_file_selected(save_path):
 	# Be sure the rendering is updated
 	modulate.a = 0.0
-	yield(get_tree(), "idle_frame")
-	VisualServer.force_draw()
+	await get_tree().process_frame
+	RenderingServer.force_draw()
 	
 	# Capture the current viewport's texture
 	var viewport_texture = get_viewport().get_texture()
@@ -155,8 +155,6 @@ func is_near_black(pixel: Color, tolerance: float = 0.01) -> bool:
 	return (pixel.r < tolerance and pixel.g < tolerance and pixel.b < tolerance)
 
 func trim_image(img : Image) -> Image:
-	img.lock()
-	
 	var left = img.get_width()
 	var right = 0
 	var top = img.get_height()
@@ -170,9 +168,6 @@ func trim_image(img : Image) -> Image:
 				right = max(right, i)
 				top = min(top, j)
 				bottom = max(bottom, j)
-
-	img.unlock()
-
 	# Check if the image was all black or nearly all black and couldn't be trimmed
 	if left > right or top > bottom:
 		print("Image couldn't be trimmed!")
@@ -237,11 +232,11 @@ func _on_PreviewWidthSpinBox_value_changed(value):
 	pass # Replace with function body.
 
 func _on_PreviewHeightSpinBox_value_changed(value):
-	if value > OS.window_size.y:
+	if value > get_window().size.y:
 		# Set it to the maximum possible value (which is Window Height)
-		oPreviewHeightSpinBox.value = OS.window_size.y
+		oPreviewHeightSpinBox.value = get_window().size.y
 		# Show an error message
-		if OS.window_fullscreen == false:
+		if get_window().mode = (Window.MODE_FULLSCREEN if = false: else Window.MODE_WINDOWED)
 			oTooHighResErrorLabel.show()
 	else:
 		oTooHighResErrorLabel.hide()

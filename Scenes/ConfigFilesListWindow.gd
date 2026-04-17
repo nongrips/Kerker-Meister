@@ -1,12 +1,12 @@
-extends WindowDialog
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oVBoxContainerConfigLocalMap = Nodelist.list["oVBoxContainerConfigLocalMap"]
-onready var oVBoxContainerConfigFxdata = Nodelist.list["oVBoxContainerConfigFxdata"]
-onready var oVBoxContainerConfigCampaign = Nodelist.list["oVBoxContainerConfigCampaign"]
-onready var oVBoxContainerConfigData = Nodelist.list["oVBoxContainerConfigData"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oReadCfg = Nodelist.list["oReadCfg"]
+extends Window
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oVBoxContainerConfigLocalMap = Nodelist.list["oVBoxContainerConfigLocalMap"]
+@onready var oVBoxContainerConfigFxdata = Nodelist.list["oVBoxContainerConfigFxdata"]
+@onready var oVBoxContainerConfigCampaign = Nodelist.list["oVBoxContainerConfigCampaign"]
+@onready var oVBoxContainerConfigData = Nodelist.list["oVBoxContainerConfigData"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oReadCfg = Nodelist.list["oReadCfg"]
 
 func _on_ConfigFilesListWindow_about_to_show():
 	update_everything()
@@ -37,7 +37,7 @@ func update_everything():
 
 func add_linkbutton(filePath, targetGrid):
 	var linkButtonNode = LinkButton.new()
-	linkButtonNode.connect("pressed", self, "_on_linkbutton_pressed", [filePath])
+	linkButtonNode.pressed.connect(_on_linkbutton_pressed.bind(filePath))
 	linkButtonNode.underline = LinkButton.UNDERLINE_MODE_ON_HOVER
 	linkButtonNode.text = filePath.get_file()
 	linkButtonNode.hint_tooltip = filePath
@@ -61,7 +61,7 @@ func get_campaign_main_data(mapPathArgument):
 	for campaignFilePath in listOfCampaignFiles:
 		var configData = oReadCfg.read_dkcfg_file(campaignFilePath)["config"]
 		var levelsLocation = configData.get("common", {}).get("LEVELS_LOCATION", null)
-		if levelsLocation and oGame.GAME_DIRECTORY.plus_file(levelsLocation).to_lower() == mapPathArgument.get_base_dir().to_lower():
+		if levelsLocation and oGame.GAME_DIRECTORY.path_join(levelsLocation).to_lower() == mapPathArgument.get_base_dir().to_lower():
 			return configData
 	return {}
 
@@ -70,7 +70,7 @@ func try_open_directory(directoryPath, logDescription):
 	if directoryPath == null or directoryPath == "":
 		print(logDescription + " path is not set or empty.")
 		return false
-	var directoryAccess = Directory.new()
+	var directoryAccess: DirAccess = null
 	if directoryAccess.dir_exists(directoryPath):
 		OS.shell_open(directoryPath)
 		return true
@@ -101,7 +101,7 @@ func _on_ConfigLinkCampaign_pressed():
 		var campaignData = get_campaign_main_data(oCurrentMap.path)
 		var configsLocation = campaignData.get("common", {}).get("CONFIGS_LOCATION", "")
 		if configsLocation != "":
-			determinedCampaignConfigPath = oGame.GAME_DIRECTORY.plus_file(configsLocation)
+			determinedCampaignConfigPath = oGame.GAME_DIRECTORY.path_join(configsLocation)
 		else:
 			print("Campaign 'CONFIGS_LOCATION' is empty, using main game directory.")
 			determinedCampaignConfigPath = oGame.GAME_DIRECTORY

@@ -1,7 +1,7 @@
 extends Tree
-onready var oGame = Nodelist.list["oGame"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
 
 var treeItemsThatWantNames = {} # <BASENAME> <TreeItem>
 var gatherMapNames = {} # <BASENAME> <LifNameString>
@@ -20,10 +20,10 @@ func update_source_tree(): # Call this whenever there's an update to the filesys
 	get_root().set_text(0,"SourceMapTree root")
 	
 	var path
-	path = oGame.GAME_DIRECTORY.plus_file("levels")
+	path = oGame.GAME_DIRECTORY.path_join("levels")
 	var levelsTreeItem = add_tree_dir(self, self, path)
 	deep_scan(path, levelsTreeItem)
-	path = oGame.GAME_DIRECTORY.plus_file("campgns")
+	path = oGame.GAME_DIRECTORY.path_join("campgns")
 	var campgnsTreeItem = add_tree_dir(self, self, path)
 	deep_scan(path, campgnsTreeItem)
 	
@@ -36,9 +36,9 @@ func update_source_tree(): # Call this whenever there's an update to the filesys
 	print('SourceMapTree updated in: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
 
 func deep_scan(rootPath, parentTreeItem):
-	var dir = Directory.new()
-	if dir.open(rootPath) == OK:
-		dir.list_dir_begin(true, false)
+	var dir = DirAccess.open(rootPath)
+	if dir != null:
+		dir.list_dir_begin()
 		add_directory_contents(dir, parentTreeItem)
 		dir.list_dir_end()
 	else:
@@ -51,12 +51,12 @@ func add_directory_contents(dir, treeItem):
 	var itemsToAdd = []  # Temporary list to batch add items
 	
 	while (fileName != ""):
-		var pathString = dir.get_current_dir().plus_file(fileName)
+		var pathString = dir.get_current_dir().path_join(fileName)
 		pathsToSort.append([pathString, dir.current_is_dir()])
 		fileName = dir.get_next()
 	
-	if OS.get_name() == "X11":
-		pathsToSort.sort_custom(MyCustomSorter, "sort_ascending")
+	if OS.get_name() == "Linux":
+		pathsToSort.sort_custom(MyCustomSorter.sort_ascending)
 	
 	for i in pathsToSort:
 		var pathString = i[0]
@@ -72,9 +72,8 @@ func add_directory_contents(dir, treeItem):
 		var parentItem = itemData[2]
 		if itemType == "dir":
 			var newTreeItem = add_tree_dir(self, parentItem, pathString)
-			var subDir = Directory.new()
-			subDir.open(pathString)
-			subDir.list_dir_begin(true, false)
+			var subDir = DirAccess.open(pathString)
+			subDir.list_dir_begin()
 			add_directory_contents(subDir, newTreeItem)
 		elif itemType == "file":
 			var EXT = pathString.get_extension().to_upper()

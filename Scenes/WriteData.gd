@@ -1,20 +1,20 @@
 extends Node
 
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oDataLiquid = Nodelist.list["oDataLiquid"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oDataLof = Nodelist.list["oDataLof"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oDataLua = Nodelist.list["oDataLua"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oDataLiquid = Nodelist.list["oDataLiquid"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oDataLua = Nodelist.list["oDataLua"]
 
 var value # just so I don't have to initialize the var in every function
 
@@ -166,7 +166,7 @@ func write_tngfx():
 		Things.TYPE.DOOR: "Door"
 	}
 
-	var lines = PoolStringArray()
+	var lines = PackedStringArray()
 	lines.append("[common]")
 	lines.append("") # This gets changed at the end
 	
@@ -242,7 +242,7 @@ func write_apt():
 
 func write_aptfx():
 	var buffer = StreamPeerBuffer.new()
-	var lines = PoolStringArray()
+	var lines = PackedStringArray()
 	lines.append("[common]")
 	lines.append("") # This gets changed at the end
 	
@@ -301,7 +301,7 @@ func write_lgt():
 
 func write_lgtfx():
 	var buffer = StreamPeerBuffer.new()
-	var lines = PoolStringArray()
+	var lines = PackedStringArray()
 	lines.append("[common]")
 	lines.append("") # This gets changed at the end
 	
@@ -360,7 +360,7 @@ func write_clm():
 
 	buffer.put_32(oDataClm.column_count)
 	buffer.put_32(0)
-	var data = PoolByteArray()
+	var data = PackedByteArray()
 	data.resize(oDataClm.column_count * 24)
 
 	var utilized = oDataClm.utilized

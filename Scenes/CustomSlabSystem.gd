@@ -1,15 +1,15 @@
 extends Node
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 var cfg = ConfigFile.new()
 
 func load_unearth_custom_slabs_file():
-	var filePath = Settings.unearthdata.plus_file("custom_slabs.cfg")
+	var filePath = Settings.unearthdata.path_join("custom_slabs.cfg")
 	
-	var file = File.new()
-	if file.open(filePath, File.READ) != OK:
+	var file = FileAccess.open(filePath, FileAccess.READ)
+	if file == null:
 		# No custom_slabs.cfg file found
 		return
 	
@@ -101,7 +101,7 @@ func add_custom_slab(slab_dict):
 	
 	print("ADDED CUSTOM SLAB ", head_id)
 	
-	cfg.save(Settings.unearthdata.plus_file("custom_slabs.cfg"))
+	cfg.save(Settings.unearthdata.path_join("custom_slabs.cfg"))
 
 func attempt_to_remove_custom_slab(header_id):
 	oPickSlabWindow.set_selection(null)
@@ -129,7 +129,7 @@ func remove_custom_slab(header_id):
 	if cfg.has_section(section):
 		cfg.erase_section(section)
 	
-	cfg.save(Settings.unearthdata.plus_file("custom_slabs.cfg"))
+	cfg.save(Settings.unearthdata.path_join("custom_slabs.cfg"))
 	
 	oMessage.quick("Removed fake slab: " + str(header_id))
 

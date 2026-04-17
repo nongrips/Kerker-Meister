@@ -8,7 +8,7 @@ func _enter_tree() -> void:
 	copy_button = Button.new()
 	copy_button.text = "Copy Stack"
 	add_control_to_container(CONTAINER_TOOLBAR, copy_button)
-	copy_button.connect("pressed", self, "_on_copy_pressed")
+	copy_button.pressed.connect(_on_copy_pressed)
 
 
 func _exit_tree() -> void:
@@ -123,9 +123,9 @@ func _on_copy_pressed() -> void:
 		text += "%s - %s:%s - at function: %s\n" % [frame, file, line, func_name]
 		item = item.get_next()
 
-	if text.empty():
+	if text.is_empty():
 		OS.alert("Stack is empty.", "Copy Stack Frames")
 		return
 	
-	OS.set_clipboard(text.strip_edges())
+	DisplayServer.clipboard_set(text.strip_edges())
 	print("Stack frames copied to clipboard.") 

@@ -1,13 +1,13 @@
-extends WindowDialog
-onready var oChooseMapImageFileDialog = Nodelist.list["oChooseMapImageFileDialog"]
-onready var oMapImageTextureRect = Nodelist.list["oMapImageTextureRect"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oImageAsMapGuide = Nodelist.list["oImageAsMapGuide"]
-onready var oNewMapWindow = Nodelist.list["oNewMapWindow"]
-onready var oDataClm = Nodelist.list["oDataClm"]
+extends Window
+@onready var oChooseMapImageFileDialog = Nodelist.list["oChooseMapImageFileDialog"]
+@onready var oMapImageTextureRect = Nodelist.list["oMapImageTextureRect"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oImageAsMapGuide = Nodelist.list["oImageAsMapGuide"]
+@onready var oNewMapWindow = Nodelist.list["oNewMapWindow"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
 
 var imageData = Image.new()
 var textureData = ImageTexture.new()
@@ -27,7 +27,7 @@ func _ready():
 			buttonID.text = Slabs.fetch_name(slabID)
 			buttonID.toggle_mode = true
 			buttonID.group = btnGroup
-			buttonID.connect("pressed",self,"_on_slab_button_pressed",[buttonID])
+			buttonID.pressed.connect(_on_slab_button_pressed.bind(buttonID))
 			buttonID.set_meta("coloursAssigned", [])
 			buttonID.set_meta("slabID", slabID)
 			
@@ -68,7 +68,7 @@ func _on_ChooseMapImageFileDialog_file_selected(path):
 	#offsetResultBy = Vector2(1,1) # # To take into consideration the border
 	
 	textureData = ImageTexture.new()
-	textureData.create_from_image(imageData, 0) # flags off
+	textureData.set_image(imageData) # flags off
 	oMapImageTextureRect.texture = textureData
 	oImageAsMapGuide.visible = true
 
@@ -77,26 +77,23 @@ func _on_MapImageTextureRect_gui_input(event):
 	if visible == false: return
 	if oMapImageTextureRect.texture == null: return
 	
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		CODETIME_START = OS.get_ticks_msec()
 		
 		var mousePos = get_global_mouse_position() * Settings.UI_SCALE
 		
 		var screenshot = Image.new()
 		screenshot = get_viewport().get_texture().get_data()
-		
-		screenshot.lock()
 		screenshot.flip_y() # Must be used due to Godot
 		var pixel = screenshot.get_pixelv(mousePos)
 		highlightedColour = Color8(pixel.r8, pixel.g8, pixel.b8, pixel.a8)
-		screenshot.unlock()
 		#print(highlightedColour)
 		if highlightedColour == transparencyColour:
 			highlightedColour = Color(0,0,0,0)
 		
 		print('Get pixel time: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
 		
-		oMapImageTextureRect.material.set_shader_param("flashSpecific", highlightedColour)
+		oMapImageTextureRect.material.set_shader_parameter("flashSpecific", highlightedColour)
 		
 		for i in btnGroup.get_buttons():
 			if i.get_meta("coloursAssigned").has(highlightedColour) == true:
@@ -112,7 +109,7 @@ func _on_MapImageTextureRect_gui_input(event):
 #print('Map to image time: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
 
 func _on_slab_button_pressed(buttonID):
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	buttonID.pressed = false
 	
 	if oDataClm.cubes.size() == 0:
@@ -139,9 +136,9 @@ func _on_slab_button_pressed(buttonID):
 	buttonID.get_meta("coloursAssigned").append(highlightedColour)
 	
 	
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	var numberOfSlabsApplied = apply_colour_as_slabIDs_to_map(highlightedColour, slabID)
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	
 	if numberOfSlabsApplied > 0:
 		finish_up()
@@ -166,8 +163,6 @@ func _on_ImgMapButtonApply_pressed():
 
 func apply_colour_as_slabIDs_to_map(doColour, slabID):
 	var shapePositionArray = []
-	
-	imageData.lock()
 	# Only 83x83 is used within the image. Don't overwrite the borders.
 	
 	var rectStart = Vector2(1, 1)
@@ -181,8 +176,6 @@ func apply_colour_as_slabIDs_to_map(doColour, slabID):
 				shapePositionArray.append(Vector2(x,y))
 			elif c.a == 0 and doColour.a == 0: # If the alpha of both is 0, ignore the colour values
 				shapePositionArray.append(Vector2(x,y))
-	imageData.unlock()
-	
 	var useOwner = 5
 	oSlabPlacement.place_shape_of_slab_id(shapePositionArray, slabID, useOwner)
 	oSlabPlacement.generate_slabs_based_on_id(shapePositionArray, true)
@@ -200,7 +193,7 @@ func _on_ImageAsMapDialog_visibility_changed():
 	if is_instance_valid(oUi) == false: return
 	if visible == true:
 		oUi.hide_tools()
-		rect_position.x = 0
+		position.x = 0
 	else:
 		oUi.show_tools()
 
@@ -237,7 +230,7 @@ func _on_ImageAsMapDialog_visibility_changed():
 #func add_colour_swatch(buttonID):
 #
 #	var colourRectNode = ColorRect.new()
-#	colourRectNode.rect_min_size = Vector2(28,28)
+#	colourRectNode.custom_minimum_size = Vector2(28,28)
 #	colourRectNode.color = transparencyColour
 #	colourRectNode.hint_tooltip = ""
 #
@@ -249,7 +242,7 @@ func _on_ImageAsMapDialog_visibility_changed():
 #	borderRect.editor_only = false
 #	borderRect.anchor_right = 1.0
 #	borderRect.anchor_bottom = 1.0
-#	borderRect.rect_position.x += 1
+#	borderRect.position.x += 1
 #	borderRect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 #	colourRectNode.add_child(borderRect)
 #

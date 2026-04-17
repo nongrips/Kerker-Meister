@@ -1,20 +1,25 @@
 extends Node2D
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oUi = Nodelist.list["oUi"]
 
 var ownership = 5 # Not used by Dungeon Keeper, this is just to make it easy for the editor.
 var thingType = Things.TYPE.EXTRA
 var subtype = 2 # As written in Things.DATA_EXTRA
 
-var locationX = null setget set_location_x
-var locationY = null setget set_location_y
-var locationZ = null setget set_location_z
-var lightRange = null setget set_lightrange
-var lightIntensity = null
-var parentTile = null setget set_parentTile
+var locationX = null:
 
+	set(_val): set_location_x(_val)
+var locationY = null:
+	set(_val): set_location_y(_val)
+var locationZ = null:
+	set(_val): set_location_z(_val)
+var lightRange = null:
+	set(_val): set_lightrange(_val)
+var lightIntensity = null
+var parentTile = null:
+	set(_val): set_parentTile(_val)
 var data3 = null
 var data4 = null
 var data5 = null
@@ -34,7 +39,7 @@ func _enter_tree():
 	if parentTile != null:
 		add_to_group('attachedtotile_'+str(parentTile))
 	#for i in 10:
-	#	yield(get_tree(),'idle_frame')
+	#	await get_tree().process_frame
 	#print("hello? this is  subtype:", subtype, " thingType:" ,thingType, " position:", position, " locationX:", locationX," locationY:", locationY," locationZ:", locationZ, " visible: ", visible)
 
 func set_location_x(setVal):
@@ -58,7 +63,7 @@ func set_location_z(setVal):
 
 func set_lightrange(setval):
 	lightRange = setval
-	update()
+	queue_redraw()
 
 func instance_was_selected(): update()
 func instance_was_deselected(): update()
@@ -72,14 +77,14 @@ func _on_MouseDetection_mouse_entered():
 		oSelection.cursorOnInstancesArray.append(self)
 	oSelection.clean_up_cursor_array()
 	oThingDetails.update_details()
-	update()
+	queue_redraw()
 
 func _on_MouseDetection_mouse_exited():
 	if oSelection.cursorOnInstancesArray.has(self):
 		oSelection.cursorOnInstancesArray.erase(self)
 	oSelection.clean_up_cursor_array()
 	oThingDetails.update_details()
-	update()
+	queue_redraw()
 
 func _on_VisibilityNotifier2D_screen_entered():
 	visible = true

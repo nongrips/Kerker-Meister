@@ -1,5 +1,5 @@
 extends ProgressBar
-onready var oEditor = Nodelist.list["oEditor"]
+@onready var oEditor = Nodelist.list["oEditor"]
 
 func _init():
 	visible = false

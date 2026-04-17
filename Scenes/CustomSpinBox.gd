@@ -2,13 +2,12 @@ extends SpinBox
 class_name CustomSpinBox
 
 func _ready():
-	get_line_edit().expand_to_text_length = true
 	get_line_edit().grow_horizontal = Control.GROW_DIRECTION_BEGIN # Important for expanding to the left insde of the right
-	get_line_edit().align = LineEdit.ALIGN_RIGHT
+	get_line_edit().alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 func _input(event):
-	if is_instance_valid(get_focus_owner()) == false: return
-	if get_focus_owner().get_parent() != self: return # get_parent is used because LineEdit is a child of SpinBox
+	if is_instance_valid(get_viewport().gui_get_focus_owner()) == false: return
+	if get_viewport().gui_get_focus_owner().get_parent() != self: return # get_parent is used because LineEdit is a child of SpinBox
 	
 	if (event.is_action("ui_left") or event.is_action("ui_down")) and event.is_pressed():
 		var a = get_line_edit().caret_position

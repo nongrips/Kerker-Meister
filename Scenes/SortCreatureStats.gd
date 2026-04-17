@@ -1,9 +1,9 @@
-extends WindowDialog
-onready var oGame = Nodelist.list["oGame"]
-onready var oSortCreaStatsGrid = Nodelist.list["oSortCreaStatsGrid"]
-onready var oStatsOptionButton = Nodelist.list["oStatsOptionButton"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oReadCfg = Nodelist.list["oReadCfg"]
+extends Window
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oSortCreaStatsGrid = Nodelist.list["oSortCreaStatsGrid"]
+@onready var oStatsOptionButton = Nodelist.list["oStatsOptionButton"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oReadCfg = Nodelist.list["oReadCfg"]
 
 var name_type = 0
 
@@ -15,7 +15,7 @@ func _on_SortCreatureStats_visibility_changed():
 		start()
 
 func start():
-	var listOfCfgs = Utils.get_filetype_in_directory(oGame.GAME_DIRECTORY.plus_file("creatrs"), "CFG")
+	var listOfCfgs = Utils.get_filetype_in_directory(oGame.GAME_DIRECTORY.path_join("creatrs"), "CFG")
 	for path in listOfCfgs:
 		var aaa = oReadCfg.read_dkcfg_file(path)["config"]
 		all_creature_data[path.get_file()] = aaa
@@ -46,7 +46,7 @@ func update_list(optionButtonIndex):
 				var getValue = all_creature_data[file][section].get(optionButtonMeta[1])
 				list_data.append([getName, getValue])
 	
-	list_data.sort_custom(self, "sort_list")
+	list_data.sort_custom(sort_list)
 	for i in list_data:
 		var col = Color(0.5,0.5,0.5)
 		var label_text = str(i[0])  # Create a single string with a separator
@@ -110,14 +110,14 @@ func add_entry(string1, value, fontColor):
 	addLabel1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	addLabel2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	
-	addLabel1.connect("mouse_entered", self, "_on_label_mouse_entered", [addLabel1, addLabel2])
-	addLabel2.connect("mouse_entered", self, "_on_label_mouse_entered", [addLabel1, addLabel2])
+	addLabel1.mouse_entered.connect(_on_label_mouse_entered.bind(addLabel1, addLabel2))
+	addLabel2.mouse_entered.connect(_on_label_mouse_entered.bind(addLabel1, addLabel2))
 	
-	addLabel1.connect("mouse_exited", self, "_on_label_mouse_exited", [addLabel1, addLabel2])
-	addLabel2.connect("mouse_exited", self, "_on_label_mouse_exited", [addLabel1, addLabel2])
+	addLabel1.mouse_exited.connect(_on_label_mouse_exited.bind(addLabel1, addLabel2))
+	addLabel2.mouse_exited.connect(_on_label_mouse_exited.bind(addLabel1, addLabel2))
 	
-	addLabel1.connect("gui_input", self, "_on_label_gui_input", [addLabel1, addLabel2])
-	addLabel2.connect("gui_input", self, "_on_label_gui_input", [addLabel1, addLabel2])
+	addLabel1.gui_input.connect(_on_label_gui_input.bind(addLabel1, addLabel2))
+	addLabel2.gui_input.connect(_on_label_gui_input.bind(addLabel1, addLabel2))
 
 func _on_label_mouse_entered(l1,l2):
 	if l1.text in selected_labels:
@@ -134,7 +134,7 @@ func _on_label_mouse_exited(l1,l2):
 		l2.set("custom_colors/font_color", Color(0.5,0.5,0.5))
 
 func _on_label_gui_input(event, l1, l2):
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var label_text = l1.text
 		if label_text in selected_labels:
 			selected_labels.erase(label_text)

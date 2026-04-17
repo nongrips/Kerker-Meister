@@ -24,7 +24,7 @@ extends Node2D
 #		var imgTex = ImageTexture.new()
 #
 #		img.load(files[i])
-#		imgTex.create_from_image(img, 0)
+#		imgTex.set_image(img)
 #
 #		#print(files[i])
 #
@@ -35,9 +35,9 @@ extends Node2D
 #
 #var baseDir
 #func get_dir_contents(rootPath: String):
-#	var dir = Directory.new()
+#	var dir = DirAccess.new()
 #	if dir.open(rootPath) == OK:
-#		dir.list_dir_begin(true, false)
+#		dir.list_dir_begin()
 #		baseDir = dir.get_current_dir().get_base_dir() + "/"
 #		_add_dir_contents(dir)
 #	else:
@@ -50,9 +50,9 @@ extends Node2D
 #		var path = dir.get_current_dir() + "/" + file_name
 #
 #		if dir.current_is_dir():
-#			var subDir = Directory.new()
+#			var subDir = DirAccess.new()
 #			subDir.open(path)
-#			subDir.list_dir_begin(true, false)
+#			subDir.list_dir_begin()
 #			directories.append(path)
 #			_add_dir_contents(subDir)
 #		else:

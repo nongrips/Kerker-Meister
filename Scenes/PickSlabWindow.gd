@@ -1,27 +1,28 @@
-extends WindowDialog
-onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oSlabTabs = Nodelist.list["oSlabTabs"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oGridFunctions = Nodelist.list["oGridFunctions"]
-onready var oSlabStyle = Nodelist.list["oSlabStyle"]
-onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
-onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
-onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
-onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oPlaceLockedCheckBox = Nodelist.list["oPlaceLockedCheckBox"]
-onready var oConfirmDeleteFakeSlab = Nodelist.list["oConfirmDeleteFakeSlab"]
-onready var oAddCustomSlabWindow = Nodelist.list["oAddCustomSlabWindow"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oSlabNameDisplay = Nodelist.list["oSlabNameDisplay"]
-onready var oUi = Nodelist.list["oUi"]
+extends Window
+@onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oSlabTabs = Nodelist.list["oSlabTabs"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oGridFunctions = Nodelist.list["oGridFunctions"]
+@onready var oSlabStyle = Nodelist.list["oSlabStyle"]
+@onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
+@onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
+@onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
+@onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oPlaceLockedCheckBox = Nodelist.list["oPlaceLockedCheckBox"]
+@onready var oConfirmDeleteFakeSlab = Nodelist.list["oConfirmDeleteFakeSlab"]
+@onready var oAddCustomSlabWindow = Nodelist.list["oAddCustomSlabWindow"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oSlabNameDisplay = Nodelist.list["oSlabNameDisplay"]
+@onready var oUi = Nodelist.list["oUi"]
 
-onready var oSelectedRect = $Clippy/SelectedRect
-onready var oCenteredLabel = $Clippy/CenteredLabel
-export var grid_item_size : Vector2
-export var grid_window_scale : float setget update_scale
+@onready var oSelectedRect = $Clippy/SelectedRect
+@onready var oCenteredLabel = $Clippy/CenteredLabel
+@export var grid_item_size : Vector2
+@export var grid_window_scale : float:
+	set(_val): update_scale(_val)
 var rectChangedTimer = Timer.new()
 
 enum {
@@ -31,7 +32,7 @@ enum {
 
 # To adjust space around the icon, "hseparation" is actually the space between a tab's text and its icon. And also increase content_margin_left in theme.
 
-onready var tabs = {
+@onready var tabs = {
 	Slabs.TAB_MAINSLAB: [oSlabTabs.get_node("TabFolder/MainSlabs/ScrollContainer/GridContainer"), "res://edited_images/icon_slab1.png"], #"res://dk_images/crspell_64/dig_std.png"
 	Slabs.TAB_OTHER: [oSlabTabs.get_node("TabFolder/WallSlabs/ScrollContainer/GridContainer"), "res://edited_images/icon_slab2.png"], #"res://dk_images/crspell_64/dig_dis.png"
 	Slabs.TAB_CUSTOM: [oSlabTabs.get_node("TabFolder/CustomSlabsTab/ScrollContainer/GridContainer"), "res://edited_images/icon_slab2.png"],
@@ -43,22 +44,22 @@ onready var tabs = {
 func _ready():
 	get_close_button().expand = true
 	get_close_button().hide()
-	connect("resized",oGridFunctions,"_on_GridWindow_resized", [self])
-	connect("visibility_changed",oGridFunctions,"_on_GridWindow_visibility_changed",[self])
-	connect("gui_input",oGridFunctions,"_on_GridWindow_gui_input",[self])
-	connect("item_rect_changed",self,"rect_changed_start_timer") # Using a timer to reduce lag
-	rectChangedTimer.connect("timeout", oUi, "_on_any_window_was_modified", [self])
+	resized.connect(oGridFunctions._on_GridWindow_resized.bind(self))
+	visibility_changed.connect(oGridFunctions._on_GridWindow_visibility_changed.bind(self))
+	gui_input.connect(oGridFunctions._on_GridWindow_gui_input.bind(self))
+	item_rect_changed.connect(rect_changed_start_timer) # Using a timer to reduce lag
+	rectChangedTimer.timeout.connect(oUi._on_any_window_was_modified.bind(self))
 	rectChangedTimer.one_shot = true
 	add_child(rectChangedTimer)
 	
-	oSlabTabs.tabSystem.connect("tab_changed",oGridFunctions,"_on_tab_changed",[self])
-	oSlabTabs.tabSystem.connect("tab_changed",self,"_on_SlabTabs_tab_changed")
+	oSlabTabs.tabSystem.tab_changed.connect(oGridFunctions._on_tab_changed.bind(self))
+	oSlabTabs.tabSystem.tab_changed.connect(_on_SlabTabs_tab_changed)
 	
 	grid_window_scale = 0.76
 	grid_item_size = Vector2(96, 96)
 	
 	# Window's minimum size
-	rect_min_size = Vector2((grid_item_size.x*grid_window_scale)+11, (grid_item_size.y*grid_window_scale)+11)
+	custom_minimum_size = Vector2((grid_item_size.x*grid_window_scale)+11, (grid_item_size.y*grid_window_scale)+11)
 	oSlabTabs.initialize(["Main", "Other", "Fake slabs", "Style", "Ownership"])
 
 func _process(delta): # It's necessary to use _process to update selection, because ScrollContainer won't fire a signal while you're scrolling.
@@ -67,8 +68,8 @@ func _process(delta): # It's necessary to use _process to update selection, beca
 
 func update_selection_position():
 	if is_instance_valid(oSelectedRect.boundToItem) == true:
-		oSelectedRect.rect_global_position = oSelectedRect.boundToItem.rect_global_position
-		oSelectedRect.rect_size = oSelectedRect.boundToItem.rect_size
+		oSelectedRect.global_position = oSelectedRect.boundToItem.global_position
+		oSelectedRect.size = oSelectedRect.boundToItem.size
 
 
 func add_slabs():
@@ -94,7 +95,7 @@ func add_slabs():
 		var putIntoTab = Slabs.data[slabID][Slabs.EDITOR_TAB]
 		if putIntoTab != Slabs.TAB_NONE:
 			var scene = preload("res://Scenes/SlabDisplay.tscn")
-			var id = scene.instance()
+			var id = scene.instantiate()
 			var slabVariation
 			
 			var columnArray = [0,0,0, 0,0,0, 0,0,0]
@@ -129,12 +130,12 @@ func add_slabs():
 	print('add_slabs: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
 	
 	if is_instance_valid(oTMapLoader):
-		yield(get_tree(),'idle_frame') # Fixes a bug where textures go dark when opening slabset window
+		await get_tree().process_frame # Fixes a bug where textures go dark when opening slabset window
 		oTMapLoader.apply_texture_pack()
 
 func custom_slab_add_new_button():
 	var scene = preload('res://Scenes/GenericGridItem.tscn')
-	var id = scene.instance()
+	var id = scene.instantiate()
 	#id.set_meta("ID_of_slab", 0)
 	id.img_normal = preload('res://Art/AddCustomSlab.png')
 	id.img_hover = preload('res://Art/AddCustomSlabHover.png')
@@ -143,10 +144,10 @@ func custom_slab_add_new_button():
 	var set_text = "Add new"
 	set_text = set_text.replace(" ","\n") # Use "New lines" wherever there was a space.
 	id.set_meta("grid_item_text", set_text)
-	id.connect("mouse_entered", self, "_on_hovered_over_item", [id])
-	id.connect("mouse_exited", self, "_on_hovered_none")
-	id.connect("pressed",self,"_on_pressed_add_new_custom_slab")
-	id.rect_min_size = Vector2(grid_item_size.x * grid_window_scale, grid_item_size.y * grid_window_scale)
+	id.mouse_entered.connect(_on_hovered_over_item.bind(id))
+	id.mouse_exited.connect(_on_hovered_none)
+	id.pressed.connect(_on_pressed_add_new_custom_slab)
+	id.custom_minimum_size = Vector2(grid_item_size.x * grid_window_scale, grid_item_size.y * grid_window_scale)
 	
 	var tabID = tabs[Slabs.TAB_CUSTOM][GRIDCON_PATH]
 	tabID.add_child(id)
@@ -168,11 +169,11 @@ func add_child_to_grid(tabID, id, set_text):
 	tabID.add_child(id)
 	set_text = set_text.replace(" ","\n") # Use "New lines" wherever there was a space.
 	id.set_meta("grid_item_text", set_text)
-	id.connect("mouse_entered", self, "_on_hovered_over_item", [id])
-	id.connect("mouse_exited", self, "_on_hovered_none")
-	id.connect("pressed",self,"pressed",[id])
+	id.mouse_entered.connect(_on_hovered_over_item.bind(id))
+	id.mouse_exited.connect(_on_hovered_none)
+	id.pressed.connect(pressed.bind(id))
 	id.connect('gui_input',self,"_on_slab_portrait_gui_input",[id])
-	id.rect_min_size = Vector2(grid_item_size.x * grid_window_scale, grid_item_size.y * grid_window_scale)
+	id.custom_minimum_size = Vector2(grid_item_size.x * grid_window_scale, grid_item_size.y * grid_window_scale)
 	oGridFunctions._on_GridWindow_resized(self)
 
 
@@ -193,10 +194,10 @@ func _on_hovered_over_item(id):
 	var offset
 	match oSlabTabs.current_tab:
 		Slabs.TAB_STYLE,Slabs.TAB_OWNER:
-			offset = Vector2(id.rect_size.x * 0.5, id.rect_size.y * 0.25)
+			offset = Vector2(id.size.x * 0.5, id.size.y * 0.25)
 		_:
-			offset = Vector2(id.rect_size.x * 0.5, id.rect_size.y * 0.50)
-	oCenteredLabel.rect_global_position = id.rect_global_position + offset
+			offset = Vector2(id.size.x * 0.5, id.size.y * 0.50)
+	oCenteredLabel.global_position = id.global_position + offset
 	oCenteredLabel.get_node("Label").text = id.get_meta("grid_item_text")
 	
 	if id.has_meta("ID_of_slab"):
@@ -235,7 +236,7 @@ func update_scale(setvalue):
 	var oGridContainer = current_grid_container()
 	if oGridContainer == null: return
 	for id in oGridContainer.get_children():
-		id.rect_min_size = Vector2(grid_item_size.x * setvalue, grid_item_size.y * setvalue)
+		id.custom_minimum_size = Vector2(grid_item_size.x * setvalue, grid_item_size.y * setvalue)
 	grid_window_scale = setvalue
 	oGridFunctions._on_GridWindow_resized(self)
 

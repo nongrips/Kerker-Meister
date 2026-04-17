@@ -6,13 +6,11 @@ func _ready():
 	#readSlabsTNG()
 
 func readSlabsOBJ_part1():
-	var textFile = File.new()
-	textFile.open("res://slabobj_part1.txt", File.WRITE)
+	var textFile = FileAccess.open("res://slabobj_part1.txt", FileAccess.WRITE)
 	
-	var file = File.new()
+	var file: FileAccess = null
 	var path = "res://unearthdata/slabs.obj"
-	file.open(path, File.READ)
-	
+	file = FileAccess.open(path, FileAccess.READ)
 	file.seek(2)
 	for i in 1176:
 		if i % 28 == 0:
@@ -24,16 +22,14 @@ func readSlabsOBJ_part1():
 	textFile.close()
 
 func readSlabsOBJ_part2():
-	var file = File.new()
+	var file: FileAccess = null
 	var path = "res://unearthdata/slabs.obj"
-	file.open(path, File.READ)
-	
+	file = FileAccess.open(path, FileAccess.READ)
 	file.seek(0)
 	var numberOfObj = file.get_16()
 	print('Number of obj: ' + str(numberOfObj))
 	
-	var textFile = File.new()
-	textFile.open("res://slabobj_part2.txt", File.WRITE)
+	var textFile = FileAccess.open("res://slabobj_part2.txt", FileAccess.WRITE)
 	
 	
 	var dataList = 10
@@ -52,16 +48,14 @@ func readSlabsOBJ_part2():
 
 func readSlabsTNG():
 	#var array = []
-	var file = File.new()
+	var file: FileAccess = null
 	var path = "res://unearthdata/slabs.tng"
-	file.open(path, File.READ)
-	
+	file = FileAccess.open(path, FileAccess.READ)
 	file.seek(0)
 	var numberOfThings = file.get_16()+5
 	print('Number of things: '+str(numberOfThings))
 	
-	var textFile = File.new()
-	textFile.open("res://bytelist2.txt", File.WRITE)
+	var textFile = FileAccess.open("res://bytelist2.txt", FileAccess.WRITE)
 	
 	
 	var dataList = 13
@@ -82,8 +76,7 @@ func readSlabsTNG():
 
 func readSlabsCLM():
 	var array = []
-	var file = File.new()
-	file.open("res://slabs.clm",File.READ)
+	var file = FileAccess.open("res://slabs.clm", FileAccess.READ)
 	
 	file.seek(0)
 	var numberOfClmEntries = file.get_16()
@@ -105,8 +98,7 @@ func readSlabsCLM():
 
 func readSlabsDAT():
 	var array = []
-	var file = File.new()
-	file.open("res://slabs.dat",File.READ)
+	var file = FileAccess.open("res://slabs.dat", FileAccess.READ)
 	
 	file.seek(0)
 	var numberOfSets = file.get_16()
@@ -122,8 +114,8 @@ func readSlabsDAT():
 	save_text_file(str(array), "res://bytelist.txt")
 
 func save_text_file(text, path):
-	var f = File.new()
-	var err = f.open(path, File.WRITE)
+	var f = FileAccess.open(path, FileAccess.WRITE)
+	var err = OK if f != null else FAILED
 	if err != OK:
 		printerr("Could not write file, error code ", err)
 		return

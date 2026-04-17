@@ -1,20 +1,20 @@
 extends Node
 
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oXSizeLine = Nodelist.list["oXSizeLine"]
-onready var oYSizeLine = Nodelist.list["oYSizeLine"]
-onready var oNewMapSymmetricalBorder = Nodelist.list["oNewMapSymmetricalBorder"]
-onready var oPlayerCount = Nodelist.list["oPlayerCount"]
-onready var oPlacePlayersCheckBox = Nodelist.list["oPlacePlayersCheckBox"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oRandomPlayersPizza = Nodelist.list["oRandomPlayersPizza"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oPlayerDistance = Nodelist.list["oPlayerDistance"]
-onready var oPlayerPositioning = Nodelist.list["oPlayerPositioning"]
-onready var oNoiseDistance = Nodelist.list["oNoiseDistance"]
-onready var oLinearDistanceCheckBox = Nodelist.list["oLinearDistanceCheckBox"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oXSizeLine = Nodelist.list["oXSizeLine"]
+@onready var oYSizeLine = Nodelist.list["oYSizeLine"]
+@onready var oNewMapSymmetricalBorder = Nodelist.list["oNewMapSymmetricalBorder"]
+@onready var oPlayerCount = Nodelist.list["oPlayerCount"]
+@onready var oPlacePlayersCheckBox = Nodelist.list["oPlacePlayersCheckBox"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oRandomPlayersPizza = Nodelist.list["oRandomPlayersPizza"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oPlayerDistance = Nodelist.list["oPlayerDistance"]
+@onready var oPlayerPositioning = Nodelist.list["oPlayerPositioning"]
+@onready var oNoiseDistance = Nodelist.list["oNoiseDistance"]
+@onready var oLinearDistanceCheckBox = Nodelist.list["oLinearDistanceCheckBox"]
 
 var playerPositions = []
 var occupiedCoordinates = {}
@@ -372,7 +372,6 @@ func find_position_in_subsection(centerPos, subSectionWidth, subSectionHeight, i
 
 
 func check_valid_player_position(centerPos, imageData):
-	imageData.lock()
 	var halfSize = int(PLAYER_SIZE / 2)
 	for dy in range(-halfSize, halfSize + 1):
 		for dx in range(-halfSize, halfSize + 1):
@@ -380,9 +379,7 @@ func check_valid_player_position(centerPos, imageData):
 			var y = centerPos.y + dy
 			if x >= 0 and x < imageData.get_width() and y >= 0 and y < imageData.get_height():
 				if imageData.get_pixel(x, y) == impenetrableColour:
-					imageData.unlock()
 					return false
-	imageData.unlock()
 	return true
 
 
@@ -391,24 +388,17 @@ const potentialPlayerColour = Color(1.0, 0.0, 1.0, 1.0) # Magenta for potential 
 func draw_potential_player_positions(imageData):
 	if playerPositions.size() == 0:
 		return
-	
-	imageData.lock()
 	for i in range(playerPositions.size()):
 		var playerPos = playerPositions[i]
 		var x = playerPos.x
 		var y = playerPos.y
 		if x >= 0 and x < imageData.get_width() and y >= 0 and y < imageData.get_height():
 			imageData.set_pixel(x, y, potentialPlayerColour)
-	imageData.unlock()
-
-
 func convert_potential_positions_to_colored_players(imageData):
 	print("Converting potential player positions to actual players with hearts and claimed floor")
 	var mapWidth = imageData.get_width()
 	var mapHeight = imageData.get_height()
 	var potentialPositions = []
-	
-	imageData.lock()
 	for y in range(mapHeight):
 		for x in range(mapWidth):
 			var pixelColor = imageData.get_pixel(x, y)
@@ -421,10 +411,6 @@ func convert_potential_positions_to_colored_players(imageData):
 		var pos = potentialPositions[i]
 		var playerNumber = i + 1
 		place_colored_player_pixels_at_position(imageData, pos, playerNumber)
-	
-	imageData.unlock()
-
-
 func place_colored_player_pixels_at_position(imageData, centerPos, playerNumber):
 	var mapWidth = imageData.get_width()
 	var mapHeight = imageData.get_height()
@@ -527,7 +513,6 @@ func calculate_available_radius_for_direction(mapSizeX, mapSizeY, imageData, sub
 		directionY = 1.0
 	
 	# Test along the direction to find available radius
-	imageData.lock()
 	var availableRadius = 0.0
 	for testRadius in range(5, int(maxTestRadius), 2):
 		var testX = mapCenterX + directionX * testRadius
@@ -538,7 +523,6 @@ func calculate_available_radius_for_direction(mapSizeX, mapSizeY, imageData, sub
 		testPos.y = clamp(testPos.y, playerMargin, mapSizeY - playerMargin - 1)
 		if check_valid_player_position_unlocked(testPos, imageData):
 			availableRadius = testRadius
-	imageData.unlock()
 	return availableRadius
 
 

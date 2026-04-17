@@ -1,7 +1,7 @@
 extends LineEdit
 
 func _ready():
-	connect("focus_exited", self, "_on_focus_exited")
+	focus_exited.connect(_on_focus_exited)
 
 func _on_focus_exited():
 	text = String(int(text))

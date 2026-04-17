@@ -1,22 +1,22 @@
 extends Node
 
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oDataLiquid = Nodelist.list["oDataLiquid"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oDataLiquid = Nodelist.list["oDataLiquid"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
 
-onready var oWriteData = Nodelist.list["oWriteData"]
-onready var oReadData = Nodelist.list["oReadData"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oWriteData = Nodelist.list["oWriteData"]
+@onready var oReadData = Nodelist.list["oReadData"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
 
 const FILE_TYPES = [
 	"LOF", # This must be read first so that MAPSIZE can be used in relation to the rest of the files
@@ -63,7 +63,7 @@ func new_blank(EXT):
 		"UNE" : oReadData.new_une()
 
 func read(filePath, EXT):
-	if File.new().file_exists(filePath) == false:
+	if FileAccess.file_exists(filePath) == false:
 		print("File not found : " + filePath)
 		return
 
@@ -98,9 +98,9 @@ func read_buffer_for_extension(buffer, EXT):
 
 func file_path_to_buffer(filePath):
 	var buffer = StreamPeerBuffer.new()
-	var file = File.new()
-	if file.open(filePath, File.READ) == OK:
-		buffer.data_array = file.get_buffer(file.get_len())
+	var file = FileAccess.open(filePath, FileAccess.READ)
+	if file != null:
+		buffer.data_array = file.get_buffer(file.get_length())
 		file.close()
 	return buffer
 
@@ -114,8 +114,8 @@ func write(filePath, EXT):
 	return err
 
 func write_buffer_to_file(filePath, buffer, EXT, CODETIME_START):
-	var file = File.new()
-	var err = file.open(filePath, File.WRITE)
+	var file = FileAccess.open(filePath, FileAccess.WRITE)
+	var err = OK if file != null else FAILED
 	if err == OK:
 		file.store_buffer(buffer.data_array)
 		file.close()

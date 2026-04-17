@@ -1,9 +1,9 @@
 extends Node
-onready var oCfgEditor = Nodelist.list["oCfgEditor"]
-onready var oTabRules = Nodelist.list["oTabRules"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
-onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCfgEditor = Nodelist.list["oCfgEditor"]
+@onready var oTabRules = Nodelist.list["oTabRules"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
+@onready var oEditor = Nodelist.list["oEditor"]
 
 var control_references: Dictionary = {}
 var add_button: Button = null
@@ -13,13 +13,13 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 	
 	var item_panel = PanelContainer.new()
 	item_panel.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	item_panel.add_stylebox_override("panel", oCfgEditor.create_darker_border_stylebox())
+	item_panel.add_theme_stylebox_override("panel", oCfgEditor.create_darker_border_stylebox())
 	item_panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	
 	parent.add_child(item_panel)
 	
 	var control_container = VBoxContainer.new()
-	control_container.add_constant_override("separation", 5)
+	control_container.add_theme_constant_override("separation", 5)
 	item_panel.add_child(control_container)
 	
 	var header_container = HBoxContainer.new()
@@ -28,7 +28,7 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 	
 	
 	var main_row_container = HBoxContainer.new()
-	main_row_container.add_constant_override("separation", 12)
+	main_row_container.add_theme_constant_override("separation", 12)
 	main_row_container.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 	header_container.add_child(main_row_container)
 	
@@ -36,13 +36,13 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 	var type_items = ["MkCreature", "MkGoodHero", "NegSpellAll", "PosSpellAll", "NegUniqFunc", "PosUniqFunc"]
 	var type_label = Label.new()
 	type_label.text = sacrifice_data.type
-	type_label.rect_min_size.x = 0
+	type_label.custom_minimum_size.x = 0
 	type_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	type_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	editor_context.setup_script_editor_font(type_label)
-	type_label.connect("gui_input", self, "_on_type_label_clicked", [array_index, type_items, editor_context])
-	type_label.connect("mouse_entered", self, "_on_sacrifice_label_mouse_entered", [type_label, section_name, array_index])
-	type_label.connect("mouse_exited", self, "_on_sacrifice_label_mouse_exited", [type_label, section_name, array_index])
+	type_label.gui_input.connect(_on_type_label_clicked.bind(array_index, type_items, editor_context))
+	type_label.mouse_entered.connect(_on_sacrifice_label_mouse_entered.bind(type_label, section_name, array_index))
+	type_label.mouse_exited.connect(_on_sacrifice_label_mouse_exited.bind(type_label, section_name, array_index))
 	main_row_container.add_child(type_label)
 	
 	var reward_items = get_sacrifice_reward_items(sacrifice_data.type)
@@ -51,9 +51,9 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 	reward_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	reward_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	editor_context.setup_script_editor_font(reward_label)
-	reward_label.connect("gui_input", self, "_on_reward_label_clicked", [array_index, reward_items, editor_context])
-	reward_label.connect("mouse_entered", self, "_on_sacrifice_label_mouse_entered", [reward_label, section_name, array_index])
-	reward_label.connect("mouse_exited", self, "_on_sacrifice_label_mouse_exited", [reward_label, section_name, array_index])
+	reward_label.gui_input.connect(_on_reward_label_clicked.bind(array_index, reward_items, editor_context))
+	reward_label.mouse_entered.connect(_on_sacrifice_label_mouse_entered.bind(reward_label, section_name, array_index))
+	reward_label.mouse_exited.connect(_on_sacrifice_label_mouse_exited.bind(reward_label, section_name, array_index))
 	main_row_container.add_child(reward_label)
 	
 	var reward_spacer = Control.new()
@@ -64,17 +64,17 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 		var add_ingredient_button = Button.new()
 		add_ingredient_button.text = "+"
 		add_ingredient_button.hint_tooltip = "Add ingredient"
-		add_ingredient_button.rect_min_size.x = 30
+		add_ingredient_button.custom_minimum_size.x = 30
 		editor_context.setup_script_editor_font(add_ingredient_button)
-		add_ingredient_button.connect("pressed", self, "_on_add_ingredient_pressed", [array_index])
+		add_ingredient_button.pressed.connect(_on_add_ingredient_pressed.bind(array_index))
 		main_row_container.add_child(add_ingredient_button)
 	
 #	var ingredients_container = HBoxContainer.new()
-#	ingredients_container.add_constant_override("separation", 12)
-#	ingredients_container.alignment = BoxContainer.ALIGN_END
+#	ingredients_container.add_theme_constant_override("separation", 12)
+#	ingredients_container.alignment = BoxContainer.ALIGNMENT_END
 	var ingredients_container = GridContainer.new()
-	ingredients_container.add_constant_override("hseparation", 12)
-	ingredients_container.add_constant_override("vseparation", 0)
+	ingredients_container.add_theme_constant_override("hseparation", 12)
+	ingredients_container.add_theme_constant_override("vseparation", 0)
 	ingredients_container.columns = 3
 	main_row_container.add_child(ingredients_container)
 	
@@ -87,19 +87,19 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 		ingredient_label.text = ingredient_value
 		#ingredient_label.set_h_size_flags(Control.SIZE_SHRINK_BEGIN)
 		#var string_size_in_font = oCfgEditor.font.get_string_size(ingredient_label.text)
-		#ingredient_label.autowrap = true
-		#ingredient_label.rect_min_size = Vector2(string_size_in_font.x, 0) # Vector2(100, 0)
+		#ingredient_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		#ingredient_label.custom_minimum_size = Vector2(string_size_in_font.x, 0) # Vector2(100, 0)
 		ingredient_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		ingredient_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		editor_context.setup_script_editor_font(ingredient_label)
-		ingredient_label.connect("gui_input", self, "_on_ingredient_label_clicked", [array_index, i, ingredient_items, editor_context])
-		ingredient_label.connect("mouse_entered", self, "_on_sacrifice_label_mouse_entered", [ingredient_label, section_name, array_index])
-		ingredient_label.connect("mouse_exited", self, "_on_sacrifice_label_mouse_exited", [ingredient_label, section_name, array_index])
+		ingredient_label.gui_input.connect(_on_ingredient_label_clicked.bind(array_index, i, ingredient_items, editor_context))
+		ingredient_label.mouse_entered.connect(_on_sacrifice_label_mouse_entered.bind(ingredient_label, section_name, array_index))
+		ingredient_label.mouse_exited.connect(_on_sacrifice_label_mouse_exited.bind(ingredient_label, section_name, array_index))
 		ingredients_container.add_child(ingredient_label)
 		ingredient_labels.append(ingredient_label)
 	
-	var revert_button = revert_button_scene.instance()
-	revert_button.connect("pressed", self, "_on_sacrifice_revert_pressed", [section_name, array_index])
+	var revert_button = revert_button_scene.instantiate()
+	revert_button.pressed.connect(_on_sacrifice_revert_pressed.bind(section_name, array_index))
 	if not has_sacrifice_default_value(array_index):
 		revert_button.disabled = true
 		revert_button.modulate.a = 0
@@ -108,9 +108,9 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 	var remove_button = Button.new()
 	remove_button.text = "-"
 	remove_button.hint_tooltip = "Delete entry"
-	remove_button.rect_min_size.x = 30
+	remove_button.custom_minimum_size.x = 30
 	editor_context.setup_script_editor_font(remove_button)
-	remove_button.connect("pressed", self, "_on_remove_sacrifice_pressed", [section_name, array_index])
+	remove_button.pressed.connect(_on_remove_sacrifice_pressed.bind(section_name, array_index))
 	main_row_container.add_child(remove_button)
 	
 	var refs = {
@@ -227,14 +227,14 @@ func remove_ingredient_at_index(refs: Dictionary, ingredient_index: int):
 	
 	for i in range(ingredient_index, refs["ingredient_labels"].size()):
 		var label = refs["ingredient_labels"][i]
-		label.disconnect("gui_input", self, "_on_ingredient_label_clicked")
+		label.gui_input.disconnect(_on_ingredient_label_clicked)
 		label.connect("gui_input", self, "_on_ingredient_label_clicked", [refs["array_index"], i, get_ingredient_items(), oCfgEditor])
 	
 	if refs["sacrifice_data"].ingredients.size() < 6:
 		var add_ingredient_button = Button.new()
 		add_ingredient_button.text = "+"
 		add_ingredient_button.hint_tooltip = "Add ingredient"
-		add_ingredient_button.rect_min_size.x = 30
+		add_ingredient_button.custom_minimum_size.x = 30
 		oCfgEditor.setup_script_editor_font(add_ingredient_button)
 		add_ingredient_button.connect("pressed", self, "_on_add_ingredient_pressed", [refs["array_index"]])
 		main_row_container.add_child(add_ingredient_button)
@@ -283,8 +283,8 @@ func _on_sacrifice_type_selected(type_name: String, metadata: Dictionary):
 	refs["reward_label"].text = "Select..."
 	var reward_items = get_sacrifice_reward_items(type_name)
 	refs["reward_items"] = reward_items
-	yield(oCfgEditor.get_tree().create_timer(0.1), "timeout")
-	oTabRules.create_selection_popup("Select Sacrifice Reward", reward_items, funcref(self, "_on_sacrifice_reward_selected"), array_index)
+	await oCfgEditor.get_tree().create_timer(0.1).timeout
+	oTabRules.create_selection_popup("Select Sacrifice Reward", reward_items, Callable(self, "_on_sacrifice_reward_selected"), array_index)
 
 
 func _on_add_ingredient_pressed(array_index: int):
@@ -297,7 +297,7 @@ func _on_add_ingredient_pressed(array_index: int):
 		var ingredient_items = get_ingredient_items()
 		
 		var callback_data = {"array_index": array_index, "ingredient_index": ingredient_index}
-		create_ingredient_selection_popup("Select Ingredient " + str(ingredient_index + 1), ingredient_items, funcref(self, "_on_add_ingredient_selected"), callback_data)
+		create_ingredient_selection_popup("Select Ingredient " + str(ingredient_index + 1), ingredient_items, Callable(self, "_on_add_ingredient_selected"), callback_data)
 
 
 func _on_add_ingredient_selected(ingredient_name: String, metadata: Dictionary):
@@ -315,11 +315,11 @@ func _on_add_ingredient_selected(ingredient_name: String, metadata: Dictionary):
 	var ingredient_label = Label.new()
 	ingredient_label.text = ingredient_name
 	ingredient_label.set_h_size_flags(Control.SIZE_SHRINK_END)
-	ingredient_label.rect_min_size = Vector2(60, 0)
+	ingredient_label.custom_minimum_size = Vector2(60, 0)
 	ingredient_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	ingredient_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	oCfgEditor.setup_script_editor_font(ingredient_label)
-	ingredient_label.connect("gui_input", self, "_on_ingredient_label_clicked", [metadata.get("array_index"), ingredient_index, ingredient_items, oCfgEditor])
+	ingredient_label.gui_input.connect(_on_ingredient_label_clicked.bind(metadata.get("array_index"), ingredient_index, ingredient_items, oCfgEditor))
 	ingredient_label.connect("mouse_entered", self, "_on_sacrifice_label_mouse_entered", [ingredient_label, refs["section_name"], metadata.get("array_index")])
 	ingredient_label.connect("mouse_exited", self, "_on_sacrifice_label_mouse_exited", [ingredient_label, refs["section_name"], metadata.get("array_index")])
 	
@@ -343,9 +343,9 @@ func _on_add_ingredient_selected(ingredient_name: String, metadata: Dictionary):
 		var add_ingredient_button = Button.new()
 		add_ingredient_button.text = "+"
 		add_ingredient_button.hint_tooltip = "Add ingredient"
-		add_ingredient_button.rect_min_size.x = 30
+		add_ingredient_button.custom_minimum_size.x = 30
 		oCfgEditor.setup_script_editor_font(add_ingredient_button)
-		add_ingredient_button.connect("pressed", self, "_on_add_ingredient_pressed", [metadata.get("array_index")])
+		add_ingredient_button.pressed.connect(_on_add_ingredient_pressed.bind(metadata.get("array_index")))
 		main_row_container.add_child(add_ingredient_button)
 		main_row_container.move_child(add_ingredient_button, 3)
 	
@@ -356,7 +356,7 @@ func _on_add_ingredient_selected(ingredient_name: String, metadata: Dictionary):
 func _on_add_sacrifice_pressed(section_name: String):
 	add_sacrifice_data()
 	oCfgEditor.rebuild_ui()
-	yield(oCfgEditor.ensure_add_button_visible(add_button), "completed")
+	await oCfgEditor.ensure_add_button_visible(add_button).completed
 
 
 
@@ -367,10 +367,10 @@ func update_all_sacrifice_labels_color():
 		var is_item_modified = is_sacrifice_item_different(array_index)
 		var target_color = oCfgEditor.UI_TEXT_MODIFIED if is_item_modified else oCfgEditor.UI_TEXT_NORMAL
 		
-		refs["type_label"].add_color_override("font_color", target_color)
-		refs["reward_label"].add_color_override("font_color", target_color)
+		refs["type_label"].add_theme_color_override("font_color", target_color)
+		refs["reward_label"].add_theme_color_override("font_color", target_color)
 		for ingredient_label in refs["ingredient_labels"]:
-			ingredient_label.add_color_override("font_color", target_color)
+			ingredient_label.add_theme_color_override("font_color", target_color)
 
 
 func get_tooltip_text_for_label(label: Label, array_index: int) -> String:
@@ -401,12 +401,12 @@ func _on_remove_sacrifice_pressed(section_name: String, array_index: int):
 
 
 func _on_type_label_clicked(event: InputEvent, array_index: int, type_items: Array, editor_context):
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
-		oTabRules.create_selection_popup("Select Sacrifice Type", type_items, funcref(self, "_on_sacrifice_type_selected"), array_index)
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		oTabRules.create_selection_popup("Select Sacrifice Type", type_items, Callable(self, "_on_sacrifice_type_selected"), array_index)
 
 
-func create_ingredient_selection_popup(title: String, items: Array, callback: FuncRef, metadata: Dictionary):
-	var wrapped_callback = funcref(oCfgEditor, "_on_link_button_pressed")
+func create_ingredient_selection_popup(title: String, items: Array, callback: Callable, metadata: Dictionary):
+	var wrapped_callback = Callable(oCfgEditor, "_on_link_button_pressed")
 	wrapped_callback.set_meta("title", title)
 	wrapped_callback.set_meta("items", items)
 	wrapped_callback.set_meta("callback", callback)
@@ -415,21 +415,21 @@ func create_ingredient_selection_popup(title: String, items: Array, callback: Fu
 
 
 func _on_reward_label_clicked(event: InputEvent, array_index: int, reward_items: Array, editor_context):
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var current_reward_items = reward_items
 		if control_references.has(array_index) and control_references[array_index].has("reward_items"):
 			current_reward_items = control_references[array_index]["reward_items"]
-		oTabRules.create_selection_popup("Select Sacrifice Reward", current_reward_items, funcref(self, "_on_sacrifice_reward_selected"), array_index)
+		oTabRules.create_selection_popup("Select Sacrifice Reward", current_reward_items, Callable(self, "_on_sacrifice_reward_selected"), array_index)
 
 
 func _on_ingredient_label_clicked(event: InputEvent, array_index: int, ingredient_index: int, ingredient_items: Array, editor_context):
 	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == BUTTON_RIGHT:
+		if event.button_index == MOUSE_BUTTON_RIGHT:
 			if control_references.has(array_index):
 				remove_ingredient_at_index(control_references[array_index], ingredient_index)
-		elif event.button_index == BUTTON_LEFT:
+		elif event.button_index == MOUSE_BUTTON_LEFT:
 			var callback_data = {"array_index": array_index, "ingredient_index": ingredient_index}
-			create_ingredient_selection_popup("Select Ingredient " + str(ingredient_index + 1), ingredient_items, funcref(self, "_on_ingredient_selected"), callback_data)
+			create_ingredient_selection_popup("Select Ingredient " + str(ingredient_index + 1), ingredient_items, Callable(self, "_on_ingredient_selected"), callback_data)
 
 
 func has_sacrifice_default_value(array_index: int) -> bool:
@@ -469,13 +469,13 @@ func update_sacrifice_ui_after_revert(array_index: int, default_data):
 			var ingredient_label = Label.new()
 			ingredient_label.text = ingredient_value
 			ingredient_label.set_h_size_flags(Control.SIZE_SHRINK_END)
-			ingredient_label.rect_min_size = Vector2(60, 0)
+			ingredient_label.custom_minimum_size = Vector2(60, 0)
 			ingredient_label.mouse_filter = Control.MOUSE_FILTER_STOP
 			ingredient_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 			oCfgEditor.setup_script_editor_font(ingredient_label)
-			ingredient_label.connect("gui_input", self, "_on_ingredient_label_clicked", [array_index, i, ingredient_items, oCfgEditor])
-			ingredient_label.connect("mouse_entered", self, "_on_sacrifice_label_mouse_entered", [ingredient_label, "sacrifices", array_index])
-			ingredient_label.connect("mouse_exited", self, "_on_sacrifice_label_mouse_exited", [ingredient_label, "sacrifices", array_index])
+			ingredient_label.gui_input.connect(_on_ingredient_label_clicked.bind(array_index, i, ingredient_items, oCfgEditor))
+			ingredient_label.mouse_entered.connect(_on_sacrifice_label_mouse_entered.bind(ingredient_label, "sacrifices", array_index))
+			ingredient_label.mouse_exited.connect(_on_sacrifice_label_mouse_exited.bind(ingredient_label, "sacrifices", array_index))
 			ingredients_container.add_child(ingredient_label)
 			refs["ingredient_labels"].append(ingredient_label)
 		
@@ -484,9 +484,9 @@ func update_sacrifice_ui_after_revert(array_index: int, default_data):
 			var add_ingredient_button = Button.new()
 			add_ingredient_button.text = "+"
 			add_ingredient_button.hint_tooltip = "Add ingredient"
-			add_ingredient_button.rect_min_size.x = 30
+			add_ingredient_button.custom_minimum_size.x = 30
 			oCfgEditor.setup_script_editor_font(add_ingredient_button)
-			add_ingredient_button.connect("pressed", self, "_on_add_ingredient_pressed", [array_index])
+			add_ingredient_button.pressed.connect(_on_add_ingredient_pressed.bind(array_index))
 			main_row_container.add_child(add_ingredient_button)
 			main_row_container.move_child(add_ingredient_button, 3)
 	

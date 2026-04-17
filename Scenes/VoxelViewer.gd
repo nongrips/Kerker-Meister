@@ -1,26 +1,26 @@
 extends ViewportContainer
-onready var oColumnDetails = Nodelist.list["oColumnDetails"]
-onready var oVoxelGen = Nodelist.list["oVoxelGen"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oGridContainerCustomColumns3x3 = Nodelist.list["oGridContainerCustomColumns3x3"]
-onready var oGridContainerDynamicColumns3x3 = Nodelist.list["oGridContainerDynamicColumns3x3"]
-onready var oSlabsetIDSpinBox = Nodelist.list["oSlabsetIDSpinBox"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oVariationNumberSpinBox = Nodelist.list["oVariationNumberSpinBox"]
-onready var oColumnsetControls = Nodelist.list["oColumnsetControls"]
-onready var oClmEditorControls = Nodelist.list["oClmEditorControls"]
+@onready var oColumnDetails = Nodelist.list["oColumnDetails"]
+@onready var oVoxelGen = Nodelist.list["oVoxelGen"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oGridContainerCustomColumns3x3 = Nodelist.list["oGridContainerCustomColumns3x3"]
+@onready var oGridContainerDynamicColumns3x3 = Nodelist.list["oGridContainerDynamicColumns3x3"]
+@onready var oSlabsetIDSpinBox = Nodelist.list["oSlabsetIDSpinBox"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oVariationNumberSpinBox = Nodelist.list["oVariationNumberSpinBox"]
+@onready var oColumnsetControls = Nodelist.list["oColumnsetControls"]
+@onready var oClmEditorControls = Nodelist.list["oClmEditorControls"]
 
 
-onready var oVoxelCamera = $"VoxelViewport/VoxelCameraPivotPoint/VoxelCamera"
-onready var oAllVoxelObjects = $"VoxelViewport/VoxelCreator/AllVoxelObjects"
-onready var oSelectedVoxelObject = $"VoxelViewport/VoxelCreator/SelectedPivotPoint/SelectedVoxelObject"
-onready var oSelectedPivotPoint = $"VoxelViewport/VoxelCreator/SelectedPivotPoint"
-onready var oVoxelCameraPivotPoint = $"VoxelViewport/VoxelCameraPivotPoint"
-onready var oHighlightBase = $"VoxelViewport/VoxelCreator/HighlightBase"
+@onready var oVoxelCamera = $"VoxelViewport/VoxelCameraPivotPoint/VoxelCamera"
+@onready var oAllVoxelObjects = $"VoxelViewport/VoxelCreator/AllVoxelObjects"
+@onready var oSelectedVoxelObject = $"VoxelViewport/VoxelCreator/SelectedPivotPoint/SelectedVoxelObject"
+@onready var oSelectedPivotPoint = $"VoxelViewport/VoxelCreator/SelectedPivotPoint"
+@onready var oVoxelCameraPivotPoint = $"VoxelViewport/VoxelCameraPivotPoint"
+@onready var oHighlightBase = $"VoxelViewport/VoxelCreator/HighlightBase"
 
 var scnBillboardObj = preload("res://Scenes/Billboard3DObject.tscn")
 
-export(int, "MAP_CUSTOM_SLAB", "MAP_COLUMN", "DK_SLABSET", "DK_COLUMN") var displayingType
+@export var displayingType
 enum {
 	MAP_CUSTOM_SLAB
 	MAP_COLUMN
@@ -28,14 +28,16 @@ enum {
 	DK_COLUMN
 }
 
-var viewObject = 0 setget set_object
+var viewObject = 0:
+
+	set(_val): set_object(_val)
 var column_count = 2048
 var previousObject = 0
 var disable_camera_animation = false
 
 func initialize():
 	if is_instance_valid(oDataClm) == false: return
-	if oDataClm.cubes.empty() == true: return
+	if oDataClm.cubes.is_empty() == true: return
 	
 	#if visible == true:
 	var CODETIME_START = OS.get_ticks_msec()
@@ -70,7 +72,7 @@ func clear_attached_3d_objects():
 		i.free()
 
 func add_billboard_obj(tex, pos:Vector3):
-	var id = scnBillboardObj.instance()
+	var id = scnBillboardObj.instantiate()
 	if tex == null:
 		tex = preload('res://Art/Thing.png')
 		id.pixel_size = 0.004
@@ -80,7 +82,7 @@ func add_billboard_obj(tex, pos:Vector3):
 	else:
 		id.texture = tex
 
-	id.translation = pos
+	id.position = pos
 	id.offset.y = tex.get_height() * 0.5
 	$"%AttachedObjects".add_child(id)
 
@@ -120,11 +122,11 @@ func set_object(setVal):
 	if disable_camera_animation:
 		# Set camera position directly without animation
 		if displayingType == DK_SLABSET:
-			oVoxelCameraPivotPoint.translation.z = viewObject*4
-			oVoxelCameraPivotPoint.translation.x = viewObject*4
+			oVoxelCameraPivotPoint.position.z = viewObject*4
+			oVoxelCameraPivotPoint.position.x = viewObject*4
 		else:
-			oVoxelCameraPivotPoint.translation.z = viewObject*2
-			oVoxelCameraPivotPoint.translation.x = viewObject*2
+			oVoxelCameraPivotPoint.position.z = viewObject*2
+			oVoxelCameraPivotPoint.position.x = viewObject*2
 	else:
 		oVoxelCamera.cameraShiftSpeed = clamp(0.02 * abs(previousObject-viewObject), 0.02, 0.3)
 	
@@ -150,11 +152,11 @@ func set_object(setVal):
 	oHighlightBase.visible = true
 	
 	if displayingType == DK_SLABSET:
-		oHighlightBase.translation.z = viewObject*4
-		oHighlightBase.translation.x = viewObject*4
+		oHighlightBase.position.z = viewObject*4
+		oHighlightBase.position.x = viewObject*4
 	else:
-		oHighlightBase.translation.z = viewObject*2
-		oHighlightBase.translation.x = viewObject*2
+		oHighlightBase.position.z = viewObject*2
+		oHighlightBase.position.x = viewObject*2
 
 
 func do_all():
@@ -176,8 +178,8 @@ func do_all():
 					oVoxelGen.column_gen(genArray, x, y, clmIndex, surrClmIndex, true, Columnset)
 		
 		oAllVoxelObjects.mesh = oVoxelGen.complete_mesh(genArray)
-		oAllVoxelObjects.translation.z = -0.5
-		oAllVoxelObjects.translation.x = -0.5
+		oAllVoxelObjects.position.z = -0.5
+		oAllVoxelObjects.position.x = -0.5
 	var CODETIME_START = OS.get_ticks_msec()
 	
 	
@@ -220,10 +222,10 @@ func do_one():
 				
 				oVoxelGen.column_gen(genArray, x-1.5, y-1.5, clmIndex, surrClmIndex, true, oDataClm)
 		oSelectedVoxelObject.mesh = oVoxelGen.complete_mesh(genArray)
-		oSelectedVoxelObject.translation.z = 0.0
-		oSelectedVoxelObject.translation.x = 0.0
-		oSelectedPivotPoint.translation.z = 0.0
-		oSelectedPivotPoint.translation.x = 0.0
+		oSelectedVoxelObject.position.z = 0.0
+		oSelectedVoxelObject.position.x = 0.0
+		oSelectedPivotPoint.position.z = 0.0
+		oSelectedPivotPoint.position.x = 0.0
 	
 	if displayingType == MAP_COLUMN or displayingType == DK_COLUMN:
 		var surrClmIndex = [-1,-1,-1,-1]
@@ -233,8 +235,8 @@ func do_one():
 			DK_COLUMN: oVoxelGen.column_gen(genArray, 0, 0, viewObject, surrClmIndex, true, Columnset)
 		
 		oSelectedVoxelObject.mesh = oVoxelGen.complete_mesh(genArray)
-		oSelectedPivotPoint.translation.z = (viewObject * 2)
-		oSelectedPivotPoint.translation.x = (viewObject * 2)
+		oSelectedPivotPoint.position.z = (viewObject * 2)
+		oSelectedPivotPoint.position.x = (viewObject * 2)
 	
 	if displayingType == DK_SLABSET: # This is not for fake slab, this is for slabset slabs
 		
@@ -253,10 +255,10 @@ func do_one():
 				oVoxelGen.column_gen(genArray, x-1.5, y-1.5, clmIndex, surrClmIndex, true, Columnset)
 		
 		oSelectedVoxelObject.mesh = oVoxelGen.complete_mesh(genArray)
-		oSelectedPivotPoint.translation.z = (viewObject * 4)
-		oSelectedPivotPoint.translation.x = (viewObject * 4)
-		oSelectedVoxelObject.translation.z = 0
-		oSelectedVoxelObject.translation.x = 0
+		oSelectedPivotPoint.position.z = (viewObject * 4)
+		oSelectedPivotPoint.position.x = (viewObject * 4)
+		oSelectedVoxelObject.position.z = 0
+		oSelectedVoxelObject.position.x = 0
 
 #func _process(delta):
 #	print(viewObject)
@@ -287,20 +289,20 @@ func _on_ColumnIndexSpinBox_value_changed(value):
 	
 	match displayingType:
 		MAP_COLUMN:
-			oClmEditorControls.oColumnIndexSpinBox.disconnect("value_changed",self,"_on_ColumnIndexSpinBox_value_changed")
+			oClmEditorControls.oColumnIndexSpinBox.value_changed.disconnect(_on_ColumnIndexSpinBox_value_changed)
 			set_object(value)
-			oClmEditorControls.oColumnIndexSpinBox.connect("value_changed",self,"_on_ColumnIndexSpinBox_value_changed")
+			oClmEditorControls.oColumnIndexSpinBox.value_changed.connect(_on_ColumnIndexSpinBox_value_changed)
 		DK_COLUMN:
-			oColumnsetControls.oColumnIndexSpinBox.disconnect("value_changed",self,"_on_ColumnIndexSpinBox_value_changed")
+			oColumnsetControls.oColumnIndexSpinBox.value_changed.disconnect(_on_ColumnIndexSpinBox_value_changed)
 			set_object(value)
-			oColumnsetControls.oColumnIndexSpinBox.connect("value_changed",self,"_on_ColumnIndexSpinBox_value_changed")
+			oColumnsetControls.oColumnIndexSpinBox.value_changed.connect(_on_ColumnIndexSpinBox_value_changed)
 
 
 
 
 var skip3x3function = false
 func _on_Slabset3x3ColumnSpinBox_value_changed(value): # Runs 9 times when switching variation or ID. First.
-	yield(get_tree(),'idle_frame') # Important so that it runs after _on_VariationNumberSpinBox_value_changed()
+	await get_tree().process_frame # Important so that it runs after _on_VariationNumberSpinBox_value_changed()
 	if skip3x3function == true: return
 	do_one()
 	oColumnDetails.update_details()
@@ -315,7 +317,7 @@ func _on_VariationNumberSpinBox_value_changed(value):
 	oSelectedVoxelObject.visible = true
 	
 	skip3x3function = true
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	skip3x3function = false
 
 
@@ -328,7 +330,7 @@ func _on_SlabsetIDSpinBox_value_changed(value):
 	oSelectedVoxelObject.visible = true
 	
 	skip3x3function = true
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	skip3x3function = false
 
 func refresh_entire_view():

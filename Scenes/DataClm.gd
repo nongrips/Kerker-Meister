@@ -1,11 +1,11 @@
 extends 'res://Class/ClmClass.gd'
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oTimerUpdateColumnEntries = Nodelist.list["oTimerUpdateColumnEntries"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oUniversalDetails = Nodelist.list["oUniversalDetails"]
-onready var oConfirmClmEntriesFull = Nodelist.list["oConfirmClmEntriesFull"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oTimerUpdateColumnEntries = Nodelist.list["oTimerUpdateColumnEntries"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oUniversalDetails = Nodelist.list["oUniversalDetails"]
+@onready var oConfirmClmEntriesFull = Nodelist.list["oConfirmClmEntriesFull"]
 
 var column_count = 8192
 
@@ -23,7 +23,7 @@ var default_data = {}
 
 func _ready():
 	if is_instance_valid(oConfirmClmEntriesFull):
-		oConfirmClmEntriesFull.connect("confirmed", self, "_on_ConfirmClmEntriesFull_confirmed")
+		oConfirmClmEntriesFull.confirmed.connect(_on_ConfirmClmEntriesFull_confirmed)
 
 func store_default_data():
 	default_data["utilized"] = utilized.duplicate(true)
@@ -39,7 +39,7 @@ func store_default_data():
 
 
 func clm_data_exists():
-	if cubes.empty() == true:
+	if cubes.is_empty() == true:
 		return false # Nothing in arrays, so column data doesn't exist
 	else:
 		return true # Something in arrays, so column data exists
@@ -128,7 +128,7 @@ func sort_columns_by_utilized():
 		])
 	
 	# Sort
-	array.sort_custom(self, "sorter_utilized")
+	array.sort_custom(sorter_utilized)
 	
 	for i in column_count:
 		var sourceIndex = array[i][0]

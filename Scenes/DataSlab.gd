@@ -13,7 +13,7 @@ var idImgData = Image.new()
 var idTexData = ImageTexture.new()
 
 #func _input(event):
-#	if event is InputEventKey and event.pressed and event.scancode == KEY_F11:
+#	if event is InputEventKey and event.pressed and event.keycode == KEY_F11:
 #		var filename = "a.png"
 #		var err = idImgData.save_png(filename)
 #		if err == OK:
@@ -28,15 +28,15 @@ func initialize(w, h, fillValue, setPerEntryBytes):
 	bytes_per_entry = setPerEntryBytes
 	buffer_size = width * height * bytes_per_entry
 	
-	# Clearing a buffer is troublesome, in order to do so I need to set the buffer to an equal-sized blank PoolByteArray. (this takes 0ms)
-	var blankByteArray = PoolByteArray([])
+	# Clearing a buffer is troublesome, in order to do so I need to set the buffer to an equal-sized blank PackedByteArray. (this takes 0ms)
+	var blankByteArray = PackedByteArray([])
 	blankByteArray.resize(buffer_size)
 	blankByteArray.fill(fillValue)
 	buffer.data_array = blankByteArray
 
 func initialize_img():
 	regenerate_image_from_buffer()
-	idTexData.create_from_image(idImgData)
+	idTexData.set_image(idImgData)
 
 func set_cellv(pos, value):
 	set_cell(pos.x, pos.y, value)
@@ -67,14 +67,14 @@ func get_cellv(pos):
 
 func update_texture():
 	regenerate_image_from_buffer()
-	idTexData.create_from_image(idImgData)
+	idTexData.set_image(idImgData)
 
 
 func regenerate_image_from_buffer():
 	if width <= 0 or height <= 0:
 		return
 	
-	var pixel_data = PoolByteArray()
+	var pixel_data = PackedByteArray()
 	pixel_data.resize(width * height * 3) # RGB8 format = 3 bytes per pixel
 	
 	buffer.seek(0)
@@ -100,7 +100,7 @@ func resize(new_width, new_height, fillValue):
 	# Resize grid
 	var new_buffer_size = new_width * new_height * bytes_per_entry
 	var new_buffer = StreamPeerBuffer.new()
-	var new_data_array = PoolByteArray([])
+	var new_data_array = PackedByteArray([])
 	new_data_array.resize(new_buffer_size)
 	new_data_array.fill(fillValue)
 	new_buffer.data_array = new_data_array
@@ -130,20 +130,14 @@ func resize(new_width, new_height, fillValue):
 	buffer = new_buffer
 	
 	# Resize image
-	var new_image = Image.new()
-	new_image.create(new_width, new_height, false, idImgData.FORMAT_RGB8)
+	var new_image = Image.create(new_width, new_height, false, idImgData.FORMAT_RGB8)
 	new_image.fill(Color8(fillValue, fillValue, fillValue))
 	
 	# Copy old image data
-	new_image.lock()
-	idImgData.lock()
 	var copy_widthi = min(width, new_width)
 	var copy_heighti = min(height, new_height)
 	for y in range(copy_heighti):
 		for x in range(copy_widthi):
 			new_image.set_pixel(x, y, idImgData.get_pixel(x, y))
-	idImgData.unlock()
-	new_image.unlock()
-	
 	idImgData = new_image
-	idTexData.create_from_image(idImgData)
+	idTexData.set_image(idImgData)

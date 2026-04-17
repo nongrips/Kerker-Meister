@@ -1,11 +1,11 @@
 extends PanelContainer
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oSlabTabs = Nodelist.list["oSlabTabs"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oSlabTabs = Nodelist.list["oSlabTabs"]
 
 var scnOwnerButton = preload("res://Scenes/OnlyOwnershipButton.tscn")
-onready var oSelectedRect = get_node("../../../../Clippy/SelectedRect")
+@onready var oSelectedRect = get_node("../../../../Clippy/SelectedRect")
 
 func update_grid_items():
 	var oGridContainer = current_grid_container()
@@ -21,11 +21,11 @@ func update_grid_items():
 
 #	# Add children
 	for i in owner_order:
-		var id = scnOwnerButton.instance()
-		id.connect("pressed", self, "_on_OwnerButtonPressed", [id])
+		var id = scnOwnerButton.instantiate()
+		id.pressed.connect(_on_OwnerButtonPressed.bind(id))
 		
-		id.connect("mouse_entered", oPickSlabWindow, "_on_hovered_over_item", [id])
-		id.connect("mouse_exited", oPickSlabWindow, "_on_hovered_none")
+		id.mouse_entered.connect(oPickSlabWindow._on_hovered_over_item.bind(id))
+		id.mouse_exited.connect(oPickSlabWindow._on_hovered_none)
 		
 		id.set_meta("ownershipID",i)
 		id.set_meta("grid_item_text",Constants.ownershipNames[i])
@@ -54,7 +54,7 @@ func update_grid_items():
 	if oSlabTabs.get_current_tab_control().name == "OnlyOwnership":
 		var ontab = oSlabTabs.current_tab
 		oSlabTabs.current_tab = ontab-1
-		yield(get_tree(),'idle_frame')
+		await get_tree().process_frame
 		oSlabTabs.current_tab = ontab
 
 

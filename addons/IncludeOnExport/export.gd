@@ -42,28 +42,26 @@ func _export_file_our_way(path):
 
 	# Copy to the output directory
 
-	var rfile = File.new()
-	rfile.open(path, File.READ)
-	var buffer = rfile.get_buffer(rfile.get_len())
+	var rfile = FileAccess.open(path, FileAccess.READ)
+	var buffer = rfile.get_buffer(rfile.get_length())
 	rfile.close()
 
-	var output_path = output_root_dir.plus_file(path.trim_prefix("res://"))
+	var output_path = output_root_dir.path_join(path.trim_prefix("res://"))
 	var output_dir = output_path.get_base_dir()
 
-	var dir = Directory.new()
+	var dir: DirAccess = null
 	if not dir.dir_exists(output_dir):
 		dir.make_dir_recursive(output_dir)
 
-	var wfile = File.new()
-	wfile.open(output_path, File.WRITE)
+	var wfile = FileAccess.open(output_path, FileAccess.WRITE)
 	wfile.store_buffer(buffer)
 	wfile.close()
 
 
 func dir_contents(path):
 	var array = []
-	var dir = Directory.new()
-	if dir.open(path) == OK:
+	var dir = DirAccess.open(path)
+	if dir != null:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
@@ -71,7 +69,7 @@ func dir_contents(path):
 				pass
 			else:
 				if file_name.get_extension().to_upper() == "PNG":
-					array.append(path.plus_file(file_name))
+					array.append(path.path_join(file_name))
 			file_name = dir.get_next()
 	else:
 		print("An error occurred when trying to access the path.")
@@ -84,7 +82,7 @@ func dir_contents(path):
 #	else:
 #		createFileName = "UnearthLinux v" + Version.full + ".zip"
 #
-#	var output_zip_filepath = folder_to_zip_up.get_base_dir().plus_file(createFileName)
+#	var output_zip_filepath = folder_to_zip_up.get_base_dir().path_join(createFileName)
 #
 #	# Create new zip file
 #	run_minizip(folder_to_zip_up, output_zip_filepath)
@@ -103,7 +101,7 @@ func dir_contents(path):
 #	var command = ""
 #	command += "cd /d \"" + folder_to_zip_up.get_base_dir() + "\""
 #	command += " && "
-#	command += ProjectSettings.globalize_path("res://addons/IncludeOnExport/minizip.exe") + " -o -i \"" + output_zip_filepath.get_base_dir().plus_file(output_zip_filepath.get_file()) + "\" \"" + folder_to_zip_up.get_file() + "\""
+#	command += ProjectSettings.globalize_path("res://addons/IncludeOnExport/minizip.exe") + " -o -i \"" + output_zip_filepath.get_base_dir().path_join(output_zip_filepath.get_file()) + "\" \"" + folder_to_zip_up.get_file() + "\""
 #	print(command)
 #
 #	var output = Array()

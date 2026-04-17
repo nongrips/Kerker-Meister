@@ -4,7 +4,7 @@ extends HBoxContainer
 signal request_refresh_plugin(p_name)
 signal confirm_refresh_plugin(p_name)
 
-onready var options = $OptionButton
+@onready var options = $OptionButton
 
 func _ready():
 	$RefreshButton.icon = get_icon("Reload", "EditorIcons")
@@ -25,7 +25,7 @@ func update_items(p_plugins):
 func select_plugin(p_name):
 	if not options:
 		return
-	if p_name == null or p_name.empty():
+	if p_name == null or p_name.is_empty():
 		return
 
 	for idx in options.get_item_count():
@@ -40,9 +40,9 @@ func _on_RefreshButton_pressed():
 		return # nothing selected
 
 	var plugin = options.get_item_metadata(options.selected)
-	if not plugin or plugin.empty():
+	if not plugin or plugin.is_empty():
 		return
-	emit_signal("request_refresh_plugin", plugin)
+	request_refresh_plugin.emit(plugin)
 
 
 func show_warning(p_name):
@@ -55,4 +55,4 @@ func show_warning(p_name):
 
 func _on_ConfirmationDialog_confirmed():
 	var plugin = options.get_item_metadata(options.selected)
-	emit_signal("confirm_refresh_plugin", plugin)
+	confirm_refresh_plugin.emit(plugin)

@@ -1,11 +1,11 @@
 extends Node
-onready var oVoxelGen = Nodelist.list["oVoxelGen"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
-onready var oLoadingBar = Nodelist.list["oLoadingBar"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oVoxelGen = Nodelist.list["oVoxelGen"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
+@onready var oLoadingBar = Nodelist.list["oLoadingBar"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
 
 signal terrain3D_finished_generating
 
@@ -30,7 +30,7 @@ func start():
 			if OS.get_ticks_msec() > loadTime+100:
 				loadTime += 100
 				oLoadingBar.value = (currentLoad/(totalLoadingSize))*100
-				yield(get_tree(),'idle_frame')
+				await get_tree().process_frame
 			
 			
 			for ySubtile in 3:
@@ -57,8 +57,8 @@ func start():
 	oTerrainMesh.mesh = oVoxelGen.complete_slx_mesh(arrayOfArrays)
 	print('Codetime: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
 	
-	yield(get_tree(),'idle_frame') # Important to solve race condition
-	emit_signal("terrain3D_finished_generating")
+	await get_tree().process_frame # Important to solve race condition
+	terrain3D_finished_generating.emit()
 
 func loading_bar_start():
 	oLoadingBar.visible = true

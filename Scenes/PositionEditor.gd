@@ -4,9 +4,9 @@ var align
 signal position_editor_focus_exited
 signal position_editor_text_entered
 signal position_editor_text_changed
-onready var oLineEditX = $"HBoxContainer1/LineEditX"
-onready var oLineEditY = $"HBoxContainer1/LineEditY"
-onready var oLineEditZ = $"HBoxContainer2/LineEditZ"
+@onready var oLineEditX = $"HBoxContainer1/LineEditX"
+@onready var oLineEditY = $"HBoxContainer1/LineEditY"
+@onready var oLineEditZ = $"HBoxContainer2/LineEditZ"
 
 func set_txt(array):
 	if array.size() >= 1:
@@ -21,22 +21,22 @@ func set_txt(array):
 		$"HBoxContainer2/LineEditZ".visible = false #Visibility is checked for oLineEditZ later on, so visibility is set for it
 
 func _on_LineEditX_focus_exited():
-	emit_signal("position_editor_focus_exited")
+	position_editor_focus_exited.emit()
 func _on_LineEditY_focus_exited():
-	emit_signal("position_editor_focus_exited")
+	position_editor_focus_exited.emit()
 func _on_LineEditZ_focus_exited():
-	emit_signal("position_editor_focus_exited")
+	position_editor_focus_exited.emit()
 
 func _on_LineEditX_text_entered(new_text):
-	emit_signal("position_editor_text_entered")
+	position_editor_text_entered.emit()
 func _on_LineEditY_text_entered(new_text):
-	emit_signal("position_editor_text_entered")
+	position_editor_text_entered.emit()
 func _on_LineEditZ_text_entered(new_text):
-	emit_signal("position_editor_text_entered")
+	position_editor_text_entered.emit()
 
 func _on_LineEditX_text_changed(new_text):
-	emit_signal("position_editor_text_changed", new_text)
+	position_editor_text_changed.emit(new_text)
 func _on_LineEditY_text_changed(new_text):
-	emit_signal("position_editor_text_changed", new_text)
+	position_editor_text_changed.emit(new_text)
 func _on_LineEditZ_text_changed(new_text):
-	emit_signal("position_editor_text_changed", new_text)
+	position_editor_text_changed.emit(new_text)

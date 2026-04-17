@@ -1,9 +1,9 @@
 extends Node
-onready var oCfgEditor = Nodelist.list["oCfgEditor"]
-onready var oTabRules = Nodelist.list["oTabRules"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
-onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCfgEditor = Nodelist.list["oCfgEditor"]
+@onready var oTabRules = Nodelist.list["oTabRules"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
+@onready var oEditor = Nodelist.list["oEditor"]
 
 var control_references: Dictionary = {}
 var add_button: Button = null
@@ -22,7 +22,7 @@ func create_research_control(parent: VBoxContainer, array_index: int, value, sec
 	
 	var item_panel = PanelContainer.new()
 	item_panel.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	item_panel.add_stylebox_override("panel", oCfgEditor.create_darker_border_stylebox())
+	item_panel.add_theme_stylebox_override("panel", oCfgEditor.create_darker_border_stylebox())
 	item_panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	
 	parent.add_child(item_panel)
@@ -34,25 +34,25 @@ func create_research_control(parent: VBoxContainer, array_index: int, value, sec
 	var type_items = ["MAGIC", "ROOM", "CREATURE"]
 	var type_label = Label.new()
 	type_label.text = research_data.type
-	type_label.rect_min_size.x = 80
+	type_label.custom_minimum_size.x = 80
 	type_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	type_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	editor_context.setup_script_editor_font(type_label)
-	type_label.connect("gui_input", self, "_on_type_label_clicked", [array_index, type_items, editor_context])
-	type_label.connect("mouse_entered", self, "_on_research_label_mouse_entered", [type_label, section_name, array_index])
-	type_label.connect("mouse_exited", self, "_on_research_label_mouse_exited", [type_label, section_name, array_index])
+	type_label.gui_input.connect(_on_type_label_clicked.bind(array_index, type_items, editor_context))
+	type_label.mouse_entered.connect(_on_research_label_mouse_entered.bind(type_label, section_name, array_index))
+	type_label.mouse_exited.connect(_on_research_label_mouse_exited.bind(type_label, section_name, array_index))
 	control_container.add_child(type_label)
 	
 	var kind_items = get_research_kind_items(research_data.type)
 	var kind_label = Label.new()
 	kind_label.text = research_data.kind if research_data.kind != "" else "Select..."
-	kind_label.rect_min_size.x = 150
+	kind_label.custom_minimum_size.x = 150
 	kind_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	kind_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	editor_context.setup_script_editor_font(kind_label)
-	kind_label.connect("gui_input", self, "_on_kind_label_clicked", [array_index, kind_items, editor_context])
-	kind_label.connect("mouse_entered", self, "_on_research_label_mouse_entered", [kind_label, section_name, array_index])
-	kind_label.connect("mouse_exited", self, "_on_research_label_mouse_exited", [kind_label, section_name, array_index])
+	kind_label.gui_input.connect(_on_kind_label_clicked.bind(array_index, kind_items, editor_context))
+	kind_label.mouse_entered.connect(_on_research_label_mouse_entered.bind(kind_label, section_name, array_index))
+	kind_label.mouse_exited.connect(_on_research_label_mouse_exited.bind(kind_label, section_name, array_index))
 	control_container.add_child(kind_label)
 	
 	var spacer = Control.new()
@@ -64,47 +64,47 @@ func create_research_control(parent: VBoxContainer, array_index: int, value, sec
 	points_spinbox.max_value = 999999999
 	points_spinbox.step = 1
 	points_spinbox.value = research_data.points
-	points_spinbox.rect_min_size.x = 0
+	points_spinbox.custom_minimum_size.x = 0
 	editor_context.setup_script_editor_font(points_spinbox)
-	points_spinbox.get_line_edit().add_color_override("font_color", oCfgEditor.UI_TEXT_NORMAL)
-	points_spinbox.connect("value_changed", self, "_on_points_changed", [array_index])
-	points_spinbox.get_line_edit().connect("focus_entered", editor_context, "_on_spinbox_focus_entered", [points_spinbox])
-	points_spinbox.get_line_edit().connect("focus_exited", editor_context, "_on_spinbox_focus_exited", [points_spinbox, section_name, str(array_index)])
-	points_spinbox.connect("mouse_entered", editor_context, "_on_control_mouse_entered", [type_label, points_spinbox, section_name, str(array_index)])
-	points_spinbox.connect("mouse_exited", editor_context, "_on_control_mouse_exited", [type_label, points_spinbox, section_name, str(array_index)])
+	points_spinbox.get_line_edit().add_theme_color_override("font_color", oCfgEditor.UI_TEXT_NORMAL)
+	points_spinbox.value_changed.connect(_on_points_changed.bind(array_index))
+	points_spinbox.get_line_edit().focus_entered.connect(editor_context._on_spinbox_focus_entered.bind(points_spinbox))
+	points_spinbox.get_line_edit().focus_exited.connect(editor_context._on_spinbox_focus_exited.bind(points_spinbox, section_name, str(array_index)))
+	points_spinbox.mouse_entered.connect(editor_context._on_control_mouse_entered.bind(type_label, points_spinbox, section_name, str(array_index)))
+	points_spinbox.mouse_exited.connect(editor_context._on_control_mouse_exited.bind(type_label, points_spinbox, section_name, str(array_index)))
 	control_container.add_child(points_spinbox)
 	
-	var revert_button = revert_button_scene.instance()
-	revert_button.connect("pressed", self, "_on_research_revert_pressed", [section_name, array_index])
+	var revert_button = revert_button_scene.instantiate()
+	revert_button.pressed.connect(_on_research_revert_pressed.bind(section_name, array_index))
 	if not has_research_default_value(array_index):
 		revert_button.disabled = true
 		revert_button.modulate.a = 0
 	control_container.add_child(revert_button)
 	
 	var move_button_container = HBoxContainer.new()
-	move_button_container.add_constant_override("separation", 2)
+	move_button_container.add_theme_constant_override("separation", 2)
 	control_container.add_child(move_button_container)
 	
 	var move_up_button = Button.new()
 	move_up_button.text = "↑"
 	move_up_button.hint_tooltip = "Move Up"
 	editor_context.setup_script_editor_font(move_up_button)
-	move_up_button.connect("pressed", self, "_on_move_research_up_pressed", [section_name, array_index])
+	move_up_button.pressed.connect(_on_move_research_up_pressed.bind(section_name, array_index))
 	move_button_container.add_child(move_up_button)
 	
 	var move_down_button = Button.new()
 	move_down_button.text = "↓"
 	move_down_button.hint_tooltip = "Move Down"
 	editor_context.setup_script_editor_font(move_down_button)
-	move_down_button.connect("pressed", self, "_on_move_research_down_pressed", [section_name, array_index])
+	move_down_button.pressed.connect(_on_move_research_down_pressed.bind(section_name, array_index))
 	move_button_container.add_child(move_down_button)
 	
 	var remove_button = Button.new()
 	remove_button.text = "-"
 	remove_button.hint_tooltip = "Delete entry"
-	remove_button.rect_min_size.x = 30
+	remove_button.custom_minimum_size.x = 30
 	editor_context.setup_script_editor_font(remove_button)
-	remove_button.connect("pressed", self, "_on_remove_research_pressed", [section_name, array_index])
+	remove_button.pressed.connect(_on_remove_research_pressed.bind(section_name, array_index))
 	control_container.add_child(remove_button)
 	
 	var refs = {
@@ -202,15 +202,15 @@ func update_all_research_labels_color():
 		var is_item_modified = is_research_item_different(array_index)
 		var target_color = oCfgEditor.UI_TEXT_MODIFIED if is_item_modified else oCfgEditor.UI_TEXT_NORMAL
 		
-		refs["type_label"].add_color_override("font_color", target_color)
-		refs["kind_label"].add_color_override("font_color", target_color)
-		refs["points_spinbox"].get_line_edit().add_color_override("font_color", target_color)
+		refs["type_label"].add_theme_color_override("font_color", target_color)
+		refs["kind_label"].add_theme_color_override("font_color", target_color)
+		refs["points_spinbox"].get_line_edit().add_theme_color_override("font_color", target_color)
 
 
 func _on_add_research_pressed(section_name: String):
 	add_research_data()
 	oCfgEditor.rebuild_ui()
-	yield(oCfgEditor.ensure_add_button_visible(add_button), "completed")
+	await oCfgEditor.ensure_add_button_visible(add_button).completed
 
 
 func _on_remove_research_pressed(section_name: String, array_index: int):
@@ -239,8 +239,8 @@ func _on_research_type_selected(type_name: String, metadata: Dictionary):
 	refs["kind_label"].text = "Select..."
 	var kind_items = get_research_kind_items(type_name)
 	refs["kind_items"] = kind_items
-	yield(oCfgEditor.get_tree().create_timer(0.1), "timeout")
-	oTabRules.create_selection_popup("Select Research Kind", kind_items, funcref(self, "_on_research_kind_selected"), array_index)
+	await oCfgEditor.get_tree().create_timer(0.1).timeout
+	oTabRules.create_selection_popup("Select Research Kind", kind_items, Callable(self, "_on_research_kind_selected"), array_index)
 
 
 func _on_research_kind_selected(kind_name: String, metadata: Dictionary):
@@ -255,16 +255,16 @@ func _on_research_kind_selected(kind_name: String, metadata: Dictionary):
 
 
 func _on_type_label_clicked(event: InputEvent, array_index: int, type_items: Array, editor_context):
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
-		oTabRules.create_selection_popup("Select Research Type", type_items, funcref(self, "_on_research_type_selected"), array_index)
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		oTabRules.create_selection_popup("Select Research Type", type_items, Callable(self, "_on_research_type_selected"), array_index)
 
 
 func _on_kind_label_clicked(event: InputEvent, array_index: int, kind_items: Array, editor_context):
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var current_kind_items = kind_items
 		if control_references.has(array_index) and control_references[array_index].has("kind_items"):
 			current_kind_items = control_references[array_index]["kind_items"]
-		oTabRules.create_selection_popup("Select Research Kind", current_kind_items, funcref(self, "_on_research_kind_selected"), array_index)
+		oTabRules.create_selection_popup("Select Research Kind", current_kind_items, Callable(self, "_on_research_kind_selected"), array_index)
 
 
 func _on_research_label_mouse_entered(label: Label, section_name: String, array_index: int):

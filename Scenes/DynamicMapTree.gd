@@ -1,9 +1,9 @@
 extends Tree
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oSourceMapTree = Nodelist.list["oSourceMapTree"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oLineEditFilter = Nodelist.list["oLineEditFilter"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oSourceMapTree = Nodelist.list["oSourceMapTree"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oLineEditFilter = Nodelist.list["oLineEditFilter"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
 
 var searchResultTreeItemDirs = [] # Just used for killing items with no children
 

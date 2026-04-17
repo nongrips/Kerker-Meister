@@ -1,16 +1,16 @@
 extends Node
 
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oBuffers = Nodelist.list["oBuffers"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oOpenMap = Nodelist.list["oOpenMap"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oThreadedSaveUndo = Nodelist.list["oThreadedSaveUndo"]
-onready var oLoadingBar = Nodelist.list["oLoadingBar"]
-onready var oNewMapWindow = Nodelist.list["oNewMapWindow"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oOpenMap = Nodelist.list["oOpenMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oThreadedSaveUndo = Nodelist.list["oThreadedSaveUndo"]
+@onready var oLoadingBar = Nodelist.list["oLoadingBar"]
+@onready var oNewMapWindow = Nodelist.list["oNewMapWindow"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
 
 
 var undo_history = []
@@ -40,11 +40,11 @@ func _process(delta):
 	if undo_save_queued == true:
 		set_process(false)
 		while true:
-			if Input.is_mouse_button_pressed(BUTTON_LEFT) or \
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or \
 				oLoadingBar.visible == true or \
 				oNewMapWindow.currently_creating_new_map == true or \
 				performing_undo == true:
-					yield(get_tree(), "idle_frame")
+					await get_tree().process_frame
 			else:
 				break
 		oThreadedSaveUndo.semaphore.post()

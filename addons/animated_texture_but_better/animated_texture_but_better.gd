@@ -1,6 +1,6 @@
 extends AnimatedTexture
 
-#const ALLOWED_FILE_EXTENSIONS: PoolStringArray = PoolStringArray([
+#const ALLOWED_FILE_EXTENSIONS: PackedStringArray = PackedStringArray([
 #	"png", "jpg", "jpeg", "gif", "tiff", "tif"
 #])
 #
@@ -25,14 +25,14 @@ extends AnimatedTexture
 #	if not sprites_dir:
 #		set_frame_texture(0, null)
 #
-#	var dir: Directory = Directory.new()
+#	var dir: Directory = DirAccess.new()
 #	if dir.open(sprites_dir) == OK:
 #		dir.list_dir_begin()
 #
 #		var file_name: String = dir.get_next()
 #		var texture_id: int = -1
 #		while file_name:
-#			var name_extension_split: PoolStringArray = (
+#			var name_extension_split: PackedStringArray = (
 #				file_name.rsplit(".", true, 1)
 #			)
 #

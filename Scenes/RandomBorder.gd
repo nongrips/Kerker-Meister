@@ -1,17 +1,17 @@
 extends Node
 
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oNoiseOctaves = Nodelist.list["oNoiseOctaves"]
-onready var oNoisePeriod = Nodelist.list["oNoisePeriod"]
-onready var oNoisePersistence = Nodelist.list["oNoisePersistence"]
-onready var oNoiseLacunarity = Nodelist.list["oNoiseLacunarity"]
-onready var oXSizeLine = Nodelist.list["oXSizeLine"]
-onready var oYSizeLine = Nodelist.list["oYSizeLine"]
-onready var oNoiseDistance = Nodelist.list["oNoiseDistance"]
-onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oNoiseOctaves = Nodelist.list["oNoiseOctaves"]
+@onready var oNoisePeriod = Nodelist.list["oNoisePeriod"]
+@onready var oNoisePersistence = Nodelist.list["oNoisePersistence"]
+@onready var oNoiseLacunarity = Nodelist.list["oNoiseLacunarity"]
+@onready var oXSizeLine = Nodelist.list["oXSizeLine"]
+@onready var oYSizeLine = Nodelist.list["oYSizeLine"]
+@onready var oNoiseDistance = Nodelist.list["oNoiseDistance"]
+@onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
 
 var noise = OpenSimplexNoise.new()
 var algorithmType = 1
@@ -32,8 +32,6 @@ func fill_entire_map_with_earth():
 
 
 func convert_pixels_to_slabs(imageData):
-	imageData.lock()
-	
 	for y in range(1, M.ySize-1):
 		for x in range(1, M.xSize-1):
 			var pixelColor = imageData.get_pixel(x,y)
@@ -57,9 +55,6 @@ func convert_pixels_to_slabs(imageData):
 				match pixelColor:
 					impenetrableColour: oDataSlab.set_cell(x, y, Slabs.ROCK)
 					earthColour: oDataSlab.set_cell(x, y, Slabs.EARTH)
-	imageData.unlock()
-
-
 func update_border_image_with_noise(imageData, textureData):
 	var NOISECODETIME = OS.get_ticks_msec()
 	var borderDist = oNoiseDistance.value
@@ -103,8 +98,6 @@ func update_border_image_with_noise(imageData, textureData):
 	var coordsToCheck = [Vector2(halfMapSize.x,halfMapSize.y)]
 	
 	imageData.fill(impenetrableColour)
-	imageData.lock()
-	
 	while coordsToCheck.size() > 0:
 		var coord = coordsToCheck.pop_back()
 		if floodFillTileMap.get_cellv(coord) == 1:
@@ -114,25 +107,17 @@ func update_border_image_with_noise(imageData, textureData):
 			coordsToCheck.append(coord + Vector2(0,-1))
 			coordsToCheck.append(coord + Vector2(1,0))
 			coordsToCheck.append(coord + Vector2(-1,0))
-	
-	imageData.unlock()
-	
 	print('Border image time: ' + str(OS.get_ticks_msec() - NOISECODETIME) + 'ms')
 
 
 func update_border_image_with_blank(imageData, textureData):
 	imageData.fill(earthColour)
-	imageData.lock()
-	
 	var fullMapSize = Vector2(oXSizeLine.text.to_int(), oYSizeLine.text.to_int())
 	
 	for x in fullMapSize.x:
 		for y in fullMapSize.y:
 			if x == 0 or x == fullMapSize.x-1 or y == 0 or y == fullMapSize.y-1:
 				imageData.set_pixel(x,y, impenetrableColour)
-	imageData.unlock()
-
-
 func remove_isolated_earth_slabs(imageData):
 	var w = imageData.get_width()
 	var h = imageData.get_height()
@@ -142,7 +127,6 @@ func remove_isolated_earth_slabs(imageData):
 	var potentialPlayerColour = Color(1.0, 0.0, 1.0, 1.0)
 	var coordsToCheck = []
 	var magentaPositions = []
-	imageData.lock()
 	for y in range(h):
 		for x in range(w):
 			if imageData.get_pixel(x, y) == potentialPlayerColour:
@@ -178,7 +162,3 @@ func remove_isolated_earth_slabs(imageData):
 				imageData.set_pixel(x, y, earthColour)
 	for magentaPos in magentaPositions:
 		imageData.set_pixel(magentaPos.x, magentaPos.y, potentialPlayerColour)
-	imageData.unlock()
-
-
- 

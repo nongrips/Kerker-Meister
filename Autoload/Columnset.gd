@@ -1,6 +1,6 @@
 extends 'res://Class/ClmClass.gd'
-onready var oGame = Nodelist.list["oGame"]
-onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 var column_count = 8192
 var reserved_columnset = 4096
@@ -106,8 +106,8 @@ func export_toml_columnset(filePath):
 	if column_diffs.size() == 0:
 		return false
 	
-	var textFile = File.new()
-	if textFile.open(filePath, File.WRITE) != OK:
+	var textFile = FileAccess.open(filePath, FileAccess.WRITE)
+	if textFile == null:
 		var oMessage = Nodelist.list["oMessage"]
 		oMessage.big("Error", "Couldn't save file, maybe try saving to another directory.")
 		return false

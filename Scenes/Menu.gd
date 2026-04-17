@@ -1,50 +1,50 @@
 extends PanelContainer
-onready var oSaveMap = Nodelist.list["oSaveMap"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oPreferencesWindow = Nodelist.list["oPreferencesWindow"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
-onready var oMenuButtonFile = Nodelist.list["oMenuButtonFile"]
-onready var oMenuButtonEdit = Nodelist.list["oMenuButtonEdit"]
-onready var oMenuButtonSettings = Nodelist.list["oMenuButtonSettings"]
-onready var oMenuButtonView = Nodelist.list["oMenuButtonView"]
-onready var oMenuPlayButton = Nodelist.list["oMenuPlayButton"]
-onready var oFileDialogSaveAs = Nodelist.list["oFileDialogSaveAs"]
-onready var oFileDialogOpen = Nodelist.list["oFileDialogOpen"]
-onready var oConfirmAutoGen = Nodelist.list["oConfirmAutoGen"]
-onready var oTabPlacements = Nodelist.list["oTabPlacements"]
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oMenuButtonHelp = Nodelist.list["oMenuButtonHelp"]
-onready var oAboutWindow = Nodelist.list["oAboutWindow"]
-onready var oControlsWindow = Nodelist.list["oControlsWindow"]
-onready var oImageAsMapDialog = Nodelist.list["oImageAsMapDialog"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
-onready var oTextureEditingWindow = Nodelist.list["oTextureEditingWindow"]
-onready var oOpenMap = Nodelist.list["oOpenMap"]
-onready var oConfirmDiscardChanges = Nodelist.list["oConfirmDiscardChanges"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oNewMapWindow = Nodelist.list["oNewMapWindow"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oDataLof = Nodelist.list["oDataLof"]
-onready var oExportPreview = Nodelist.list["oExportPreview"]
-onready var oResizeCurrentMapSize = Nodelist.list["oResizeCurrentMapSize"]
-onready var oGridDataWindow = Nodelist.list["oGridDataWindow"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oActionPointListWindow = Nodelist.list["oActionPointListWindow"]
-onready var oUndoStates = Nodelist.list["oUndoStates"]
-onready var oSortCreatureStats = Nodelist.list["oSortCreatureStats"]
-onready var oConfigFilesListWindow = Nodelist.list["oConfigFilesListWindow"]
-onready var oConfirmOpenWhichScript = Nodelist.list["oConfirmOpenWhichScript"]
-onready var oChangelogWindow = Nodelist.list["oChangelogWindow"]
-onready var oCfgEditor = Nodelist.list["oCfgEditor"]
+@onready var oSaveMap = Nodelist.list["oSaveMap"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oPreferencesWindow = Nodelist.list["oPreferencesWindow"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oMenuButtonFile = Nodelist.list["oMenuButtonFile"]
+@onready var oMenuButtonEdit = Nodelist.list["oMenuButtonEdit"]
+@onready var oMenuButtonSettings = Nodelist.list["oMenuButtonSettings"]
+@onready var oMenuButtonView = Nodelist.list["oMenuButtonView"]
+@onready var oMenuPlayButton = Nodelist.list["oMenuPlayButton"]
+@onready var oFileDialogSaveAs = Nodelist.list["oFileDialogSaveAs"]
+@onready var oFileDialogOpen = Nodelist.list["oFileDialogOpen"]
+@onready var oConfirmAutoGen = Nodelist.list["oConfirmAutoGen"]
+@onready var oTabPlacements = Nodelist.list["oTabPlacements"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oMenuButtonHelp = Nodelist.list["oMenuButtonHelp"]
+@onready var oAboutWindow = Nodelist.list["oAboutWindow"]
+@onready var oControlsWindow = Nodelist.list["oControlsWindow"]
+@onready var oImageAsMapDialog = Nodelist.list["oImageAsMapDialog"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oTextureEditingWindow = Nodelist.list["oTextureEditingWindow"]
+@onready var oOpenMap = Nodelist.list["oOpenMap"]
+@onready var oConfirmDiscardChanges = Nodelist.list["oConfirmDiscardChanges"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oNewMapWindow = Nodelist.list["oNewMapWindow"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oExportPreview = Nodelist.list["oExportPreview"]
+@onready var oResizeCurrentMapSize = Nodelist.list["oResizeCurrentMapSize"]
+@onready var oGridDataWindow = Nodelist.list["oGridDataWindow"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oActionPointListWindow = Nodelist.list["oActionPointListWindow"]
+@onready var oUndoStates = Nodelist.list["oUndoStates"]
+@onready var oSortCreatureStats = Nodelist.list["oSortCreatureStats"]
+@onready var oConfigFilesListWindow = Nodelist.list["oConfigFilesListWindow"]
+@onready var oConfirmOpenWhichScript = Nodelist.list["oConfirmOpenWhichScript"]
+@onready var oChangelogWindow = Nodelist.list["oChangelogWindow"]
+@onready var oCfgEditor = Nodelist.list["oCfgEditor"]
 
 var recentlyOpened = []
 var recentlyOpenedPopupMenu = PopupMenu.new()
@@ -59,7 +59,7 @@ func _ready():
 	
 	for i in $HBoxContainer2.get_children():
 		if i is MenuButton:
-			i.get_popup().rect_min_size.x = 180
+			i.get_popup().custom_minimum_size.x = 180
 	
 	add_file_menu_items()
 	add_edit_menu_items()
@@ -69,12 +69,12 @@ func _ready():
 	popup.add_child(recentlyOpenedPopupMenu)
 	popup.set_item_submenu(3, "recentlyOpened")
 	
-	recentlyOpenedPopupMenu.connect("id_pressed",self,"_on_RecentSubmenu_Pressed")
+	recentlyOpenedPopupMenu.id_pressed.connect(_on_RecentSubmenu_Pressed)
 	
-	oMenuButtonFile.get_popup().connect("id_pressed",self,"_on_FileSubmenu_Pressed")
-	oMenuButtonEdit.get_popup().connect("id_pressed",self,"_on_EditSubmenu_Pressed")
-	oMenuButtonView.get_popup().connect("id_pressed",self,"_on_ViewSubmenu_Pressed")
-	oMenuButtonHelp.get_popup().connect("id_pressed",self,"_on_HelpSubmenu_Pressed")
+	oMenuButtonFile.get_popup().id_pressed.connect(_on_FileSubmenu_Pressed)
+	oMenuButtonEdit.get_popup().id_pressed.connect(_on_EditSubmenu_Pressed)
+	oMenuButtonView.get_popup().id_pressed.connect(_on_ViewSubmenu_Pressed)
+	oMenuButtonHelp.get_popup().id_pressed.connect(_on_HelpSubmenu_Pressed)
 
 func add_file_menu_items():
 	# Add menu items to oMenuButtonFile
@@ -145,13 +145,12 @@ func initialize_recently_opened(value):
 	recentlyOpened = value
 	populate_recently_opened()
 
-var tdir = Directory.new()
-
+var tdir: DirAccess = null
 func find_cased_file_path(basePathString: String, fileExtensions: Array) -> String:
 	var dirPath = basePathString.get_base_dir()
 	var baseFileNameWithoutExt = basePathString.get_file()
-	var d = Directory.new()
-	if d.open(dirPath) != OK:
+	var d = DirAccess.open(dirPath)
+	if d == null:
 		return ""
 	d.list_dir_begin()
 	var entry = d.get_next()
@@ -161,7 +160,7 @@ func find_cased_file_path(basePathString: String, fileExtensions: Array) -> Stri
 				var targetFileNameWithExt = baseFileNameWithoutExt + ext
 				if entry.to_lower() == targetFileNameWithExt.to_lower():
 					d.list_dir_end()
-					return dirPath.plus_file(entry)
+					return dirPath.path_join(entry)
 		entry = d.get_next()
 	d.list_dir_end()
 	return ""
@@ -381,7 +380,7 @@ func _on_ViewSubmenu_Pressed(pressedID):
 func _on_MenuButtonSettings_pressed():
 	oMenuButtonSettings.get_popup().visible = false
 	
-	if Columnset.cubes.empty() == true:
+	if Columnset.cubes.is_empty() == true:
 		oMessage.quick("No currently opened map.")
 	else:
 		Utils.popup_centered(oMapSettingsWindow)
@@ -395,9 +394,9 @@ func _on_PlayButton_pressed(): # Use normal Button instead of MenuButton in comb
 	
 	oGame.menu_play_clicked()
 	
-	oMenuPlayButton.disconnect("pressed",self,"_on_PlayButton_pressed")
-	yield(get_tree().create_timer(2.5), "timeout")
-	oMenuPlayButton.connect("pressed",self,"_on_PlayButton_pressed")
+	oMenuPlayButton.pressed.disconnect(_on_PlayButton_pressed)
+	await get_tree().create_timer(2.5).timeout
+	oMenuPlayButton.pressed.connect(_on_PlayButton_pressed)
 
 func _on_ConfirmDiscardChanges_confirmed():
 	oOpenMap.open_map(oCurrentMap.path)

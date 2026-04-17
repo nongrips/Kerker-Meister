@@ -1,7 +1,7 @@
 extends Node
-onready var oGame = Nodelist.list["oGame"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 var reserved_slabset = 100
 var highest_slabset_id_from_fxdata = 0
@@ -185,8 +185,8 @@ func ensure_tng_has_space(variationIndex): # Helper retained, though not used in
 
 
 func preprocess_toml_file(filePath): # 7ms
-	var file = File.new()
-	if file.open(filePath, File.READ) != OK:
+	var file = FileAccess.open(filePath, FileAccess.READ)
+	if file == null:
 		return null
 
 	# [[slab20.NW_WATER_objects]]
@@ -215,8 +215,8 @@ func preprocess_toml_file(filePath): # 7ms
 
 #print(processed_string)
 # test
-#	var textFile = File.new()
-#	if textFile.open("D:/AI/debug_slabset.toml", File.WRITE) != OK:
+#	var textFile = FileAccess.new()
+#	if textFile.open("D:/AI/debug_slabset.toml", FileAccess.WRITE) != OK:
 #		return
 #	textFile.store_string(processed_string)
 #	textFile.close()
@@ -273,10 +273,10 @@ func export_toml_slabset(filePath):
 	var CODETIME_START = OS.get_ticks_msec()
 	var list_of_modified_slabs = get_all_modified_slabs()
 
-	if list_of_modified_slabs.empty():
+	if list_of_modified_slabs.is_empty():
 		return false
 
-	var lines = PoolStringArray()
+	var lines = PackedStringArray()
 	for slabID in list_of_modified_slabs:
 		lines.append("[slab" + str(slabID) + "]")
 		lines.append("")
@@ -323,7 +323,7 @@ func export_toml_slabset(filePath):
 								value = object_properties[z]
 						if propertyName:
 							lines.append(propertyName + " = " + str(value))
-				if tng[variation].empty():
+				if tng[variation].is_empty():
 					lines.append("Objects = []")
 			else:
 				lines.append("Objects = []")
@@ -331,8 +331,8 @@ func export_toml_slabset(filePath):
 			lines.append("")
 		lines.append("")
 
-	var textFile = File.new()
-	if textFile.open(filePath, File.WRITE) != OK:
+	var textFile = FileAccess.open(filePath, FileAccess.WRITE)
+	if textFile == null:
 		oMessage.big("Error", "Couldn't save file, maybe try saving to another directory.")
 		return false
 
@@ -384,9 +384,9 @@ func is_tng_variation_different(variation):
 
 
 func is_dat_column_different(variation, subtile):
-	if variation >= dat.size() or dat[variation].empty():
+	if variation >= dat.size() or dat[variation].is_empty():
 		return false
-	if variation >= default_data["dat"].size() or default_data["dat"][variation].empty():
+	if variation >= default_data["dat"].size() or default_data["dat"][variation].is_empty():
 		return dat[variation][subtile] != 0
 	return dat[variation][subtile] != default_data["dat"][variation][subtile]
 

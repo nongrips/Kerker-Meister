@@ -1,20 +1,20 @@
 extends Node
 
-onready var oGame = Nodelist.list["oGame"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oDataLua = Nodelist.list["oDataLua"]
-onready var oScriptEditor = Nodelist.list["oScriptEditor"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oBuffers = Nodelist.list["oBuffers"]
-onready var oMenuButtonFile = Nodelist.list["oMenuButtonFile"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oDataLua = Nodelist.list["oDataLua"]
+@onready var oScriptEditor = Nodelist.list["oScriptEditor"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oMenuButtonFile = Nodelist.list["oMenuButtonFile"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
 
 var queueExit = false
 
@@ -40,19 +40,19 @@ func save_map(filePath):
 	oDataClm.update_all_utilized()
 	var writeFailure = false
 	for EXT in oBuffers.FILE_TYPES:
-		var saveToFilePath = map_base_dir.plus_file(map_filename_no_ext + '.' + EXT.to_lower())
+		var saveToFilePath = map_base_dir.path_join(map_filename_no_ext + '.' + EXT.to_lower())
 		var should_process = oBuffers.should_process_file_type(EXT)
 		if should_process:
 			if oBuffers.write(saveToFilePath, EXT.to_upper()) != OK:
 				writeFailure = true
 		
-		if File.new().file_exists(saveToFilePath):
-			var modTime = File.new().get_modified_time(saveToFilePath)
+		if FileAccess.file_exists(saveToFilePath):
+			var modTime = FileAccess.get_modified_time(saveToFilePath)
 			var precise_path = Utils.case_insensitive_file(map_base_dir, saveToFilePath.get_file().get_basename(), saveToFilePath.get_extension())
 			oCurrentMap.currentFilePaths[EXT] = [precise_path if precise_path else saveToFilePath, modTime]
 		elif oCurrentMap.currentFilePaths.has(EXT):
 			var path_info = oCurrentMap.currentFilePaths[EXT]
-			var is_valid_path = typeof(path_info) == TYPE_ARRAY and path_info.size() > oCurrentMap.PATHSTRING and File.new().file_exists(path_info[oCurrentMap.PATHSTRING])
+			var is_valid_path = typeof(path_info) == TYPE_ARRAY and path_info.size() > oCurrentMap.PATHSTRING and FileAccess.file_exists(path_info[oCurrentMap.PATHSTRING])
 			if not should_process and not is_valid_path:
 				oCurrentMap.currentFilePaths.erase(EXT)
 			elif should_process:
@@ -88,9 +88,9 @@ func delete_script_file(map_filename_no_ext, map_base_dir, script_key, file_ext,
 		var path_info = oCurrentMap.currentFilePaths[script_key]
 		if typeof(path_info) == TYPE_ARRAY and path_info.size() > oCurrentMap.PATHSTRING:
 			path_to_delete = path_info[oCurrentMap.PATHSTRING]
-	if path_to_delete == "" or not File.new().file_exists(path_to_delete):
+	if path_to_delete == "" or not FileAccess.file_exists(path_to_delete):
 		path_to_delete = Utils.case_insensitive_file(map_base_dir, script_target_filename.get_basename(), script_target_filename.get_extension())
-	if path_to_delete == "" or not File.new().file_exists(path_to_delete):
+	if path_to_delete == "" or not FileAccess.file_exists(path_to_delete):
 		return
 
 	var global_path = ProjectSettings.globalize_path(path_to_delete)
@@ -109,24 +109,24 @@ func delete_existing_files(map_file_path):
 	var baseDirectory = map_file_path.get_base_dir()
 	var MAP_NAME_NO_EXT = map_file_path.get_file().get_basename().to_upper()
 
-	if OS.get_name() == "X11":
+	if OS.get_name() == "Linux":
 		fileTypesToDelete = oBuffers.FILE_TYPES
 	elif oCurrentFormat.selected == Constants.ClassicFormat:
 		fileTypesToDelete = ["TNGFX", "APTFX", "LGTFX"]
 	elif oCurrentFormat.selected == Constants.KfxFormat:
 		fileTypesToDelete = ["LIF", "TNG", "APT", "LGT"]
-	if fileTypesToDelete.empty():
+	if fileTypesToDelete.is_empty():
 		return
 
-	var dir = Directory.new()
-	if dir.open(baseDirectory) != OK:
+	var dir = DirAccess.open(baseDirectory)
+	if dir == null:
 		print("An error occurred when trying to access " + baseDirectory)
 		return
-	dir.list_dir_begin(true, false)
+	dir.list_dir_begin()
 	var fileName = dir.get_next()
 	while fileName != "":
 		if MAP_NAME_NO_EXT in fileName.to_upper() and fileTypesToDelete.has(fileName.get_extension().to_upper()):
-			if dir.file_exists(fileName):
+			if FileAccess.file_exists(fileName):
 				print("Deleted due to format conflict/OS: " + fileName)
 				dir.remove(fileName)
 		fileName = dir.get_next()
@@ -155,7 +155,7 @@ func save_toml_file(file_type, map_filename_no_ext, map_base_dir):
 			config_type = oConfigFileManager.LOAD_CFG_CAMPAIGN
 	else:
 		# Default to local file
-		file_path = map_base_dir.plus_file(map_filename_no_ext + "." + file_type)
+		file_path = map_base_dir.path_join(map_filename_no_ext + "." + file_type)
 	
 	var export_success = false
 	match file_type:
@@ -168,7 +168,7 @@ func save_toml_file(file_type, map_filename_no_ext, map_base_dir):
 		if config_type == oConfigFileManager.LOAD_CFG_CAMPAIGN:
 			if not oConfigFileManager.paths_loaded[config_type].has(file_path):
 				oConfigFileManager.paths_loaded[config_type].append(file_path)
-			oConfigFileManager.emit_signal("config_file_status_changed")
+			oConfigFileManager.config_file_status_changed.emit()
 		else:
 			oConfigFileManager.notify_file_created(file_path, file_type)
 		print("Saved " + file_type.get_basename() + " to: " + file_path)
@@ -178,7 +178,7 @@ func save_toml_file(file_type, map_filename_no_ext, map_base_dir):
 
 
 func delete_toml_file_if_exists(file_path, file_type):
-	if File.new().file_exists(file_path):
+	if FileAccess.file_exists(file_path):
 		var global_path = ProjectSettings.globalize_path(file_path)
 		var err_trash = OS.move_to_trash(global_path)
 		if err_trash == OK:
@@ -200,7 +200,7 @@ func save_rules_cfg_file(file_type, map_filename_no_ext, map_base_dir):
 		if existing_file_path.get_file() == file_type:
 			config_type = oConfigFileManager.LOAD_CFG_CAMPAIGN
 	else:
-		file_path = map_base_dir.plus_file(map_filename_no_ext + "." + file_type)
+		file_path = map_base_dir.path_join(map_filename_no_ext + "." + file_type)
 	
 	var export_success = export_rules_cfg(file_path)
 	
@@ -208,7 +208,7 @@ func save_rules_cfg_file(file_type, map_filename_no_ext, map_base_dir):
 		if config_type == oConfigFileManager.LOAD_CFG_CAMPAIGN:
 			if not oConfigFileManager.paths_loaded[config_type].has(file_path):
 				oConfigFileManager.paths_loaded[config_type].append(file_path)
-			oConfigFileManager.emit_signal("config_file_status_changed")
+			oConfigFileManager.config_file_status_changed.emit()
 		else:
 			oConfigFileManager.notify_file_created(file_path, file_type)
 		print("Saved " + file_type.get_basename() + " to: " + file_path)
@@ -217,7 +217,7 @@ func save_rules_cfg_file(file_type, map_filename_no_ext, map_base_dir):
 
 
 func export_rules_cfg(file_path):
-	if not oConfigFileManager.current_data.has("rules.cfg") or oConfigFileManager.current_data["rules.cfg"].empty():
+	if not oConfigFileManager.current_data.has("rules.cfg") or oConfigFileManager.current_data["rules.cfg"].is_empty():
 		return false
 	
 	var has_any_changes = false
@@ -238,14 +238,14 @@ func export_rules_cfg(file_path):
 					if oConfigFileManager.is_item_different(section_name, key):
 						modified_keys[key] = section_data[key]
 						has_any_changes = true
-			if not modified_keys.empty():
+			if not modified_keys.is_empty():
 				sections_to_export[section_name] = modified_keys
 	
 	if not has_any_changes:
 		return false
 	
-	var file = File.new()
-	if file.open(file_path, File.WRITE) != OK:
+	var file = FileAccess.open(file_path, FileAccess.WRITE)
+	if file == null:
 		return false
 	
 	for section_name in sections_to_export.keys():
@@ -276,7 +276,7 @@ func export_rules_cfg(file_path):
 			for key in section_data.keys():
 				var value = section_data[key]
 				if value is Array:
-					if value.empty():
+					if value.is_empty():
 						file.store_line(key + " = ")
 					else:
 						var str_values = []
@@ -293,7 +293,7 @@ func export_rules_cfg(file_path):
 
 
 func delete_rules_cfg_file_if_exists(file_path, file_type):
-	if File.new().file_exists(file_path):
+	if FileAccess.file_exists(file_path):
 		var global_path = ProjectSettings.globalize_path(file_path)
 		var err_trash = OS.move_to_trash(global_path)
 		if err_trash == OK:

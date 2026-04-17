@@ -1,8 +1,9 @@
 extends VBoxContainer
-onready var oScriptGenerator = Nodelist.list["oScriptGenerator"]
+@onready var oScriptGenerator = Nodelist.list["oScriptGenerator"]
 
-var availabilityState setget set_availability_state
+var availabilityState:
 
+	set(_val): set_availability_state(_val)
 enum {
 	OPTION_START
 	OPTION_RESEARCH
@@ -12,8 +13,8 @@ enum {
 }
 
 func _ready():
-	connect("mouse_entered", self, "_on_available_button_mouse_entered")
-	connect("mouse_exited", self, "_on_available_button_mouse_exited")
+	mouse_entered.connect(_on_available_button_mouse_entered)
+	mouse_exited.connect(_on_available_button_mouse_exited)
 
 
 func _on_available_button_mouse_entered():
@@ -28,7 +29,7 @@ func _on_available_button_mouse_exited():
 
 func _on_AvailableButton_gui_input(event):
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			_on_button_pressed()
 
 

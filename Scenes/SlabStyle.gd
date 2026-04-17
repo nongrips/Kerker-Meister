@@ -1,14 +1,15 @@
 extends PanelContainer
-onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oTMapNames = Nodelist.list["oTMapNames"]
+@onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oTMapNames = Nodelist.list["oTMapNames"]
 
 var scnSlabStyleButton = preload("res://Scenes/SlabStyleButton.tscn")
-var paintSlabStyle = 0 setget set_paintSlabStyle
-onready var oSelectedRect = get_node("../../../../Clippy/SelectedRect")
+var paintSlabStyle = 0:
+	set(_val): set_paintSlabStyle(_val)
+@onready var oSelectedRect = get_node("../../../../Clippy/SelectedRect")
 
 func initialize_grid_items():
 	if is_instance_valid(oDisplaySlxNumbers):
@@ -16,11 +17,11 @@ func initialize_grid_items():
 	var oGridContainer = current_grid_container()
 #	# Add children
 	for i in oTMapLoader.cachedTextures.size()+1: # +1 is for "Default"
-		var btnId = scnSlabStyleButton.instance()
-		btnId.connect("pressed", self, "_on_SlabStyleButtonPressed", [btnId,i])
+		var btnId = scnSlabStyleButton.instantiate()
+		btnId.pressed.connect(_on_SlabStyleButtonPressed.bind(btnId,i))
 		
-		btnId.connect("mouse_entered", oPickSlabWindow, "_on_hovered_over_item", [btnId])
-		btnId.connect("mouse_exited", oPickSlabWindow, "_on_hovered_none")
+		btnId.mouse_entered.connect(oPickSlabWindow._on_hovered_over_item.bind(btnId))
+		btnId.mouse_exited.connect(oPickSlabWindow._on_hovered_none)
 		
 		
 		if i == 0:

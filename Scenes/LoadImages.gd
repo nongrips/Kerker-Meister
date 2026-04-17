@@ -13,7 +13,7 @@ extends Node
 #		var imgTex = ImageTexture.new()
 #
 #		img.load(files[i])
-#		imgTex.create_from_image(img, 0)
+#		imgTex.set_image(img)
 #
 #		tex[files[i]] = imgTex
 #	oTextures.call_deferred("done",tex)

@@ -1,20 +1,25 @@
 extends Node2D
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oActionPointList = Nodelist.list["oActionPointList"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oScriptMarkers = Nodelist.list["oScriptMarkers"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oActionPointList = Nodelist.list["oActionPointList"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oScriptMarkers = Nodelist.list["oScriptMarkers"]
 
 var ownership = 5 # Not used by Dungeon Keeper, this is just to make it easy for the editor.
 var thingType = Things.TYPE.EXTRA
 var subtype = 1 # As written in Things.DATA_EXTRA
 
-var locationX = null setget set_location_x
-var locationY = null setget set_location_y
+var locationX = null:
+
+	set(_val): set_location_x(_val)
+var locationY = null:
+	set(_val): set_location_y(_val)
 var locationZ = null setget set_location_z # This is actually unused for action points, but its presence fixes errors
-var pointRange = null setget set_pointrange
-var pointNumber = null setget set_pointNumber
+var pointRange = null:
+	set(_val): set_pointrange(_val)
+var pointNumber = null:
+	set(_val): set_pointNumber(_val)
 var data7 = null
 
 func set_location_x(setVal):
@@ -46,7 +51,7 @@ func set_pointNumber(setval):
 
 func set_pointrange(setval):
 	pointRange = setval
-	update()
+	queue_redraw()
 
 func instance_was_selected(): update()
 func instance_was_deselected(): update()
@@ -60,14 +65,14 @@ func _on_MouseDetection_mouse_entered():
 		oSelection.cursorOnInstancesArray.append(self)
 	oSelection.clean_up_cursor_array()
 	oThingDetails.update_details()
-	update()
+	queue_redraw()
 
 func _on_MouseDetection_mouse_exited():
 	if oSelection.cursorOnInstancesArray.has(self):
 		oSelection.cursorOnInstancesArray.erase(self)
 	oSelection.clean_up_cursor_array()
 	oThingDetails.update_details()
-	update()
+	queue_redraw()
 
 func _on_VisibilityNotifier2D_screen_entered():
 	visible = true
@@ -77,7 +82,7 @@ func _on_VisibilityNotifier2D_screen_exited():
 
 
 func _enter_tree():
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	if oActionPointList:
 		oActionPointList.update_ap_list()
 

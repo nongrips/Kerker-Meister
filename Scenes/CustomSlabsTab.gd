@@ -7,7 +7,7 @@ extends PanelContainer
 #	var oGridContainer = current_grid_container()
 #
 #	var scene = load("res://Scenes/SlabDisplay.tscn")
-#	var id = scene.instance()
+#	var id = scene.instantiate()
 #	var slabVariation
 #
 #

@@ -1,17 +1,16 @@
 extends SpinBox
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oEditingTools = Nodelist.list["oEditingTools"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oEditingTools = Nodelist.list["oEditingTools"]
 
 
 func _ready():
-	get_line_edit().expand_to_text_length = true
-	get_line_edit().connect("text_changed",self,"text_changed")
+	get_line_edit().text_changed.connect(text_changed)
 
 func text_changed(txt):
 	var newNumber = txt.to_int()
@@ -22,7 +21,7 @@ func _input(event):
 	if visible == false: return
 	if event is InputEventKey and event.pressed == true:
 		
-		if get_focus_owner() is LineEdit and get_focus_owner() != self:
+		if get_viewport().gui_get_focus_owner() is LineEdit and get_viewport().gui_get_focus_owner() != self:
 			return
 		if oMapSettingsWindow.visible == true: return
 		if oMapBrowser.visible == true: return
@@ -30,10 +29,10 @@ func _input(event):
 		if oSlabsetWindow.visible == true: return
 		if oSelector.mode == oSelector.MODE_SUBTILE: return
 		
-		yield(get_tree(),'idle_frame')
+		await get_tree().process_frame
 		if oPropertiesTabs.current_tab != 1: return
 		var setVal = null
-		match event.scancode:
+		match event.keycode:
 			KEY_1, KEY_KP_1: setVal = 1
 			KEY_2, KEY_KP_2: setVal = 2
 			KEY_3, KEY_KP_3: setVal = 3
@@ -51,5 +50,5 @@ func _input(event):
 			value = setVal
 			get_line_edit().modulate = Color(2,2,2,1)
 			for i in 10:
-				yield(get_tree(),'idle_frame')
+				await get_tree().process_frame
 			get_line_edit().modulate = Color(1,1,1,1)

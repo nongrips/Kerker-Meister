@@ -1,7 +1,7 @@
-extends Spatial
-onready var oPlayer = Nodelist.list["oPlayer"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oGame3D = Nodelist.list["oGame3D"]
+extends Node3D
+@onready var oPlayer = Nodelist.list["oPlayer"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oGame3D = Nodelist.list["oGame3D"]
 
 var reach = 100
 var blockChecks = {}
@@ -47,7 +47,7 @@ func start(startPoint, endPoint):
 	for i in abcKeys.size():
 		var id = blockChecks[abcKeys[i]]
 		if id.markForCulling == true:
-			blockChecks.erase(id.translation)
+			blockChecks.erase(id.position)
 			id.queue_free()
 	
 	#print('countTime: ' + str(countTime) )
@@ -62,8 +62,8 @@ func place_area_check(raypos):
 		if oGenerateTerrain.get_block(superPos) != oGenerateTerrain.EMPTY:
 			if blockChecks.has(superPos) == false:
 				
-				var id = blockCheckerScene.instance()
-				id.translation = superPos
+				var id = blockCheckerScene.instantiate()
+				id.position = superPos
 				oGame3D.add_child(id)
 				
 				blockChecks[superPos] = id #adds an entry to the dictionary
@@ -83,8 +83,8 @@ func place_area_check(raypos):
 #		if oGenerateTerrain.getBlock(superPos) != oGenerateTerrain.EMPTY:
 #			if blockChecks.has(superPos) == false:
 #
-#				var id = blockCheckerScene.instance()
-#				id.translation = superPos
+#				var id = blockCheckerScene.instantiate()
+#				id.position = superPos
 #				oGame3D.add_child(id)
 #
 #				blockChecks[superPos] = id
@@ -114,7 +114,7 @@ func place_area_check(raypos):
 #
 	
 #	for i in 10:
-#		yield(get_tree(),'idle_frame')
+#		await get_tree().process_frame
 
 #func raycastBlockmap(startPoint, endPoint):
 #	var raycast = Vector3()

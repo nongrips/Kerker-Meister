@@ -1,21 +1,21 @@
 extends Node
 
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataLiquid = Nodelist.list["oDataLiquid"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oDataLof = Nodelist.list["oDataLof"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oDataLua = Nodelist.list["oDataLua"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataLiquid = Nodelist.list["oDataLiquid"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oDataLua = Nodelist.list["oDataLua"]
 
 var value # just so I don't have to initialize the var in every function
 
@@ -97,22 +97,20 @@ func read_slx(buffer):
 	# 1 = Tileset 0
 	# 2 = Tileset 1
 	# 3 = Tileset 2, etc.
-	oDataSlx.slxImgData.create(M.xSize, M.ySize, false, Image.FORMAT_RGB8)
+	oDataSlx.slxImgData = Image.create(M.xSize, M.ySize, false, Image.FORMAT_RGB8)
 	
-	oDataSlx.slxImgData.lock()
 	for ySlab in M.ySize:
 		for xSlab in M.xSize:
 			value = buffer.get_u8()
 			# Red value will be used to store the slx value
 			oDataSlx.slxImgData.set_pixel(xSlab, ySlab, Color8(value,0,0,255))
-	oDataSlx.slxImgData.unlock()
-	
-	oDataSlx.slxTexData.create_from_image(oDataSlx.slxImgData, 0)
+
+	oDataSlx.slxTexData.set_image(oDataSlx.slxImgData)
 
 func new_slx():
-	oDataSlx.slxImgData.create(M.xSize, M.ySize, false, Image.FORMAT_RGB8)
+	oDataSlx.slxImgData = Image.create(M.xSize, M.ySize, false, Image.FORMAT_RGB8)
 	oDataSlx.slxImgData.fill(Color(0,0,0,1))
-	oDataSlx.slxTexData.create_from_image(oDataSlx.slxImgData, 0)
+	oDataSlx.slxTexData.set_image(oDataSlx.slxImgData)
 
 func read_une(buffer):
 	oDataFakeSlab.initialize(M.xSize, M.ySize, 0, Grid.U16)
@@ -238,7 +236,7 @@ func read_apt(buffer):
 	var apScn = preload("res://Scenes/ActionPointInstance.tscn")
 	
 	for entry in numberOfActionPoints:
-		var id = apScn.instance()
+		var id = apScn.instantiate()
 		
 		id.locationX = (buffer.get_u8() / 256.0) + buffer.get_u8() # 0-1
 		id.locationY = (buffer.get_u8() / 256.0) + buffer.get_u8() # 2-3
@@ -258,7 +256,7 @@ func read_lgt(buffer):
 	var lightScn = preload("res://Scenes/LightInstance.tscn")
 	
 	for entry in numberOfLightPoints:
-		var id = lightScn.instance()
+		var id = lightScn.instantiate()
 		
 		id.lightRange = (buffer.get_u8() / 256.0) + buffer.get_u8() # 0-1
 		id.lightIntensity = buffer.get_u8() # 2
@@ -302,7 +300,7 @@ func read_lgtfx(buffer):
 			if c.has_section(section) == false:
 				continue
 			
-			var id = lightScn.instance()
+			var id = lightScn.instantiate()
 			
 			id.locationX = c.get_value(section, "SUBTILEX")[0] + (c.get_value(section, "SUBTILEX")[1] / 256.0)
 			id.locationY = c.get_value(section, "SUBTILEY")[0] + (c.get_value(section, "SUBTILEY")[1] / 256.0)
@@ -340,7 +338,7 @@ func read_tng(buffer):
 	
 	for entryNumber in numberOfTngEntries:
 		
-		var id = thingScn.instance()
+		var id = thingScn.instantiate()
 		id.locationX = (buffer.get_u8() / 256.0) + buffer.get_u8() # 0-1
 		id.locationY = (buffer.get_u8() / 256.0) + buffer.get_u8() # 2-3
 		id.locationZ = (buffer.get_u8() / 256.0) + buffer.get_u8() # 4-5
@@ -401,7 +399,7 @@ func read_tngfx(buffer):
 			if c.has_section(section) == false:
 				continue
 			
-			var id = thingScn.instance()
+			var id = thingScn.instantiate()
 			
 			id.locationX = c.get_value(section, "SubtileX")[0] + (c.get_value(section, "SubtileX")[1] / 256.0)
 			id.locationY = c.get_value(section, "SubtileY")[0] + (c.get_value(section, "SubtileY")[1] / 256.0)
@@ -485,7 +483,7 @@ func read_aptfx(buffer):
 			if c.has_section(section) == false:
 				continue
 			
-			var id = apScn.instance()
+			var id = apScn.instantiate()
 			
 			id.locationX = c.get_value(section, "SUBTILEX")[0] + (c.get_value(section, "SUBTILEX")[1] / 256.0)
 			id.locationY = c.get_value(section, "SUBTILEY")[0] + (c.get_value(section, "SUBTILEY")[1] / 256.0)
@@ -514,7 +512,7 @@ func lif_buffer_to_array(buffer):
 	var stringFile = buffer.get_string(buffer.get_size())
 	# Divide string into lines
 	var array = stringFile.split("\n")
-	# Convert from PoolStringArray to normal array, for the sake of being editable
+	# Convert from PackedStringArray to normal array, for the sake of being editable
 	array = Array(array)
 	
 	# Each line by their comma

@@ -1,43 +1,43 @@
 extends VBoxContainer
 
-onready var oDkSlabsetVoxelView = Nodelist.list["oDkSlabsetVoxelView"]
-onready var oVariationInfoLabel = Nodelist.list["oVariationInfoLabel"]
-onready var oSlabsetIDSpinBox = Nodelist.list["oSlabsetIDSpinBox"]
-onready var oSlabsetSlabNameLabel = Nodelist.list["oSlabsetSlabNameLabel"]
-onready var oGridContainerDynamicColumns3x3 = Nodelist.list["oGridContainerDynamicColumns3x3"]
-onready var oVariationNumberSpinBox = Nodelist.list["oVariationNumberSpinBox"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oObjObjectIndexSpinBox = Nodelist.list["oObjObjectIndexSpinBox"]
-onready var oObjAddButton = Nodelist.list["oObjAddButton"]
-onready var oObjDeleteButton = Nodelist.list["oObjDeleteButton"]
-onready var oObjThingTypeSpinBox = Nodelist.list["oObjThingTypeSpinBox"]
-onready var oObjSubtypeSpinBox = Nodelist.list["oObjSubtypeSpinBox"]
-onready var oObjIsLightCheckBox = Nodelist.list["oObjIsLightCheckBox"]
-onready var oObjEffectRangeSpinBox = Nodelist.list["oObjEffectRangeSpinBox"]
-onready var oObjSubtileSpinBox = Nodelist.list["oObjSubtileSpinBox"]
-onready var oObjRelativeXSpinBox = Nodelist.list["oObjRelativeXSpinBox"]
-onready var oObjRelativeYSpinBox = Nodelist.list["oObjRelativeYSpinBox"]
-onready var oObjRelativeZSpinBox = Nodelist.list["oObjRelativeZSpinBox"]
-onready var oSlabsetObjectSection = Nodelist.list["oSlabsetObjectSection"]
-onready var oObjSubtypeLabel = Nodelist.list["oObjSubtypeLabel"]
-onready var oObjThingTypeLabel = Nodelist.list["oObjThingTypeLabel"]
-onready var oObjNameLabel = Nodelist.list["oObjNameLabel"]
-onready var oAddCustomSlabWindow = Nodelist.list["oAddCustomSlabWindow"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oSlabRevertButton = Nodelist.list["oSlabRevertButton"]
-onready var oVarRevertButton = Nodelist.list["oVarRevertButton"]
-onready var oSlabsetRevertButton = Nodelist.list["oSlabsetRevertButton"]
-onready var oConfirmRevertSlabset = Nodelist.list["oConfirmRevertSlabset"]
-onready var oCfgLoader = Nodelist.list["oCfgLoader"]
-onready var oModifiedSlabsetLabel = Nodelist.list["oModifiedSlabsetLabel"]
-onready var oModifiedSlabsetPanelContainer = Nodelist.list["oModifiedSlabsetPanelContainer"]
-onready var oSlabsetMapRegenerator = Nodelist.list["oSlabsetMapRegenerator"]
-onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCurrentlyOpenSlabset = Nodelist.list["oCurrentlyOpenSlabset"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oDkSlabsetVoxelView = Nodelist.list["oDkSlabsetVoxelView"]
+@onready var oVariationInfoLabel = Nodelist.list["oVariationInfoLabel"]
+@onready var oSlabsetIDSpinBox = Nodelist.list["oSlabsetIDSpinBox"]
+@onready var oSlabsetSlabNameLabel = Nodelist.list["oSlabsetSlabNameLabel"]
+@onready var oGridContainerDynamicColumns3x3 = Nodelist.list["oGridContainerDynamicColumns3x3"]
+@onready var oVariationNumberSpinBox = Nodelist.list["oVariationNumberSpinBox"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oObjObjectIndexSpinBox = Nodelist.list["oObjObjectIndexSpinBox"]
+@onready var oObjAddButton = Nodelist.list["oObjAddButton"]
+@onready var oObjDeleteButton = Nodelist.list["oObjDeleteButton"]
+@onready var oObjThingTypeSpinBox = Nodelist.list["oObjThingTypeSpinBox"]
+@onready var oObjSubtypeSpinBox = Nodelist.list["oObjSubtypeSpinBox"]
+@onready var oObjIsLightCheckBox = Nodelist.list["oObjIsLightCheckBox"]
+@onready var oObjEffectRangeSpinBox = Nodelist.list["oObjEffectRangeSpinBox"]
+@onready var oObjSubtileSpinBox = Nodelist.list["oObjSubtileSpinBox"]
+@onready var oObjRelativeXSpinBox = Nodelist.list["oObjRelativeXSpinBox"]
+@onready var oObjRelativeYSpinBox = Nodelist.list["oObjRelativeYSpinBox"]
+@onready var oObjRelativeZSpinBox = Nodelist.list["oObjRelativeZSpinBox"]
+@onready var oSlabsetObjectSection = Nodelist.list["oSlabsetObjectSection"]
+@onready var oObjSubtypeLabel = Nodelist.list["oObjSubtypeLabel"]
+@onready var oObjThingTypeLabel = Nodelist.list["oObjThingTypeLabel"]
+@onready var oObjNameLabel = Nodelist.list["oObjNameLabel"]
+@onready var oAddCustomSlabWindow = Nodelist.list["oAddCustomSlabWindow"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oSlabRevertButton = Nodelist.list["oSlabRevertButton"]
+@onready var oVarRevertButton = Nodelist.list["oVarRevertButton"]
+@onready var oSlabsetRevertButton = Nodelist.list["oSlabsetRevertButton"]
+@onready var oConfirmRevertSlabset = Nodelist.list["oConfirmRevertSlabset"]
+@onready var oCfgLoader = Nodelist.list["oCfgLoader"]
+@onready var oModifiedSlabsetLabel = Nodelist.list["oModifiedSlabsetLabel"]
+@onready var oModifiedSlabsetPanelContainer = Nodelist.list["oModifiedSlabsetPanelContainer"]
+@onready var oSlabsetMapRegenerator = Nodelist.list["oSlabsetMapRegenerator"]
+@onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCurrentlyOpenSlabset = Nodelist.list["oCurrentlyOpenSlabset"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
 
 signal column_shortcut_pressed(clmIndex)
 
@@ -68,7 +68,7 @@ var _previous_slab_id = 0
 var _previous_thing_type = 1
 var pending_regeneration_slab_ids = []
 
-onready var object_field_nodes = [
+@onready var object_field_nodes = [
 	oObjIsLightCheckBox, null, oObjSubtileSpinBox,
 	oObjRelativeXSpinBox, oObjRelativeYSpinBox, oObjRelativeZSpinBox,
 	oObjThingTypeSpinBox, oObjSubtypeSpinBox, oObjEffectRangeSpinBox,
@@ -76,14 +76,14 @@ onready var object_field_nodes = [
 
 func _ready():
 	for number in 9:
-		var id = scnColumnSetter.instance()
+		var id = scnColumnSetter.instantiate()
 		var spinbox = id.get_node("CustomSpinBox")
 		var shortcut = id.get_node("ButtonShortcut")
-		shortcut.connect("pressed",self,"shortcut_pressed",[id])
+		shortcut.pressed.connect(shortcut_pressed.bind(id))
 		spinbox.min_value = 0
 		spinbox.max_value = Columnset.column_count-1
-		spinbox.connect("value_changed",oDkSlabsetVoxelView,"_on_Slabset3x3ColumnSpinBox_value_changed")
-		spinbox.connect("value_changed",self,"_on_Slabset3x3ColumnSpinBox_value_changed")
+		spinbox.value_changed.connect(oDkSlabsetVoxelView._on_Slabset3x3ColumnSpinBox_value_changed)
+		spinbox.value_changed.connect(_on_Slabset3x3ColumnSpinBox_value_changed)
 		oGridContainerDynamicColumns3x3.add_child(id)
 		columnSettersArray.append(id)
 	
@@ -93,59 +93,59 @@ func _ready():
 	add_child(regeneration_timer)
 	regeneration_timer.one_shot = true
 	regeneration_timer.wait_time = 0.25
-	regeneration_timer.connect("timeout", self, "_on_regeneration_timer_timeout")
+	regeneration_timer.timeout.connect(_on_regeneration_timer_timeout)
 	add_child(flash_update_timer)
 	flash_update_timer.one_shot = true
 	flash_update_timer.wait_time = 0.5
-	flash_update_timer.connect("timeout", self, "_on_flash_update_timer_timeout")
+	flash_update_timer.timeout.connect(_on_flash_update_timer_timeout)
 	
-	oSlabsetIDSpinBox.connect("value_changed", self, "_on_SlabsetIDSpinBox_value_changed")
-	oSlabsetIDSpinBox.connect("value_changed", oDkSlabsetVoxelView, "_on_SlabsetIDSpinBox_value_changed")
+	oSlabsetIDSpinBox.value_changed.connect(_on_SlabsetIDSpinBox_value_changed)
+	oSlabsetIDSpinBox.value_changed.connect(oDkSlabsetVoxelView._on_SlabsetIDSpinBox_value_changed)
 	
 	var slabCopyButton = get_node("HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/GridContainer2/SlabCopyButton")
 	var slabPasteButton = get_node("HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/GridContainer2/SlabPasteButton")
 	var slabRevertButton = get_node("HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer2/VBoxContainer/GridContainer2/SlabRevertButton")
-	slabCopyButton.connect("pressed", self, "_on_SlabCopyButton_pressed")
-	slabPasteButton.connect("pressed", self, "_on_SlabPasteButton_pressed")
-	slabRevertButton.connect("pressed", self, "_on_SlabRevertButton_pressed")
+	slabCopyButton.pressed.connect(_on_SlabCopyButton_pressed)
+	slabPasteButton.pressed.connect(_on_SlabPasteButton_pressed)
+	slabRevertButton.pressed.connect(_on_SlabRevertButton_pressed)
 	
-	oVariationNumberSpinBox.connect("value_changed", self, "_on_VariationNumberSpinBox_value_changed")
-	oVariationNumberSpinBox.connect("value_changed", oDkSlabsetVoxelView, "_on_VariationNumberSpinBox_value_changed")
+	oVariationNumberSpinBox.value_changed.connect(_on_VariationNumberSpinBox_value_changed)
+	oVariationNumberSpinBox.value_changed.connect(oDkSlabsetVoxelView._on_VariationNumberSpinBox_value_changed)
 	
 	var varCopyButton = get_node("HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer5/VBoxContainer/GridContainer2/VarCopyButton")
 	var varPasteButton = get_node("HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer5/VBoxContainer/GridContainer2/VarPasteButton")
 	var varRevertButton = get_node("HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer5/VBoxContainer/GridContainer2/VarRevertButton")
 	var varRotateButton = get_node("HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer5/VBoxContainer/GridContainer2/VarRotateButton")
-	varCopyButton.connect("pressed", self, "_on_VarCopyButton_pressed")
-	varPasteButton.connect("pressed", self, "_on_VarPasteButton_pressed")
-	varRevertButton.connect("pressed", self, "_on_VarRevertButton_pressed")
-	varRotateButton.connect("pressed", self, "_on_VarRotateButton_pressed")
+	varCopyButton.pressed.connect(_on_VarCopyButton_pressed)
+	varPasteButton.pressed.connect(_on_VarPasteButton_pressed)
+	varRevertButton.pressed.connect(_on_VarRevertButton_pressed)
+	varRotateButton.pressed.connect(_on_VarRotateButton_pressed)
 	
-	oObjAddButton.connect("pressed", self, "_on_ObjAddButton_pressed")
-	oObjDeleteButton.connect("pressed", self, "_on_ObjDeleteButton_pressed")
-	oObjObjectIndexSpinBox.connect("value_changed", self, "_on_ObjObjectIndexSpinBox_value_changed")
-	oObjThingTypeSpinBox.connect("value_changed", self, "_on_ObjThingTypeSpinBox_value_changed")
-	oObjSubtypeSpinBox.connect("value_changed", self, "_on_ObjSubtypeSpinBox_value_changed")
-	oObjSubtileSpinBox.connect("value_changed", self, "_on_ObjSubtileSpinBox_value_changed")
-	oObjRelativeXSpinBox.connect("value_changed", self, "_on_ObjRelativeXSpinBox_value_changed")
-	oObjRelativeYSpinBox.connect("value_changed", self, "_on_ObjRelativeYSpinBox_value_changed")
-	oObjRelativeZSpinBox.connect("value_changed", self, "_on_ObjRelativeZSpinBox_value_changed")
-	oObjEffectRangeSpinBox.connect("value_changed", self, "_on_ObjEffectRangeSpinBox_value_changed")
-	oObjIsLightCheckBox.connect("toggled", self, "_on_ObjIsLightCheckBox_toggled")
+	oObjAddButton.pressed.connect(_on_ObjAddButton_pressed)
+	oObjDeleteButton.pressed.connect(_on_ObjDeleteButton_pressed)
+	oObjObjectIndexSpinBox.value_changed.connect(_on_ObjObjectIndexSpinBox_value_changed)
+	oObjThingTypeSpinBox.value_changed.connect(_on_ObjThingTypeSpinBox_value_changed)
+	oObjSubtypeSpinBox.value_changed.connect(_on_ObjSubtypeSpinBox_value_changed)
+	oObjSubtileSpinBox.value_changed.connect(_on_ObjSubtileSpinBox_value_changed)
+	oObjRelativeXSpinBox.value_changed.connect(_on_ObjRelativeXSpinBox_value_changed)
+	oObjRelativeYSpinBox.value_changed.connect(_on_ObjRelativeYSpinBox_value_changed)
+	oObjRelativeZSpinBox.value_changed.connect(_on_ObjRelativeZSpinBox_value_changed)
+	oObjEffectRangeSpinBox.value_changed.connect(_on_ObjEffectRangeSpinBox_value_changed)
+	oObjIsLightCheckBox.toggled.connect(_on_ObjIsLightCheckBox_toggled)
 	
 	var slabsetCopyValues = get_node("HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer/SlabsetCopyValues")
-	slabsetCopyValues.connect("pressed", self, "_on_SlabsetCopyValues_pressed")
+	slabsetCopyValues.pressed.connect(_on_SlabsetCopyValues_pressed)
 	
 	var slabsetHelpButton = get_node("HBoxContainer/VBoxContainer/PanelContainer/HBoxContainer/SlabsetHelpButton")
 	var SlabsetRevertButton = get_node("HBoxContainer/VBoxContainer/PanelContainer/HBoxContainer/SlabsetRevertButton")
-	slabsetHelpButton.connect("pressed", self, "_on_SlabsetHelpButton_pressed")
-	SlabsetRevertButton.connect("pressed", self, "_on_SlabsetRevertButton_pressed")
+	slabsetHelpButton.pressed.connect(_on_SlabsetHelpButton_pressed)
+	SlabsetRevertButton.pressed.connect(_on_SlabsetRevertButton_pressed)
 	
-	oConfirmRevertSlabset.connect("confirmed", self, "_on_ConfirmRevertSlabset_confirmed")
-	connect("visibility_changed", self, "_on_TabSlabset_visibility_changed")
+	oConfirmRevertSlabset.confirmed.connect(_on_ConfirmRevertSlabset_confirmed)
+	visibility_changed.connect(_on_TabSlabset_visibility_changed)
 	
 	# Connect to ConfigFileManager signals
-	oConfigFileManager.connect("config_file_status_changed", self, "_on_config_status_changed")
+	oConfigFileManager.config_file_status_changed.connect(_on_config_status_changed)
 
 func _on_TabSlabset_visibility_changed():
 	if visible:
@@ -155,7 +155,7 @@ func _on_TabSlabset_visibility_changed():
 		update_slabset_revert_button_state()
 		oDkSlabsetVoxelView._on_SlabsetIDSpinBox_value_changed(oSlabsetIDSpinBox.value)
 		_on_SlabsetIDSpinBox_value_changed(oSlabsetIDSpinBox.value)
-		yield(get_tree(),'idle_frame')
+		await get_tree().process_frame
 		oDkSlabsetVoxelView.oAllVoxelObjects.visible = true
 		is_initializing = false
 		oSlabsetWindow.update_flash_state()
@@ -167,7 +167,7 @@ func _on_TabSlabset_visibility_changed():
 func shortcut_pressed(id):
 	var spinbox = id.get_node("CustomSpinBox")
 	var clmIndex = spinbox.value
-	emit_signal("column_shortcut_pressed", clmIndex)
+	column_shortcut_pressed.emit(clmIndex)
 
 func variation_changed(localVariation):
 	localVariation = int(localVariation)
@@ -269,7 +269,7 @@ func update_slabset_paths_label():
 	else:
 		oModifiedSlabsetPanelContainer.modulate = Color(1.4, 1.4, 1.7, 1.0)
 	
-	oSlabsetRevertButton.disabled = list_of_modified_slabs.empty()
+	oSlabsetRevertButton.disabled = list_of_modified_slabs.is_empty()
 
 func update_modified_label_for_slab_id():
 	if Slabset.is_slab_edited(int(oSlabsetIDSpinBox.value)):
@@ -301,12 +301,12 @@ func update_column_spinboxes():
 	var variation = get_current_variation()
 	for subtile in columnSettersArray.size():
 		var spinbox = columnSettersArray[subtile].get_node("CustomSpinBox")
-		spinbox.disconnect("value_changed",self,"_on_Slabset3x3ColumnSpinBox_value_changed")
-		spinbox.disconnect("value_changed",oDkSlabsetVoxelView,"_on_Slabset3x3ColumnSpinBox_value_changed")
+		spinbox.value_changed.disconnect(_on_Slabset3x3ColumnSpinBox_value_changed)
+		spinbox.value_changed.disconnect(oDkSlabsetVoxelView._on_Slabset3x3ColumnSpinBox_value_changed)
 		var clmIndex = Slabset.fetch_columnset_index(variation, subtile)
 		spinbox.value = clmIndex
-		spinbox.connect("value_changed",self,"_on_Slabset3x3ColumnSpinBox_value_changed")
-		spinbox.connect("value_changed",oDkSlabsetVoxelView,"_on_Slabset3x3ColumnSpinBox_value_changed")
+		spinbox.value_changed.connect(_on_Slabset3x3ColumnSpinBox_value_changed)
+		spinbox.value_changed.connect(oDkSlabsetVoxelView._on_Slabset3x3ColumnSpinBox_value_changed)
 
 func _on_Slabset3x3ColumnSpinBox_value_changed(value):
 	oEditor.mapHasBeenEdited = true
@@ -397,8 +397,8 @@ func update_objects_ui():
 	adjust_column_color_if_different(variation)
 	adjust_object_color_if_different(variation)
 	var listOfObjects = get_list_of_objects(variation)
-	oSlabsetObjectSection.visible = !listOfObjects.empty()
-	if listOfObjects.empty() == false:
+	oSlabsetObjectSection.visible = !listOfObjects.is_empty()
+	if listOfObjects.is_empty() == false:
 		oObjObjectIndexSpinBox.visible = listOfObjects.size() > 1
 		oObjObjectIndexSpinBox.value = clamp(oObjObjectIndexSpinBox.value, 0, listOfObjects.size() - 1)
 		update_object_fields(oObjObjectIndexSpinBox.value)
@@ -410,7 +410,7 @@ func update_objects_ui():
 	update_slabset_revert_button_state()
 
 func update_3D_sprite_visuals():
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	var variation = get_current_variation()
 	oDkSlabsetVoxelView.clear_attached_3d_objects()
 	var listOfObjects = get_list_of_objects(variation)
@@ -440,14 +440,14 @@ func update_object_fields(index):
 	if index >= listOfObjects.size(): return
 	var obj = listOfObjects[index]
 
-	oObjThingTypeSpinBox.disconnect("value_changed", self, "_on_ObjThingTypeSpinBox_value_changed")
-	oObjSubtypeSpinBox.disconnect("value_changed", self, "_on_ObjSubtypeSpinBox_value_changed")
-	oObjIsLightCheckBox.disconnect("toggled", self, "_on_ObjIsLightCheckBox_toggled")
-	oObjEffectRangeSpinBox.disconnect("value_changed", self, "_on_ObjEffectRangeSpinBox_value_changed")
-	oObjSubtileSpinBox.disconnect("value_changed", self, "_on_ObjSubtileSpinBox_value_changed")
-	oObjRelativeXSpinBox.disconnect("value_changed", self, "_on_ObjRelativeXSpinBox_value_changed")
-	oObjRelativeYSpinBox.disconnect("value_changed", self, "_on_ObjRelativeYSpinBox_value_changed")
-	oObjRelativeZSpinBox.disconnect("value_changed", self, "_on_ObjRelativeZSpinBox_value_changed")
+	oObjThingTypeSpinBox.value_changed.disconnect(_on_ObjThingTypeSpinBox_value_changed)
+	oObjSubtypeSpinBox.value_changed.disconnect(_on_ObjSubtypeSpinBox_value_changed)
+	oObjIsLightCheckBox.toggled.disconnect(_on_ObjIsLightCheckBox_toggled)
+	oObjEffectRangeSpinBox.value_changed.disconnect(_on_ObjEffectRangeSpinBox_value_changed)
+	oObjSubtileSpinBox.value_changed.disconnect(_on_ObjSubtileSpinBox_value_changed)
+	oObjRelativeXSpinBox.value_changed.disconnect(_on_ObjRelativeXSpinBox_value_changed)
+	oObjRelativeYSpinBox.value_changed.disconnect(_on_ObjRelativeYSpinBox_value_changed)
+	oObjRelativeZSpinBox.value_changed.disconnect(_on_ObjRelativeZSpinBox_value_changed)
 	
 	if obj[0] == 1:
 		obj[6] = 0
@@ -462,14 +462,14 @@ func update_object_fields(index):
 	oObjRelativeYSpinBox.value = obj[4] / 256.0
 	oObjRelativeZSpinBox.value = obj[5] / 256.0
 
-	oObjThingTypeSpinBox.connect("value_changed", self, "_on_ObjThingTypeSpinBox_value_changed")
-	oObjSubtypeSpinBox.connect("value_changed", self, "_on_ObjSubtypeSpinBox_value_changed")
-	oObjIsLightCheckBox.connect("toggled", self, "_on_ObjIsLightCheckBox_toggled")
-	oObjEffectRangeSpinBox.connect("value_changed", self, "_on_ObjEffectRangeSpinBox_value_changed")
-	oObjSubtileSpinBox.connect("value_changed", self, "_on_ObjSubtileSpinBox_value_changed")
-	oObjRelativeXSpinBox.connect("value_changed", self, "_on_ObjRelativeXSpinBox_value_changed")
-	oObjRelativeYSpinBox.connect("value_changed", self, "_on_ObjRelativeYSpinBox_value_changed")
-	oObjRelativeZSpinBox.connect("value_changed", self, "_on_ObjRelativeZSpinBox_value_changed")
+	oObjThingTypeSpinBox.value_changed.connect(_on_ObjThingTypeSpinBox_value_changed)
+	oObjSubtypeSpinBox.value_changed.connect(_on_ObjSubtypeSpinBox_value_changed)
+	oObjIsLightCheckBox.toggled.connect(_on_ObjIsLightCheckBox_toggled)
+	oObjEffectRangeSpinBox.value_changed.connect(_on_ObjEffectRangeSpinBox_value_changed)
+	oObjSubtileSpinBox.value_changed.connect(_on_ObjSubtileSpinBox_value_changed)
+	oObjRelativeXSpinBox.value_changed.connect(_on_ObjRelativeXSpinBox_value_changed)
+	oObjRelativeYSpinBox.value_changed.connect(_on_ObjRelativeYSpinBox_value_changed)
+	oObjRelativeZSpinBox.value_changed.connect(_on_ObjRelativeZSpinBox_value_changed)
 	
 	if obj[0] == 1:
 		oObjSubtypeLabel.text = "Intensity"
@@ -542,9 +542,9 @@ func _on_ObjThingTypeSpinBox_value_changed(value:int):
 	else:
 		value = 7 if value in [0, 2, 7] else 1
 		_previous_thing_type = value
-	oObjThingTypeSpinBox.disconnect("value_changed", self, "_on_ObjThingTypeSpinBox_value_changed")
+	oObjThingTypeSpinBox.value_changed.disconnect(_on_ObjThingTypeSpinBox_value_changed)
 	oObjThingTypeSpinBox.value = value
-	oObjThingTypeSpinBox.connect("value_changed", self, "_on_ObjThingTypeSpinBox_value_changed")
+	oObjThingTypeSpinBox.value_changed.connect(_on_ObjThingTypeSpinBox_value_changed)
 	update_obj_name()
 	update_object_property(Slabset.obj.THING_TYPE, value)
 	update_3D_sprite_visuals()
@@ -590,27 +590,27 @@ func snap_to_256(floatValue):
 func _on_ObjRelativeXSpinBox_value_changed(floatValue: float):
 	oEditor.mapHasBeenEdited = true
 	var newValue = snap_to_256(floatValue)
-	oObjRelativeXSpinBox.disconnect("value_changed", self, "_on_ObjRelativeXSpinBox_value_changed")
+	oObjRelativeXSpinBox.value_changed.disconnect(_on_ObjRelativeXSpinBox_value_changed)
 	oObjRelativeXSpinBox.value = newValue
-	oObjRelativeXSpinBox.connect("value_changed", self, "_on_ObjRelativeXSpinBox_value_changed")
+	oObjRelativeXSpinBox.value_changed.connect(_on_ObjRelativeXSpinBox_value_changed)
 	update_object_property(Slabset.obj.RELATIVE_X, int(newValue * 256))
 	update_3D_sprite_visuals()
 
 func _on_ObjRelativeYSpinBox_value_changed(floatValue: float):
 	oEditor.mapHasBeenEdited = true
 	var newValue = snap_to_256(floatValue)
-	oObjRelativeYSpinBox.disconnect("value_changed", self, "_on_ObjRelativeYSpinBox_value_changed")
+	oObjRelativeYSpinBox.value_changed.disconnect(_on_ObjRelativeYSpinBox_value_changed)
 	oObjRelativeYSpinBox.value = newValue
-	oObjRelativeYSpinBox.connect("value_changed", self, "_on_ObjRelativeYSpinBox_value_changed")
+	oObjRelativeYSpinBox.value_changed.connect(_on_ObjRelativeYSpinBox_value_changed)
 	update_object_property(Slabset.obj.RELATIVE_Y, int(newValue * 256))
 	update_3D_sprite_visuals()
 
 func _on_ObjRelativeZSpinBox_value_changed(floatValue: float):
 	oEditor.mapHasBeenEdited = true
 	var newValue = snap_to_256(floatValue)
-	oObjRelativeZSpinBox.disconnect("value_changed", self, "_on_ObjRelativeZSpinBox_value_changed")
+	oObjRelativeZSpinBox.value_changed.disconnect(_on_ObjRelativeZSpinBox_value_changed)
 	oObjRelativeZSpinBox.value = newValue
-	oObjRelativeZSpinBox.connect("value_changed", self, "_on_ObjRelativeZSpinBox_value_changed")
+	oObjRelativeZSpinBox.value_changed.connect(_on_ObjRelativeZSpinBox_value_changed)
 	update_object_property(Slabset.obj.RELATIVE_Z, int(newValue * 256))
 	update_3D_sprite_visuals()
 
@@ -662,7 +662,7 @@ func _on_VarPasteButton_pressed():
 	paste(ONE_VARIATION)
 
 func paste(howMany):
-	if clipboard["dat"].empty() and clipboard["tng"].empty():
+	if clipboard["dat"].is_empty() and clipboard["tng"].is_empty():
 		oMessage.quick("Clipboard is empty.")
 		return
 	var locationsToPasteTo = []
@@ -740,7 +740,7 @@ func revert(variations_to_revert):
 		Slabset.tng[variation] = setToTng
 	update_column_spinboxes()
 	update_objects_ui()
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	oDkSlabsetVoxelView.refresh_entire_view()
 	restart_regeneration_timer()
 
@@ -750,7 +750,7 @@ func _on_SlabsetHelpButton_pressed():
 
 func _on_SlabsetRevertButton_pressed():
 	oConfirmRevertSlabset.dialog_text = "Revert all slabs to default?"
-	oConfirmRevertSlabset.rect_min_size.x = 800
+	oConfirmRevertSlabset.custom_minimum_size.x = 800
 	Utils.popup_centered(oConfirmRevertSlabset)
 
 func _on_ConfirmRevertSlabset_confirmed():

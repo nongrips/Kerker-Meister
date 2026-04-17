@@ -96,11 +96,11 @@ func _init(): # Lots of stuff relies on "unearthdata" being set first.
 		unearth_path = OS.get_executable_path().get_base_dir()
 	else:
 		unearth_path = ""
-	unearthdata = unearth_path.plus_file("unearthdata")
+	unearthdata = unearth_path.path_join("unearthdata")
 
 
 func initialize_settings():
-	settings_file_path = unearth_path.plus_file("settings.cfg")
+	settings_file_path = unearth_path.path_join("settings.cfg")
 	var loadError = config.load(settings_file_path)
 	if loadError != OK:
 		var saveError = config.save(settings_file_path)
@@ -121,7 +121,7 @@ func executable_stuff():
 	
 	# If previous executable_path is no longer valid (maybe it was deleted)
 	if cfg_has_setting("executable_path") == true:
-		if File.new().file_exists(oGame.EXECUTABLE_PATH) == false:
+		if FileAccess.file_exists(oGame.EXECUTABLE_PATH) == false:
 			cfg_remove_setting("executable_path")
 	
 	# Choose executable path upon first starting
@@ -133,7 +133,7 @@ func executable_stuff():
 		else:
 			# Auto-detection failed, show file dialog
 			for i in 3:
-				yield(get_tree(),'idle_frame')
+				await get_tree().process_frame
 			var oChooseDkExe = $'../Main/Ui/UiSystem/ChooseDkExe'
 			Utils.popup_centered(oChooseDkExe)
 	else:
@@ -196,8 +196,8 @@ func game_setting(doWhat,string,value):
 			if doWhat == SET: oUi.subwindows_status = value
 			if doWhat == GET: return oUi.subwindows_status
 		"vsync":
-			if doWhat == SET: OS.vsync_enabled = value
-			if doWhat == GET: return OS.vsync_enabled
+			if doWhat == SET: DisplayServer.window_set_vsync_mode(value if true else DisplayServer.VSYNC_DISABLED)
+			if doWhat == GET: return (DisplayServer.window_get_vsync_mode() != DisplayServer.VSYNC_DISABLED)
 		"framerate_limit":
 			var oEditor = $'../Main/Editor'
 			if doWhat == SET: oEditor.framerate_limit = value
@@ -304,29 +304,29 @@ func game_setting(doWhat,string,value):
 			if doWhat == GET: return oPickThingWindow.grid_window_scale
 #		"owner_window_size":
 #			var oOwnerSelection = $'../Main/Ui/UiTools/OwnerSelection'
-#			if doWhat == SET: oOwnerSelection.rect_size = value
-#			if doWhat == GET: return oOwnerSelection.rect_size
+#			if doWhat == SET: oOwnerSelection.size = value
+#			if doWhat == GET: return oOwnerSelection.size
 #		"owner_window_position":
 #			var oOwnerSelection = $'../Main/Ui/UiTools/OwnerSelection'
-#			if doWhat == SET: oOwnerSelection.rect_position = value
-#			if doWhat == GET: return oOwnerSelection.rect_position
+#			if doWhat == SET: oOwnerSelection.position = value
+#			if doWhat == GET: return oOwnerSelection.position
 #		"owner_window_scale":
 #			var oOwnerSelection = $'../Main/Ui/UiTools/OwnerSelection'
 #			if doWhat == SET: oOwnerSelection.grid_window_scale = value
 #			if doWhat == GET: return oOwnerSelection.grid_window_scale
 		
 		"editor_window_position":
-			if doWhat == SET: OS.window_position = value
-			if doWhat == GET: return OS.window_position
+			if doWhat == SET: get_window().position = value
+			if doWhat == GET: return get_window().position
 		"editor_window_size":
-			if doWhat == SET: OS.window_size = value
-			if doWhat == GET: return OS.window_size
+			if doWhat == SET: get_window().size = value
+			if doWhat == GET: return get_window().size
 		"editor_window_maximized_state":
-			if doWhat == SET: OS.window_maximized = value
-			if doWhat == GET: return OS.window_maximized
+			if doWhat == SET: get_window().mode = (Window.MODE_MAXIMIZED if value else Window.MODE_WINDOWED)
+			if doWhat == GET: return (get_window().mode == Window.MODE_MAXIMIZED)
 		"editor_window_fullscreen_state":
-			if doWhat == SET: OS.window_fullscreen = value
-			if doWhat == GET: return OS.window_fullscreen
+			if doWhat == SET: get_window().mode = (Window.MODE_FULLSCREEN if value else Window.MODE_WINDOWED)
+			if doWhat == GET: return (get_window().mode == Window.MODE_FULLSCREEN)
 
 #		"display_details_viewer":
 #			var oPropertiesWindow = $'../Main/Ui/UiTools/PropertiesWindow'
@@ -406,8 +406,8 @@ func game_setting(doWhat,string,value):
 			if doWhat == GET: return oScriptEditor.get_SCRIPT_EDITOR_FONT_SIZE()
 		"editor_font_size":
 			var oUiSystem = $'../Main/Ui/UiSystem'
-			if doWhat == SET: oUiSystem.theme.get_font("font","").size = value
-			if doWhat == GET: return oUiSystem.theme.get_font("font","").size
+			if doWhat == SET: oUiSystem.theme.get_theme_font("font","").size = value
+			if doWhat == GET: return oUiSystem.theme.get_theme_font("font","").size
 		"chance_effect_water":
 			var oWaterEffectPercent = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/HBoxContainer/WaterEffectPercent'
 			if doWhat == SET: oWaterEffectPercent.value = value
@@ -465,8 +465,8 @@ func game_setting(doWhat,string,value):
 			if doWhat == GET: return oEditor.rendering_rate
 
 func delete_settings():
-	var dir = Directory.new()
-	if dir.file_exists(settings_file_path) == true:
+	var dir: DirAccess = null
+	if FileAccess.file_exists(settings_file_path) == true:
 		dir.remove(settings_file_path)
 
 func read_cfg(setting):

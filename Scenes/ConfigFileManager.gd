@@ -1,6 +1,6 @@
 extends Node
 
-onready var oCfgLoader = Nodelist.list["oCfgLoader"]
+@onready var oCfgLoader = Nodelist.list["oCfgLoader"]
 
 signal config_file_status_changed()
 
@@ -32,11 +32,11 @@ func clear_paths():
 	FXDATA_COMMENTS = {}
 	default_data = {}
 	current_mappack_cfg_filename = ""
-	emit_signal("config_file_status_changed")
+	config_file_status_changed.emit()
 
 
 func store_default_data():
-	if current_data.has("rules.cfg") and not current_data["rules.cfg"].empty():
+	if current_data.has("rules.cfg") and not current_data["rules.cfg"].is_empty():
 		default_data["rules.cfg"] = current_data["rules.cfg"].duplicate(true)
 
 
@@ -112,12 +112,12 @@ func is_section_different(section_name: String) -> bool:
 func notify_file_created(file_path, file_type):
 	if not paths_loaded[LOAD_CFG_CURRENT_MAP].has(file_path):
 		paths_loaded[LOAD_CFG_CURRENT_MAP].append(file_path)
-	emit_signal("config_file_status_changed")
+	config_file_status_changed.emit()
 	print("oConfigFileManager: Tracked new file - " + file_type + ": " + file_path)
 
 
 func notify_file_deleted(file_path, file_type):
 	if paths_loaded[LOAD_CFG_CURRENT_MAP].has(file_path):
 		paths_loaded[LOAD_CFG_CURRENT_MAP].erase(file_path)
-	emit_signal("config_file_status_changed")
+	config_file_status_changed.emit()
 	print("oConfigFileManager: Removed tracking for file - " + file_type + ": " + file_path) 

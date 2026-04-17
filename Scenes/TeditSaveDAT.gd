@@ -1,8 +1,8 @@
 extends Node
 
-onready var oExportTmapDatDialog = Nodelist.list["oExportTmapDatDialog"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
+@onready var oExportTmapDatDialog = Nodelist.list["oExportTmapDatDialog"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
 
 var originalDatDir = ""
 var originalDatPath = ""
@@ -26,8 +26,8 @@ func _on_ExportTmapDatDialog_file_selected(pathArgument: String):
 	if oTeditLiveReloadPNG.editingImg.is_empty() or oTeditLiveReloadPNG.editingImg.get_format() != Image.FORMAT_L8:
 		oMessage.big("Error", "Cannot export. Internal image is not in L8 format or is empty.")
 		return
-	var file = File.new()
-	if file.open(pathArgument, File.WRITE) == OK:
+	var file = FileAccess.open(pathArgument, FileAccess.WRITE)
+	if file != null:
 		file.store_buffer(oTeditLiveReloadPNG.editingImg.get_data())
 		file.close()
 		oMessage.quick("Exported : " + pathArgument.get_file())

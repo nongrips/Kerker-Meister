@@ -1,11 +1,22 @@
 extends HBoxContainer
 
-export var label_setting:String setget set_label_setting, get_label_setting
-export var min_value:float setget set_min_value, get_min_value
-export var max_value:float setget set_max_value, get_max_value
-export var step:float setget set_step, get_step
-export var value:float setget set_value, get_value
+@export var label_setting:String:
 
+	get: return get_label_setting()
+
+	set(_val): set_label_setting(_val)
+@export var min_value:float:
+	get: return get_min_value()
+	set(_val): set_min_value(_val)
+@export var max_value:float:
+	get: return get_max_value()
+	set(_val): set_max_value(_val)
+@export var step:float:
+	get: return get_step()
+	set(_val): set_step(_val)
+@export var value:float:
+	get: return get_value()
+	set(_val): set_value(_val)
 signal sliderChanged
 
 func _ready():
@@ -13,7 +24,7 @@ func _ready():
 
 func _on_HSlider_value_changed(val):
 	$"VBoxContainer/LabelNumber".text = str(val)
-	emit_signal("sliderChanged")
+	sliderChanged.emit()
 
 func set_label_setting(val):
 	$LabelSetting.text = val

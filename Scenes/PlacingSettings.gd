@@ -1,14 +1,14 @@
 extends VBoxContainer
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oPlacingListData = Nodelist.list["oPlacingListData"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
-onready var oPlacingTipsButton = Nodelist.list["oPlacingTipsButton"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oLimitThing = Nodelist.list["oLimitThing"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
-onready var oPlaceLockedCheckBox = $EditingTools/PlaceLockedCheckBox
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oPlacingListData = Nodelist.list["oPlacingListData"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
+@onready var oPlacingTipsButton = Nodelist.list["oPlacingTipsButton"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oLimitThing = Nodelist.list["oLimitThing"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oPlaceLockedCheckBox = $EditingTools/PlaceLockedCheckBox
 
 # Default values for placement
 var effectRange = 5
@@ -45,7 +45,7 @@ enum FIELDS {
 
 func _ready():
 	get_parent().set_tab_title(1, "Create")
-	oPlaceLockedCheckBox.connect("toggled", self, "_on_PlaceLockedCheckBox_toggled")
+	oPlaceLockedCheckBox.toggled.connect(_on_PlaceLockedCheckBox_toggled)
 
 func editing_mode_was_switched(modeString):
 	if modeString == "Slab":

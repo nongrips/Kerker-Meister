@@ -11,7 +11,7 @@ func _init():
 		set("custom_styles/read_only", style)
 		set("custom_styles/normal", style)
 	
-	connect("focus_exited",self,"_on_EditableLabel_focus_exited")
+	focus_exited.connect(_on_EditableLabel_focus_exited)
 
 func _ready():
 	text = text # Fixes a Godot bug where alignment is incorrect when handling custom fonts

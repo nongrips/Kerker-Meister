@@ -1,14 +1,14 @@
 extends Node
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oRayCastBlockMap = Nodelist.list["oRayCastBlockMap"]
-onready var oSaveMap = Nodelist.list["oSaveMap"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCmdLineConsole = Nodelist.list["oCmdLineConsole"]
-onready var oCmdLineConsoleArg = Nodelist.list["oCmdLineConsoleArg"]
-onready var oCmdLineExecute = Nodelist.list["oCmdLineExecute"]
-onready var oKeeperFXDetection = Nodelist.list["oKeeperFXDetection"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oRayCastBlockMap = Nodelist.list["oRayCastBlockMap"]
+@onready var oSaveMap = Nodelist.list["oSaveMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCmdLineConsole = Nodelist.list["oCmdLineConsole"]
+@onready var oCmdLineConsoleArg = Nodelist.list["oCmdLineConsoleArg"]
+@onready var oCmdLineExecute = Nodelist.list["oCmdLineExecute"]
+@onready var oKeeperFXDetection = Nodelist.list["oKeeperFXDetection"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
 
 var EXECUTABLE_PATH = ""
 var GAME_DIRECTORY = ""
@@ -54,10 +54,10 @@ func set_paths(path):
 	
 	for i in get_main_subdirectories(GAME_DIRECTORY): # Directories only
 		match i.to_upper():
-			"DATA": DK_DATA_DIRECTORY = GAME_DIRECTORY.plus_file(i)
-			"FXDATA": DK_FXDATA_DIRECTORY = GAME_DIRECTORY.plus_file(i)
-			"LEVELS": DK_LEVELS_DIRECTORY = GAME_DIRECTORY.plus_file(i)
-			"CAMPGNS": DK_CAMPGNS_DIRECTORY = GAME_DIRECTORY.plus_file(i)
+			"DATA": DK_DATA_DIRECTORY = GAME_DIRECTORY.path_join(i)
+			"FXDATA": DK_FXDATA_DIRECTORY = GAME_DIRECTORY.path_join(i)
+			"LEVELS": DK_LEVELS_DIRECTORY = GAME_DIRECTORY.path_join(i)
+			"CAMPGNS": DK_CAMPGNS_DIRECTORY = GAME_DIRECTORY.path_join(i)
 	
 	if keeperfx_is_installed() == true:
 		oKeeperFXDetection.text = "KeeperFX detected. " + "(Version " + KEEPERFX_VERSION_STRING + ")"
@@ -80,7 +80,7 @@ func reconstruct_command_line():
 		"Windows":
 			COMMAND_LINE_CONSOLE = 'cmd'
 			COMMAND_LINE_CONSOLE_ARG = '/C'
-		"X11":
+		"Linux":
 			COMMAND_LINE_CONSOLE = "/bin/sh"
 			COMMAND_LINE_CONSOLE_ARG = "-c"
 	oCmdLineConsole.text = COMMAND_LINE_CONSOLE
@@ -98,7 +98,7 @@ func cmdline(mapPath):
 			constructString += '"' + GAME_DIRECTORY + '"'
 			constructString += ' && '
 			constructString += '"' + EXECUTABLE_PATH.get_file() + '"'
-		"X11":
+		"Linux":
 			constructString += "cd "
 			constructString += "'" + GAME_DIRECTORY + "'"
 			constructString += " && wine "
@@ -149,9 +149,9 @@ func menu_play_clicked():
 
 func get_main_subdirectories(path):
 	var array = []
-	var dir = Directory.new()
-	if dir.open(path) == OK:
-		dir.list_dir_begin(true, false)
+	var dir = DirAccess.open(path)
+	if dir != null:
+		dir.list_dir_begin()
 		var fileName = dir.get_next()
 		while fileName != "":
 			if dir.current_is_dir() == true:
@@ -161,20 +161,20 @@ func get_main_subdirectories(path):
 
 func test_write_permissions():
 	# Test write permissions of DK directory
-	var testPath = EXECUTABLE_PATH.get_base_dir().plus_file('test.txt')
+	var testPath = EXECUTABLE_PATH.get_base_dir().path_join('test.txt')
 	
-	var file = File.new()
-	var err = file.open(testPath, File.WRITE)
+	var file = FileAccess.open(testPath, FileAccess.WRITE)
+	var err = OK if file != null else FAILED
 	if err == OK:
 		file.store_string("Testing write permissions.")
 	file.close()
 	
-	var dir = Directory.new()
-	if dir.file_exists(testPath) == true: # Ensure any files being removed are definitely files and never directories
+	var dir: DirAccess = null
+	if FileAccess.file_exists(testPath) == true: # Ensure any files being removed are definitely files and never directories
 		dir.remove(testPath)
 	
 	if err != OK:
-		if OS.get_name() == "X11":
+		if OS.get_name() == "Linux":
 			oMessage.big("Error", "There are no write permissions for your Dungeon Keeper directory.")
 		if OS.get_name() == "Windows":
 			oMessage.big("Error", "There are no write permissions for your Dungeon Keeper directory. Maybe try moving your Dungeon Keeper folder elsewhere, then choose the executable again.")
@@ -187,7 +187,7 @@ func set_keeperfx_version():
 		"Windows":
 			var powershell_script = "[System.Diagnostics.FileVersionInfo]::GetVersionInfo('%s').FileVersion" % EXECUTABLE_PATH
 			OS.execute("powershell.exe", ["-Command", powershell_script], true, output, true)
-		"X11":
+		"Linux":
 			var script = ""
 			script += "cd " + EXECUTABLE_PATH.get_base_dir() + ";"
 			script += "exiftool -ProductVersion -n keeperfx.exe | awk -F ': ' '{print $2}'"

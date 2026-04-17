@@ -4,19 +4,19 @@ extends EditorPlugin
 var mainScreen = ''
 
 func _enter_tree():
-	connect("main_screen_changed", self, "main_screen_changed")
+	main_screen_changed.connect(main_screen_changed)
 
 func _input(event):
-	if event is InputEventMouseButton and (event.is_pressed() and event.button_index == BUTTON_MIDDLE):
+	if event is InputEventMouseButton and (event.is_pressed() and event.button_index == MOUSE_BUTTON_MIDDLE):
 		if mainScreen == "Script":
-			yield(get_tree(), "idle_frame") # Allows things in script panel to still be closed by middle click
+			await get_tree().process_frame # Allows things in script panel to still be closed by middle click
 			var ev = InputEventKey.new()
 			ev.pressed = true
-			ev.scancode = KEY_CONTROL
+			ev.keycode = KEY_CONTROL
 			get_tree().input_event(ev)
 
 			var evt = InputEventMouseButton.new()
-			evt.button_index = BUTTON_LEFT
+			evt.button_index = MOUSE_BUTTON_LEFT
 			evt.position = get_viewport().get_mouse_position()
 			evt.pressed = true
 			evt.control = true

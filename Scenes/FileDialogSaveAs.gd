@@ -1,9 +1,9 @@
 extends FileDialog
-onready var oGame = Nodelist.list["oGame"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oSaveMap = Nodelist.list["oSaveMap"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oSaveMap = Nodelist.list["oSaveMap"]
 
 var saveInstruction = Label.new()
 var lineEdit
@@ -23,7 +23,7 @@ func _ready():
 	get_vbox().move_child(saveInstruction,3)
 	lineEdit.connect('focus_exited',self, 'line_edit_focus_exited')
 	
-	acceptButton = get_ok()
+	acceptButton = get_ok_button()
 
 func line_edit_focus_exited():
 	if int(lineEdit.text) == 0:
@@ -36,8 +36,8 @@ func _on_FileDialogSaveAs_about_to_show():
 	
 	var path
 	if oCurrentMap.path == "":
-		var personalFolder = oGame.DK_LEVELS_DIRECTORY.plus_file("personal")
-		if Directory.new().dir_exists(personalFolder) and oGame.keeperfx_is_installed() == true:
+		var personalFolder = oGame.DK_LEVELS_DIRECTORY.path_join("personal")
+		if DirAccess.dir_exists_absolute(personalFolder) and oGame.keeperfx_is_installed() == true:
 			path = personalFolder # KeeperFX has personal folder
 		else:
 			path = oGame.DK_LEVELS_DIRECTORY # Old DK does not have personal folder
@@ -58,7 +58,7 @@ func _on_FileDialogSaveAs_about_to_show():
 		var currentMapNumber = oCurrentMap.path.get_file().to_upper().trim_prefix("MAP")
 		lineEdit.text = str(currentMapNumber)
 	
-	yield(get_tree(),'idle_frame')
+	await get_tree().process_frame
 	lineEdit.caret_position = lineEdit.text.length()
 	lineEdit.grab_focus()
 	deselect_items()
@@ -99,7 +99,7 @@ func _process(delta):
 func working_directory_was_changed():
 	if oCurrentMap.path == "":
 		var newMapNumber = determine_next_available_map_number_in_dir(current_dir)
-		yield(get_tree(),'idle_frame')
+		await get_tree().process_frame
 		lineEdit.text = 'map' + str(newMapNumber)
 		line_edit_focus_exited()
 		
@@ -140,11 +140,11 @@ func determine_next_available_map_number_in_dir(path):
 	var drive = get_drive()
 	if drive == "":
 		return 1
-	path = drive.plus_file(path)
+	path = drive.path_join(path)
 	
 	var mapFileNumbers = []
-	var dir = Directory.new()
-	if dir.open(path) == OK:
+	var dir = DirAccess.open(path)
+	if dir != null:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
@@ -157,7 +157,7 @@ func determine_next_available_map_number_in_dir(path):
 	else:
 		print("An error occurred when trying to access the path.")
 	
-	if mapFileNumbers.empty() == true:
+	if mapFileNumbers.is_empty() == true:
 		return 1
 	else:
 		mapFileNumbers.sort()
@@ -183,4 +183,4 @@ func _input(event):
 	if visible and event.is_action_pressed("ui_accept"):
 		get_tree().set_input_as_handled() # Consume the input event to stop the default behavior
 		lineEdit.release_focus()
-		acceptButton.emit_signal("pressed")
+		acceptButton.pressed.emit()

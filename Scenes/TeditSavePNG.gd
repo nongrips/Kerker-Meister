@@ -1,8 +1,8 @@
 extends Node
 
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
-onready var oTextureEditingWindow = Nodelist.list["oTextureEditingWindow"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
+@onready var oTextureEditingWindow = Nodelist.list["oTextureEditingWindow"]
 
 const ExportFilelist = preload("res://Scenes/exportfilelist.gd")
 
@@ -29,12 +29,12 @@ func handle_tmap_export(sourceRgbImage: Image, folderNameString: String):
 		packContent = ExportFilelist.new().string_a.replace("textures_pack_000", "textures_pack_" + texturePackNumber)
 	
 	var imageDictionary = build_image_dictionary(packContent)
-	var packFolderPath = outputDir.plus_file(packFolderName)
+	var packFolderPath = outputDir.path_join(packFolderName)
 	var uniqueDirectories = get_unique_directories(imageDictionary, packFolderPath)
 	if check_directories_exist(uniqueDirectories):
-		var fullPackPath = outputDir.plus_file(packFolderName).plus_file("")
+		var fullPackPath = outputDir.path_join(packFolderName).path_join("")
 		var message = "The folder of .PNGs already exists, they will be overwritten: \n" + fullPackPath + "\n\n If overwriting the files here causes you data loss then Cancel and go backup the folder."
-		var userConfirmed = yield(oTextureEditingWindow.show_confirmation_dialog(message), "completed")
+		var userConfirmed = await oTextureEditingWindow.show_confirmation_dialog(message).completed
 		if userConfirmed == false:
 			oMessage.quick("Cancelled")
 			return
@@ -47,7 +47,7 @@ func handle_tmap_export(sourceRgbImage: Image, folderNameString: String):
 func build_image_dictionary(flContent: String) -> Dictionary:
 	var imageDictionary = {}
 	var rawLines = Array(flContent.split('\n', false))
-	if rawLines.empty() == false: rawLines.pop_front()
+	if rawLines.is_empty() == false: rawLines.pop_front()
 	for iIdx in rawLines.size():
 		var lineDataArray = Array(rawLines[iIdx].split('\t', false))
 		var localPath = lineDataArray[0]
@@ -60,18 +60,15 @@ func build_image_dictionary(flContent: String) -> Dictionary:
 		imageDictionary[localPath]["tiles_info"].append({"line_data": lineDataArray, "source_flat_index": iIdx})
 	for localPath in imageDictionary:
 		var imgData = imageDictionary[localPath]
-		var createNewImage = Image.new()
-		createNewImage.create(imgData["max_x"], imgData["max_y"], false, Image.FORMAT_RGB8)
+		var createNewImage = Image.create(imgData["max_x"], imgData["max_y"], false, Image.FORMAT_RGB8)
 		imgData["image_obj"] = createNewImage
 	return imageDictionary
 
 
 func create_images_from_dictionary(imageDictionary: Dictionary, sourceRgbImage: Image):
-	sourceRgbImage.lock()
 	for localPath in imageDictionary:
 		var imgData = imageDictionary[localPath]
 		var currentPngImage:Image = imgData["image_obj"]
-		currentPngImage.lock()
 		for tileEntry in imgData["tiles_info"]:
 			var lineDataArray = tileEntry["line_data"]
 			var sourceTileFlatIndex = tileEntry["source_flat_index"]
@@ -80,34 +77,30 @@ func create_images_from_dictionary(imageDictionary: Dictionary, sourceRgbImage: 
 			var destXInPng = int(lineDataArray[1])
 			var destYInPng = int(lineDataArray[2])
 			currentPngImage.blit_rect(sourceRgbImage, Rect2(sourceTileX*32, sourceTileY*32, 32,32), Vector2(destXInPng, destYInPng))
-		currentPngImage.unlock()
-	sourceRgbImage.unlock()
-
-
 func get_unique_directories(imageDictionary: Dictionary, outputDir: String) -> Dictionary:
 	var uniqueDirectories = {}
 	for localPath in imageDictionary:
-		var fullDirPath = outputDir.plus_file(localPath).get_base_dir()
+		var fullDirPath = outputDir.path_join(localPath).get_base_dir()
 		uniqueDirectories[fullDirPath] = true
 	return uniqueDirectories
 
 
 func check_directories_exist(uniqueDirectories: Dictionary) -> bool:
-	var dir = Directory.new()
+	var dir: DirAccess = null
 	for packFolderPath in uniqueDirectories:
 		if dir.dir_exists(packFolderPath): return true
 	return false
 
 
 func create_directories(uniqueDirectories: Dictionary):
-	var dir = Directory.new()
+	var dir: DirAccess = null
 	for packFolderPath in uniqueDirectories:
 		dir.make_dir_recursive(packFolderPath)
 
 
 func save_images_to_disk(imageDictionary: Dictionary, outputDir: String):
 	for localPath in imageDictionary:
-		var savePath = outputDir.plus_file(localPath)
+		var savePath = outputDir.path_join(localPath)
 		var imageToSave: Image = imageDictionary[localPath]["image_obj"]
 		if imageToSave != null and imageToSave is Image:
 			var errCode = imageToSave.save_png(savePath)
@@ -119,7 +112,7 @@ func save_images_to_disk(imageDictionary: Dictionary, outputDir: String):
 
 
 func get_output_directory() -> String:
-	var outputDir = OS.get_user_data_dir().plus_file("UnearthEditorTextureCache") if OS.has_feature('editor') else Settings.unearth_path.plus_file("textures")
+	var outputDir = OS.get_user_data_dir().path_join("UnearthEditorTextureCache") if OS.has_feature('editor') else Settings.unearth_path.path_join("textures")
 	return outputDir
 
 
@@ -136,7 +129,7 @@ func open_texture_folder():
 		oMessage.big("Error", "No texture pack loaded. Please load a tileset first.")
 		return
 	var folderToOpen = openFolder if openFolder != "" else packFolder
-	if not Directory.new().dir_exists(folderToOpen):
+	if not DirAccess.dir_exists_absolute(folderToOpen):
 		oMessage.big("Error", "Texture folder does not exist: " + folderToOpen)
 		return
 	var finalPath = folderToOpen.replace("/", "\\") if OS.get_name() == "Windows" else folderToOpen

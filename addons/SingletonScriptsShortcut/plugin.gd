@@ -12,17 +12,17 @@ const sceneShortcutExt = preload("res://addons/SingletonScriptsShortcut/shortcut
 var shortcutext
 
 func _enter_tree():
-	#shortcuts = sceneShortcut.instance()
-	#shortcuts.connect("pressed", self, "on_buttonpressed")
-	#shortcuts.get_popup().connect("index_pressed", self, "index_pressed")
+	#shortcuts = sceneShortcut.instantiate()
+	#shortcuts.pressed.connect(on_buttonpressed)
+	#shortcuts.get_popup().index_pressed.connect(index_pressed)
 	
-	shortcutext = sceneShortcutExt.instance()
+	shortcutext = sceneShortcutExt.instantiate()
 	
 	scriptEditorMenu.add_child(shortcutext)
 	scriptEditorMenu.move_child(shortcutext,scriptEditorMenu.get_child_count()-10)
 	
-	shortcutext.connect("request_items", self, "update_shortcuts")
-	shortcutext.itemlist.connect("item_activated",self, "index_pressed")
+	shortcutext.request_items.connect(update_shortcuts)
+	shortcutext.itemlist.item_activated.connect(index_pressed)
 	#scriptEditorMenu.add_child(shortcuts)
 	#scriptEditorMenu.move_child(shortcuts,3)
 	update_shortcuts(shortcutext.find_node("ItemList"))
