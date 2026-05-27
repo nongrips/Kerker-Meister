@@ -8,7 +8,7 @@ extends SpinBoxPropertiesValue
 
 
 func _ready():
-	set_tooltip("You can also use keyboard keys 0-9 as a shortcut for setting levels")
+	tooltip_text = "You can also use keyboard keys 0-9 as a shortcut for setting levels"
 
 func _input(event):
 	if visible == false: return

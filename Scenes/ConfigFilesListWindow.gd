@@ -40,7 +40,7 @@ func add_linkbutton(filePath, targetGrid):
 	linkButtonNode.pressed.connect(_on_linkbutton_pressed.bind(filePath))
 	linkButtonNode.underline = LinkButton.UNDERLINE_MODE_ON_HOVER
 	linkButtonNode.text = filePath.get_file()
-	linkButtonNode.hint_tooltip = filePath
+	linkButtonNode.tooltip_text = filePath
 	targetGrid.add_child(linkButtonNode)
 	var horizontalSeparatorNode = HSeparator.new()
 	targetGrid.add_child(horizontalSeparatorNode)

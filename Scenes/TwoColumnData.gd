@@ -84,12 +84,10 @@ func add_item(leftString, rightString):
 					nodeRightColumn.min_value = 0
 					nodeRightColumn.max_value = 1000000000
 					nodeRightColumn.get_line_edit().placeholder_text = "0"
-					nodeRightColumn.get_line_edit().placeholder_alpha = 0.33
 				"Health %":
 					nodeRightColumn.min_value = 0
 					nodeRightColumn.max_value = 100
 					nodeRightColumn.get_line_edit().placeholder_text = "100"
-					nodeRightColumn.get_line_edit().placeholder_alpha = 0.33
 			
 			nodeRightColumn.value = int(rightString)
 		"Position":
@@ -127,7 +125,6 @@ func add_item(leftString, rightString):
 		"Unique name": #Creature name
 			nodeRightColumn = LineEdit.new()
 			nodeRightColumn.placeholder_text = "Default"
-			nodeRightColumn.placeholder_alpha = 0.33
 			nodeRightColumn.text = rightString #Utils.strip_special_chars_from_string(rightString)
 			nodeRightColumn.text_changed.connect(_on_property_value_changed.bind(nodeRightColumn, leftString))
 			#nodeRightColumn.add_theme_font_override("font", preload("res://Theme/StokeSmaller.tres"))

@@ -204,7 +204,7 @@ func initialize_researchables():
 				if checkAll[0] == subtype:
 					if Things.DATA_OBJECT.has(subtype):
 						var getName = Things.fetch_name(Things.TYPE.OBJECT, subtype)
-						idItem.hint_tooltip = getName + ' availability'
+						idItem.tooltip_text = getName + ' availability'
 						idItem.set_meta("variable",checkAll[1]) # function text
 						idItem.set_meta("ID", subtype)
 						idItem.type = idItem.MAGIC
@@ -213,7 +213,7 @@ func initialize_researchables():
 		elif what == IS_ROOM:
 			for checkAll in listRoom:
 				if checkAll[0] == subtype:
-					idItem.hint_tooltip = Slabs.data[subtype][Slabs.NAME]
+					idItem.tooltip_text = Slabs.data[subtype][Slabs.NAME]
 					idItem.set_meta("variable",checkAll[1]) # function text
 					idItem.set_meta("ID", subtype)
 					idItem.type = idItem.ROOM
@@ -235,7 +235,7 @@ func initialize_rooms_available():
 		var slabName = Slabs.fetch_idname(slabID)
 		if Slabs.icons.has(slabName):
 			var id = scnAvailableButton.instantiate()
-			id.hint_tooltip = Slabs.data[slabID][Slabs.NAME] + ' availability'
+			id.tooltip_text = Slabs.data[slabID][Slabs.NAME] + ' availability'
 			id.get_node("IconTextureRect").texture = Slabs.icons.get(slabName, null)
 			id.set_meta("variable", functionVariable)
 			id.set_meta("ID", slabID)
@@ -256,9 +256,9 @@ func initialize_creatures_available(): # oCreaturePool
 		var id = scnAvailableButton.instantiate()
 		id.set_meta("variable", functionVariable)
 		var getName = Things.fetch_name(Things.TYPE.CREATURE, subtype)
-		id.hint_tooltip = getName + ' availability'
+		id.tooltip_text = getName + ' availability'
 		id.get_node("%IconTextureRect").texture = Things.fetch_sprite(Things.TYPE.CREATURE, subtype)
-		id.get_node("%TextEditableLabel").hint_tooltip = getName + ' in pool'
+		id.get_node("%TextEditableLabel").tooltip_text = getName + ' in pool'
 		id.get_node("%TextEditableLabel").text = str(defaultAvailability)
 		id.get_node("%TextEditableLabel").editable = true
 		id.get_node("%TextEditableLabel").mouse_filter = Control.MOUSE_FILTER_PASS
@@ -281,7 +281,7 @@ func initialize_traps_available(): # oTrapsAvailable
 		var defaultAvailability = i[2]
 		var id = scnAvailableButton.instantiate()
 		var getName = Things.fetch_name(Things.TYPE.TRAP, subtype)
-		id.hint_tooltip = getName + ' availability'
+		id.tooltip_text = getName + ' availability'
 		id.get_node("%IconTextureRect").texture = Things.fetch_sprite(Things.TYPE.TRAP, subtype)
 		id.set_meta("variable", functionVariable)
 		id.get_node("%TextEditableLabel").editable = false
@@ -300,7 +300,7 @@ func initialize_magic_available(): # oMagicAvailable
 		var defaultAvailability = i[2]
 		var id = scnAvailableButton.instantiate()
 		var getName = Things.fetch_name(Things.TYPE.OBJECT, subtype)
-		id.hint_tooltip = getName + ' availability'
+		id.tooltip_text = getName + ' availability'
 		id.get_node("%IconTextureRect").texture = Things.fetch_sprite(Things.TYPE.OBJECT, subtype)
 		id.set_meta("variable", functionVariable)
 		id.set_meta("ID", subtype)
@@ -320,7 +320,7 @@ func initialize_doors_available(): # oDoorsAvailable
 		var defaultAvailability = i[2]
 		var id = scnAvailableButton.instantiate()
 		var getName = Things.fetch_name(Things.TYPE.DOOR, subtype)
-		id.hint_tooltip = getName + ' availability'
+		id.tooltip_text = getName + ' availability'
 		id.get_node("%IconTextureRect").texture = Things.fetch_sprite(Things.TYPE.DOOR, subtype)
 		id.set_meta("variable", functionVariable)
 		id.get_node("%TextEditableLabel").editable = false

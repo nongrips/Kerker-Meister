@@ -38,7 +38,7 @@ func check_macro(line: int) -> void:
 		
 		# Fixes a crash when macro contains a new line and you move the cursor to that new line when executing the macro
 		if constructLine.ends_with("\n"):
-			script_editor.cursor_set_line(line+1)
+			script_editor.set_caret_line(line+1)
 
 
 func get_indentation(string: String) -> String:
@@ -102,14 +102,14 @@ func _notification(what: int):
 
 func _on_cursor_changed():
 	if is_instance_valid(script_editor):
-		if cursor_line != script_editor.cursor_get_line():
+		if cursor_line != script_editor.get_caret_line():
 			check_macro(cursor_line)
-			cursor_line = script_editor.cursor_get_line()
+			cursor_line = script_editor.get_caret_line()
 
 
 func _on_gui_focus_changed(node: Node):
 	if node is TextEdit:
 		if is_instance_valid(script_editor):
-			script_editor.cursor_changed.disconnect(_on_cursor_changed)
+			script_editor.caret_changed.disconnect(_on_cursor_changed)
 		script_editor = node
-		script_editor.cursor_changed.connect(_on_cursor_changed)
+		script_editor.caret_changed.connect(_on_cursor_changed)

@@ -218,7 +218,7 @@ func set_FACING_ARROW_SIZE_BASE(setVal):
 
 
 func show_tools():
-	if oDataSlab.get_cell(0,0) == TileMap.INVALID_CELL:
+	if oDataSlab.get_cell(0,0) == -1:
 		oMenu.visible = true
 		return
 	
@@ -243,7 +243,7 @@ func hide_tools():
 
 func switch_to_2D():
 	o3DCameraInfo.visible = false
-	if oDataSlab.get_cell(0,0) != TileMap.INVALID_CELL:
+	if oDataSlab.get_cell(0,0) != -1:
 		if oMapBrowser.visible == false and oImageAsMapDialog.visible == false:
 			show_tools()
 	else:

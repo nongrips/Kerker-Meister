@@ -259,7 +259,7 @@ func update_slabset_paths_label():
 		tooltip_text = "No saved file"
 	
 	oCurrentlyOpenSlabset.text = final_text
-	oCurrentlyOpenSlabset.hint_tooltip = tooltip_text
+	oCurrentlyOpenSlabset.tooltip_text = tooltip_text
 	
 	# Handle modified slabs label
 	oModifiedSlabsetLabel.text = str(list_of_modified_slabs).replace("[","").replace("]","")

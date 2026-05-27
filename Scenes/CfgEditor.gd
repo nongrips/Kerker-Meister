@@ -39,7 +39,7 @@ func _ready():
 	oPanelCfgComment.visible = false
 	oPanelCfgComment.set_v_size_flags(Control.SIZE_SHRINK_END)
 	
-	about_to_show.connect(_on_about_to_show)
+	about_to_popup.connect(_on_about_to_show)
 	oPanelCfgComment.mouse_entered.connect(_on_panel_cfg_comment_mouse_entered)
 	oConfigFileManager.config_file_status_changed.connect(_on_config_status_changed)
 
@@ -318,7 +318,7 @@ func rebuild_specific_section(section_name: String):
 		var button_container = HBoxContainer.new()
 		var add_button = Button.new()
 		add_button.text = "Add new"
-		add_button.hint_tooltip = "Add new sacrifice"
+		add_button.tooltip_text = "Add new sacrifice"
 		add_button.custom_minimum_size.x = 120
 		add_button.set_h_size_flags(Control.SIZE_SHRINK_CENTER)
 		setup_script_editor_font(add_button)
@@ -332,7 +332,7 @@ func rebuild_specific_section(section_name: String):
 		var button_container = HBoxContainer.new()
 		var add_button = Button.new()
 		add_button.text = "Add new"
-		add_button.hint_tooltip = "Add new research"
+		add_button.tooltip_text = "Add new research"
 		add_button.custom_minimum_size.x = 120
 		add_button.set_h_size_flags(Control.SIZE_SHRINK_CENTER)
 		setup_script_editor_font(add_button)
@@ -570,4 +570,4 @@ func update_rules_paths_label():
 		tooltip_text = "No saved file"
 	
 	oCurrentlyOpenRules.text = final_text
-	oCurrentlyOpenRules.hint_tooltip = tooltip_text
+	oCurrentlyOpenRules.tooltip_text = tooltip_text

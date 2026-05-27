@@ -14,7 +14,7 @@ var _dialog_confirmed = false
 
 func _ready():
 	oExportTmapButton.disabled = true
-	oExportTmapButton.set_tooltip("A filelist pack must be loaded first in order to export")
+	oExportTmapButton.tooltip_text = "A filelist pack must be loaded first in order to export"
 	oReloaderPathPackLabel.text = ""
 
 
@@ -38,12 +38,12 @@ func _on_ExportTmapButton_pressed():
 
 func enable_export_button():
 	oExportTmapButton.disabled = false
-	oExportTmapButton.set_tooltip("")
+	oExportTmapButton.tooltip_text = ""
 
 
 func disable_export_button():
 	oExportTmapButton.disabled = true
-	oExportTmapButton.set_tooltip("A filelist pack must be loaded first in order to export")
+	oExportTmapButton.tooltip_text = "A filelist pack must be loaded first in order to export"
 
 
 func update_reloader_path_label(path: String):

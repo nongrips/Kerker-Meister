@@ -87,21 +87,21 @@ func create_research_control(parent: VBoxContainer, array_index: int, value, sec
 	
 	var move_up_button = Button.new()
 	move_up_button.text = "↑"
-	move_up_button.hint_tooltip = "Move Up"
+	move_up_button.tooltip_text = "Move Up"
 	editor_context.setup_script_editor_font(move_up_button)
 	move_up_button.pressed.connect(_on_move_research_up_pressed.bind(section_name, array_index))
 	move_button_container.add_child(move_up_button)
 	
 	var move_down_button = Button.new()
 	move_down_button.text = "↓"
-	move_down_button.hint_tooltip = "Move Down"
+	move_down_button.tooltip_text = "Move Down"
 	editor_context.setup_script_editor_font(move_down_button)
 	move_down_button.pressed.connect(_on_move_research_down_pressed.bind(section_name, array_index))
 	move_button_container.add_child(move_down_button)
 	
 	var remove_button = Button.new()
 	remove_button.text = "-"
-	remove_button.hint_tooltip = "Delete entry"
+	remove_button.tooltip_text = "Delete entry"
 	remove_button.custom_minimum_size.x = 30
 	editor_context.setup_script_editor_font(remove_button)
 	remove_button.pressed.connect(_on_remove_research_pressed.bind(section_name, array_index))

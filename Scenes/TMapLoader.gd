@@ -318,10 +318,10 @@ func apply_texture_pack():
 			apply_shader_params(nodeID.get_voxel_material("selected") as ShaderMaterial, tmapTextures, PaletteType.PALETTE_3D)
 		elif nodeID.has_node("oAllVoxelObjects") and nodeID.has_node("oSelectedVoxelObject"):
 			var allVoxelsNode = nodeID.get_node("oAllVoxelObjects")
-			if allVoxelsNode is MeshInstance3D and allVoxelsNode.mesh != null and allVoxelsNode.mesh.surface_get_material_count() > 0:
+			if allVoxelsNode is MeshInstance3D and allVoxelsNode.mesh != null and allVoxelsNode.mesh.get_surface_count() > 0:
 				apply_shader_params(allVoxelsNode.mesh.surface_get_material(0) as ShaderMaterial, tmapTextures, PaletteType.PALETTE_3D)
 			var selectedVoxelsNode = nodeID.get_node("oSelectedVoxelObject")
-			if selectedVoxelsNode is MeshInstance3D and selectedVoxelsNode.mesh != null and selectedVoxelsNode.mesh.surface_get_material_count() > 0:
+			if selectedVoxelsNode is MeshInstance3D and selectedVoxelsNode.mesh != null and selectedVoxelsNode.mesh.get_surface_count() > 0:
 				apply_shader_params(selectedVoxelsNode.mesh.surface_get_material(0) as ShaderMaterial, tmapTextures, PaletteType.PALETTE_3D)
 	apply_slabwindow_textures(tmapTextures)
 

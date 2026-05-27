@@ -96,7 +96,7 @@ func update_columnset_paths_label(list_of_modified_columns):
 		tooltip_text = "No saved file"
 	
 	oCurrentlyOpenColumnset.text = final_text
-	oCurrentlyOpenColumnset.hint_tooltip = tooltip_text
+	oCurrentlyOpenColumnset.tooltip_text = tooltip_text
 	oSlabsetWindow.update_window_title()
 
 func update_modified_label_for_all_columns(list_of_modified_columns):

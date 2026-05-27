@@ -61,7 +61,7 @@ func _ready():
 	var tooltip_text = ""
 	for key in kind_options.keys():
 		tooltip_text += key + " = " + kind_options[key] + "\n"
-	oKindOptionButton.hint_tooltip = tooltip_text.strip_edges(true)
+	oKindOptionButton.tooltip_text = tooltip_text.strip_edges(true)
 	
 	# Default to hiding ONCE, when you start the editor.
 	oAdvancedMapProperties.visible = false
@@ -333,7 +333,7 @@ func _on_OpenMapCoordButton_pressed():
 	Utils.popup_centered(oMapCoordinatesWindow)
 
 func _on_LofPathLinkButton_pressed():
-	var err = OS.shell_open(oLofPathLinkButton.hint_tooltip)
+	var err = OS.shell_open(oLofPathLinkButton.tooltip_text)
 	if err == ERR_FILE_NOT_FOUND:
 		oMessage.quick("File not found, you may need to save the map first")
 
@@ -343,7 +343,7 @@ func _update_lof_path_button():
 
 	if not is_instance_valid(oCurrentMap):
 		oLofPathLinkButton.text = "N/A"
-		oLofPathLinkButton.hint_tooltip = "Map not loaded."
+		oLofPathLinkButton.tooltip_text = "Map not loaded."
 		return
 
 	# Case 1: Map is not saved yet
@@ -358,13 +358,13 @@ func _update_lof_path_button():
 			mapDisplayName = oCurrentMap.name
 		else:
 			mapDisplayName = "current map" # Neutral placeholder if no other name is found
-		oLofPathLinkButton.hint_tooltip = ".lof file for '" + mapDisplayName + "'. Not on disk, save map to write it."
+		oLofPathLinkButton.tooltip_text = ".lof file for '" + mapDisplayName + "'. Not on disk, save map to write it."
 		return
 
 	# Case 2: Map is saved. Check its data (currentFilePaths).
 	if oCurrentMap.currentFilePaths == null:
 		oLofPathLinkButton.text = "N/A" # Or consider "Data Error"
-		oLofPathLinkButton.hint_tooltip = "Map data (file paths registry) is missing for this saved map."
+		oLofPathLinkButton.tooltip_text = "Map data (file paths registry) is missing for this saved map."
 		return
 
 	if oCurrentMap.currentFilePaths.has("LOF"):
@@ -376,16 +376,16 @@ func _update_lof_path_button():
 			if lof_full_path != null and typeof(lof_full_path) == TYPE_STRING and lof_full_path != "":
 				if FileAccess.file_exists(lof_full_path):
 					oLofPathLinkButton.text = lof_full_path.get_file()
-					oLofPathLinkButton.hint_tooltip = lof_full_path
+					oLofPathLinkButton.tooltip_text = lof_full_path
 				else: # LOF path in data, but file not found on disk
 					oLofPathLinkButton.text = "Missing LOF"
-					oLofPathLinkButton.hint_tooltip = "Expected .lof file not found on disk: " + lof_full_path
+					oLofPathLinkButton.tooltip_text = "Expected .lof file not found on disk: " + lof_full_path
 			else: # Path string in data is invalid (null, not string, or empty)
 				oLofPathLinkButton.text = "Missing LOF"
-				oLofPathLinkButton.hint_tooltip = ".lof file path is malformed or empty in map data."
+				oLofPathLinkButton.tooltip_text = ".lof file path is malformed or empty in map data."
 		else: # Data for "LOF" key is not the expected array format [path, mod_time]
 			oLofPathLinkButton.text = "Missing LOF" # Or "Data Error"
-			oLofPathLinkButton.hint_tooltip = ".lof file data format is unexpected in map data."
+			oLofPathLinkButton.tooltip_text = ".lof file data format is unexpected in map data."
 	else: # No "LOF" key in currentFilePaths for a saved map
 		oLofPathLinkButton.text = "Missing LOF"
-		oLofPathLinkButton.hint_tooltip = "No .lof file is associated with this saved map."
+		oLofPathLinkButton.tooltip_text = "No .lof file is associated with this saved map."

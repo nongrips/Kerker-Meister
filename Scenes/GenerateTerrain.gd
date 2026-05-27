@@ -47,8 +47,8 @@ func start():
 						oDataClmPos.get_cell_clmpos(x-1,z),
 					]
 					# Fix the edges
-					if x+1 >= (M.xSize*3): surrClmIndex[1] = TileMap.INVALID_CELL
-					if z+1 >= (M.ySize*3): surrClmIndex[2] = TileMap.INVALID_CELL
+					if x+1 >= (M.xSize*3): surrClmIndex[1] = -1
+					if z+1 >= (M.ySize*3): surrClmIndex[2] = -1
 					
 					oVoxelGen.column_gen(arrayOfArrays[slabStyleValue], x, z, clmIndex, surrClmIndex, false, oDataClm)
 	

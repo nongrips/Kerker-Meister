@@ -68,7 +68,7 @@ func _ready():
 	change_mode(MODE_TILE)
 
 func _process(delta):
-	if oDataSlab.get_cell(0,0) == TileMap.INVALID_CELL:
+	if oDataSlab.get_cell(0,0) == -1:
 		visible = false
 		return
 	

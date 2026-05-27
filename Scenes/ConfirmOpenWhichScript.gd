@@ -3,7 +3,7 @@ extends Window
 @onready var oMessage = Nodelist.list["oMessage"]
 
 func _ready():
-	about_to_show.connect(_on_about_to_show)
+	about_to_popup.connect(_on_about_to_show)
 
 func try_open(ext):
 	var pathToTryAndOpen = oCurrentMap.path + ext

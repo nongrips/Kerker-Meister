@@ -63,7 +63,7 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 	if sacrifice_data.ingredients.size() < 6:
 		var add_ingredient_button = Button.new()
 		add_ingredient_button.text = "+"
-		add_ingredient_button.hint_tooltip = "Add ingredient"
+		add_ingredient_button.tooltip_text = "Add ingredient"
 		add_ingredient_button.custom_minimum_size.x = 30
 		editor_context.setup_script_editor_font(add_ingredient_button)
 		add_ingredient_button.pressed.connect(_on_add_ingredient_pressed.bind(array_index))
@@ -107,7 +107,7 @@ func create_sacrifice_control(parent: VBoxContainer, array_index: int, value, se
 	
 	var remove_button = Button.new()
 	remove_button.text = "-"
-	remove_button.hint_tooltip = "Delete entry"
+	remove_button.tooltip_text = "Delete entry"
 	remove_button.custom_minimum_size.x = 30
 	editor_context.setup_script_editor_font(remove_button)
 	remove_button.pressed.connect(_on_remove_sacrifice_pressed.bind(section_name, array_index))
@@ -233,7 +233,7 @@ func remove_ingredient_at_index(refs: Dictionary, ingredient_index: int):
 	if refs["sacrifice_data"].ingredients.size() < 6:
 		var add_ingredient_button = Button.new()
 		add_ingredient_button.text = "+"
-		add_ingredient_button.hint_tooltip = "Add ingredient"
+		add_ingredient_button.tooltip_text = "Add ingredient"
 		add_ingredient_button.custom_minimum_size.x = 30
 		oCfgEditor.setup_script_editor_font(add_ingredient_button)
 		add_ingredient_button.connect("pressed", self, "_on_add_ingredient_pressed", [refs["array_index"]])
@@ -342,7 +342,7 @@ func _on_add_ingredient_selected(ingredient_name: String, metadata: Dictionary):
 	if refs["sacrifice_data"].ingredients.size() < 6:
 		var add_ingredient_button = Button.new()
 		add_ingredient_button.text = "+"
-		add_ingredient_button.hint_tooltip = "Add ingredient"
+		add_ingredient_button.tooltip_text = "Add ingredient"
 		add_ingredient_button.custom_minimum_size.x = 30
 		oCfgEditor.setup_script_editor_font(add_ingredient_button)
 		add_ingredient_button.pressed.connect(_on_add_ingredient_pressed.bind(metadata.get("array_index")))
@@ -483,7 +483,7 @@ func update_sacrifice_ui_after_revert(array_index: int, default_data):
 		if sacrifice_data.ingredients.size() < 6:
 			var add_ingredient_button = Button.new()
 			add_ingredient_button.text = "+"
-			add_ingredient_button.hint_tooltip = "Add ingredient"
+			add_ingredient_button.tooltip_text = "Add ingredient"
 			add_ingredient_button.custom_minimum_size.x = 30
 			oCfgEditor.setup_script_editor_font(add_ingredient_button)
 			add_ingredient_button.pressed.connect(_on_add_ingredient_pressed.bind(array_index))

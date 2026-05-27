@@ -1,8 +1,8 @@
-extends StaticBody
+extends StaticBody3D
 
 func resize(x,z):
-	$FloorCollisionShape.shape.extents.x = x*0.5
-	$FloorCollisionShape.shape.extents.z = z*0.5
+	$FloorCollisionShape.shape.size.x = x
+	$FloorCollisionShape.shape.size.z = z
 	$FloorCollisionShape.position.x = x*0.5
 	$FloorCollisionShape.position.z = z*0.5
 	$MeshInstance3D.mesh.size.x = x

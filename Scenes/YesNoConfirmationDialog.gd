@@ -3,7 +3,7 @@ extends ConfirmationDialog
 func _ready():
 	get_ok_button().text = "Yes"
 	get_cancel_button().text = "No"
-	about_to_show.connect(_on_about_to_show)
+	about_to_popup.connect(_on_about_to_show)
 
 func _on_about_to_show():
 	await get_tree().process_frame

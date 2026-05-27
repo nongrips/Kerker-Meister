@@ -7,7 +7,7 @@ extends Window
 @onready var CompressionWindowButtonNo: Button = $VBoxContainer/HBoxContainer/CompressionWindowButtonNo
 
 func _ready():
-	about_to_show.connect(_on_about_to_show)
+	about_to_popup.connect(_on_about_to_show)
 	
 	# Safe signal connections with null checks
 	if CompressionWindowButtonYes:

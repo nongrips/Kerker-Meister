@@ -19,7 +19,7 @@ func column_gen(genArray, x, z, clmIndex, surrClmIndex, generateBottomFace, sour
 			
 			for side in 4:
 				var sideIdx = surrClmIndex[side]
-				if oDataClm.cubes[sideIdx][y] == 0 or sideIdx == TileMap.INVALID_CELL:
+				if oDataClm.cubes[sideIdx][y] == 0 or sideIdx == -1:
 					var textureID = Cube.tex[cubeID][side]
 					add_face(genArray, pos, side, textureID)
 			

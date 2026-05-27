@@ -222,10 +222,10 @@ func constantly_monitor_play_button_state():
 	
 	if mapIsInCorrectDirectory == true: # Is playable path
 		oMenuPlayButton.disabled = false
-		oMenuPlayButton.hint_tooltip = ""
+		oMenuPlayButton.tooltip_text = ""
 	else: # Is not a playable path
 		oMenuPlayButton.disabled = true
-		oMenuPlayButton.hint_tooltip = "Map must be saved in the correct directory in order to play."
+		oMenuPlayButton.tooltip_text = "Map must be saved in the correct directory in order to play."
 	
 	if oCurrentMap.path == "":
 		oMenuPlayButton.text = "Save & Play"
@@ -267,7 +267,7 @@ func _on_EditSubmenu_Pressed(pressedID):
 		3: # Resize and shift
 			Utils.popup_centered(oResizeCurrentMapSize)
 		4: # Update all slabs
-			if oDataSlab.get_cell(0,0) != TileMap.INVALID_CELL:
+			if oDataSlab.get_cell(0,0) != -1:
 				Utils.popup_centered(oConfirmAutoGen)
 		5: # Texture editing
 			Utils.popup_centered(oTextureEditingWindow)

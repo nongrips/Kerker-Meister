@@ -215,16 +215,16 @@ func _on_NewMapFormat_item_selected(index):
 		oYSizeLine.text = "85"
 		_on_XSizeLine_focus_exited()
 		_on_YSizeLine_focus_exited()
-		oXSizeLine.hint_tooltip = "Map size can only be changed if KFX format is used."
-		oYSizeLine.hint_tooltip = "Map size can only be changed if KFX format is used."
+		oXSizeLine.tooltip_text = "Map size can only be changed if KFX format is used."
+		oYSizeLine.tooltip_text = "Map size can only be changed if KFX format is used."
 		oPlayerCount.max_value = 4.0
 		if oPlayerCount.value > 4:
 			oPlayerCount.value = 4
 	elif index == Constants.KfxFormat:
 		oXSizeLine.editable = true
 		oYSizeLine.editable = true
-		oXSizeLine.hint_tooltip = ""
-		oYSizeLine.hint_tooltip = ""
+		oXSizeLine.tooltip_text = ""
+		oYSizeLine.tooltip_text = ""
 		oPlayerCount.max_value = 8.0
 	
 

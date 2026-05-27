@@ -1,4 +1,4 @@
-extends Sprite
+extends Sprite2D
 
 @onready var oCamera2D = Nodelist.list["oCamera2D"]
 var accumulated_time = 0.0

@@ -13,7 +13,7 @@ extends Node
 @onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
 @onready var oDataOwnership = Nodelist.list["oDataOwnership"]
 
-var noise = OpenSimplexNoise.new()
+var noise = FastNoiseLite.new()
 var algorithmType = 1
 
 const earthColour = Color(36.0/255.0, 24.0/255.0, 0.0/255.0, 1.0)
@@ -58,16 +58,16 @@ func convert_pixels_to_slabs(imageData):
 func update_border_image_with_noise(imageData, textureData):
 	var NOISECODETIME = OS.get_ticks_msec()
 	var borderDist = oNoiseDistance.value
-	noise.period = (oNoisePeriod.max_value - oNoisePeriod.value) + (0.01)
-	noise.persistence = (oNoisePersistence.max_value - oNoisePersistence.value)
-	noise.lacunarity = oNoiseLacunarity.value
-	noise.octaves = oNoiseOctaves.value
+	noise.frequency = 1.0 / max((oNoisePeriod.max_value - oNoisePeriod.value) + (0.01), 0.001)
+	noise.fractal_gain = (oNoisePersistence.max_value - oNoisePersistence.value)
+	noise.fractal_lacunarity = oNoiseLacunarity.value
+	noise.fractal_octaves = int(oNoiseOctaves.value)
 	
 	var fullMapSize = Vector2(oXSizeLine.text.to_int()-1, oYSizeLine.text.to_int()-1)
 	var halfMapSize = Vector2(fullMapSize.x * 0.5, fullMapSize.y * 0.5)
 	
-	var floodFillTileMap = TileMap.new()
-	
+	var floodFillMap: Dictionary = {}
+
 	var aspectRatio = Vector2()
 	if fullMapSize.x < fullMapSize.y:
 		aspectRatio.x = max(fullMapSize.x,1.0) / max(fullMapSize.y,1.0)
@@ -75,7 +75,7 @@ func update_border_image_with_noise(imageData, textureData):
 	else:
 		aspectRatio.x = 1.0
 		aspectRatio.y = max(fullMapSize.y,1.0) / max(fullMapSize.x,1.0)
-	
+
 	var edgeDist = Vector2()
 	match algorithmType:
 		0:
@@ -85,7 +85,7 @@ func update_border_image_with_noise(imageData, textureData):
 					edgeDist.y = (abs(y-halfMapSize.y) / halfMapSize.y) * borderDist
 					var n = 1.0-abs(noise.get_noise_2d( (x/fullMapSize.x)*aspectRatio.x, (y/fullMapSize.y)*aspectRatio.y ))
 					if n > edgeDist.x and n > edgeDist.y:
-						floodFillTileMap.set_cell(x,y,1)
+						floodFillMap[Vector2i(x,y)] = 1
 		1:
 			for x in range(1, fullMapSize.x):
 				for y in range(1, fullMapSize.y):
@@ -93,20 +93,20 @@ func update_border_image_with_noise(imageData, textureData):
 					edgeDist.y = (abs(y-halfMapSize.y) / halfMapSize.y) * borderDist
 					var n = 1.0-noise.get_noise_2d( (x/fullMapSize.x)*aspectRatio.x, (y/fullMapSize.y)*aspectRatio.y )
 					if n > edgeDist.x and n > edgeDist.y:
-						floodFillTileMap.set_cell(x,y,1)
-	
-	var coordsToCheck = [Vector2(halfMapSize.x,halfMapSize.y)]
-	
+						floodFillMap[Vector2i(x,y)] = 1
+
+	var coordsToCheck = [Vector2i(halfMapSize.x,halfMapSize.y)]
+
 	imageData.fill(impenetrableColour)
 	while coordsToCheck.size() > 0:
-		var coord = coordsToCheck.pop_back()
-		if floodFillTileMap.get_cellv(coord) == 1:
-			floodFillTileMap.set_cellv(coord, 0)
-			imageData.set_pixelv(coord, earthColour)
-			coordsToCheck.append(coord + Vector2(0,1))
-			coordsToCheck.append(coord + Vector2(0,-1))
-			coordsToCheck.append(coord + Vector2(1,0))
-			coordsToCheck.append(coord + Vector2(-1,0))
+		var coord: Vector2i = coordsToCheck.pop_back()
+		if floodFillMap.get(coord, 0) == 1:
+			floodFillMap.erase(coord)
+			imageData.set_pixelv(Vector2(coord), earthColour)
+			coordsToCheck.append(coord + Vector2i(0,1))
+			coordsToCheck.append(coord + Vector2i(0,-1))
+			coordsToCheck.append(coord + Vector2i(1,0))
+			coordsToCheck.append(coord + Vector2i(-1,0))
 	print('Border image time: ' + str(OS.get_ticks_msec() - NOISECODETIME) + 'ms')
 
 

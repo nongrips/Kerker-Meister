@@ -406,8 +406,8 @@ func game_setting(doWhat,string,value):
 			if doWhat == GET: return oScriptEditor.get_SCRIPT_EDITOR_FONT_SIZE()
 		"editor_font_size":
 			var oUiSystem = $'../Main/Ui/UiSystem'
-			if doWhat == SET: oUiSystem.theme.get_theme_font("font","").size = value
-			if doWhat == GET: return oUiSystem.theme.get_theme_font("font","").size
+			if doWhat == SET: oUiSystem.theme.default_font_size = value
+			if doWhat == GET: return oUiSystem.theme.default_font_size
 		"chance_effect_water":
 			var oWaterEffectPercent = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/HBoxContainer/WaterEffectPercent'
 			if doWhat == SET: oWaterEffectPercent.value = value

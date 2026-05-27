@@ -209,7 +209,7 @@ func _on_ImageAsMapDialog_visibility_changed():
 #			if i.has_meta("colour"):
 #				if i.get_meta("colour") == col:
 #					i.remove_meta("colour")
-#					i.get_meta("colourRectNode").hint_tooltip = ""
+#					i.get_meta("colourRectNode").tooltip_text = ""
 #					i.get_meta("colourRectNode").color = transparencyColour
 #					i.get_meta("colourRectNode").get_child(0).border_color = Color(1, 1, 1, 0)
 		
@@ -221,9 +221,9 @@ func _on_ImageAsMapDialog_visibility_changed():
 #		colourRectNode.get_child(0).border_color = Color(1, 1, 1, 0.25)
 #
 #		if col == transparencyColour:
-#			colourRectNode.hint_tooltip = "Transparent"
+#			colourRectNode.tooltip_text = "Transparent"
 #		else:
-#			colourRectNode.hint_tooltip = 'R:'+str(col.r8)+', G:'+str(col.g8)+', B:'+str(col.b8)+', A:'+str(col.a8)
+#			colourRectNode.tooltip_text = 'R:'+str(col.r8)+', G:'+str(col.g8)+', B:'+str(col.b8)+', A:'+str(col.a8)
 		
 		
 
@@ -232,7 +232,7 @@ func _on_ImageAsMapDialog_visibility_changed():
 #	var colourRectNode = ColorRect.new()
 #	colourRectNode.custom_minimum_size = Vector2(28,28)
 #	colourRectNode.color = transparencyColour
-#	colourRectNode.hint_tooltip = ""
+#	colourRectNode.tooltip_text = ""
 #
 #	$HBoxContainer/VBoxContainer2/ScrollContainer/GridContainer.add_child(colourRectNode)
 #

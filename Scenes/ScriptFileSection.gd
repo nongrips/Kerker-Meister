@@ -129,7 +129,7 @@ func show_script_interface(displayText: String, tooltipText: String, keyExtensio
 
 	path_link_node.visible = true
 	path_link_node.text = displayText
-	path_link_node.hint_tooltip = tooltipText
+	path_link_node.tooltip_text = tooltipText
 		
 	if keyExtensionUppercase == "TXT":
 		hbox_generate_node.visible = true
@@ -388,12 +388,12 @@ func _on_PathLinkButton_pressed():
 		"DKScriptFileSection":
 			Utils.popup_centered(oScriptEditorWindow)
 		"LuaScriptFileSection":
-			if path_link_node.hint_tooltip == "":
+			if path_link_node.tooltip_text == "":
 				oMessage.quick("Cannot open script: path is not available.")
 				return
-			var err = OS.shell_open(path_link_node.hint_tooltip)
+			var err = OS.shell_open(path_link_node.tooltip_text)
 			if err != OK:
-				oMessage.quick("Could not open: " + path_link_node.hint_tooltip)
+				oMessage.quick("Could not open: " + path_link_node.tooltip_text)
 
 func get_script_flag(keyExtensionUppercase: String) -> bool:
 	if keyExtensionUppercase == "TXT":

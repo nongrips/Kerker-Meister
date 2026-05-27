@@ -236,7 +236,7 @@ func _on_PreviewHeightSpinBox_value_changed(value):
 		# Set it to the maximum possible value (which is Window Height)
 		oPreviewHeightSpinBox.value = get_window().size.y
 		# Show an error message
-		if get_window().mode = (Window.MODE_FULLSCREEN if = false: else Window.MODE_WINDOWED)
+		if get_window().mode != Window.MODE_FULLSCREEN:
 			oTooHighResErrorLabel.show()
 	else:
 		oTooHighResErrorLabel.hide()

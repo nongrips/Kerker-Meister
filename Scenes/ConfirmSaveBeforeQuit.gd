@@ -4,7 +4,7 @@ extends Window
 @onready var oCurrentMap = Nodelist.list["oCurrentMap"]
 
 func _ready():
-	about_to_show.connect(_on_about_to_show)
+	about_to_popup.connect(_on_about_to_show)
 
 func _on_ButtonConfirmExitSave_pressed():
 	# Save or save as based on whether there is a path
