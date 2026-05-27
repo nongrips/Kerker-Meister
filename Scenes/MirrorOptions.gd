@@ -113,7 +113,7 @@ func gui_input_on_color_fields(event, buttonIndex, buttonNode):
 
 func _on_MirrorPlacementCheckBox_pressed():
 	visible = oMirrorPlacementCheckBox.pressed
-	oGuidelines.update()
+	oGuidelines.queue_redraw()
 
 func get_quadrant(pos, fieldX, fieldY):
 	match splitType:

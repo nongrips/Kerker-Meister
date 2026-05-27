@@ -228,7 +228,7 @@ func remove_ingredient_at_index(refs: Dictionary, ingredient_index: int):
 	for i in range(ingredient_index, refs["ingredient_labels"].size()):
 		var label = refs["ingredient_labels"][i]
 		label.gui_input.disconnect(_on_ingredient_label_clicked)
-		label.connect("gui_input", self, "_on_ingredient_label_clicked", [refs["array_index"], i, get_ingredient_items(), oCfgEditor])
+		label.gui_input.connect(_on_ingredient_label_clicked.bind(refs["array_index"], i, get_ingredient_items(), oCfgEditor))
 	
 	if refs["sacrifice_data"].ingredients.size() < 6:
 		var add_ingredient_button = Button.new()
@@ -236,7 +236,7 @@ func remove_ingredient_at_index(refs: Dictionary, ingredient_index: int):
 		add_ingredient_button.tooltip_text = "Add ingredient"
 		add_ingredient_button.custom_minimum_size.x = 30
 		oCfgEditor.setup_script_editor_font(add_ingredient_button)
-		add_ingredient_button.connect("pressed", self, "_on_add_ingredient_pressed", [refs["array_index"]])
+		add_ingredient_button.pressed.connect(_on_add_ingredient_pressed.bind(refs["array_index"]))
 		main_row_container.add_child(add_ingredient_button)
 		main_row_container.move_child(add_ingredient_button, 3)
 	
@@ -320,8 +320,8 @@ func _on_add_ingredient_selected(ingredient_name: String, metadata: Dictionary):
 	ingredient_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	oCfgEditor.setup_script_editor_font(ingredient_label)
 	ingredient_label.gui_input.connect(_on_ingredient_label_clicked.bind(metadata.get("array_index"), ingredient_index, ingredient_items, oCfgEditor))
-	ingredient_label.connect("mouse_entered", self, "_on_sacrifice_label_mouse_entered", [ingredient_label, refs["section_name"], metadata.get("array_index")])
-	ingredient_label.connect("mouse_exited", self, "_on_sacrifice_label_mouse_exited", [ingredient_label, refs["section_name"], metadata.get("array_index")])
+	ingredient_label.mouse_entered.connect(_on_sacrifice_label_mouse_entered.bind(ingredient_label, refs["section_name"], metadata.get("array_index")))
+	ingredient_label.mouse_exited.connect(_on_sacrifice_label_mouse_exited.bind(ingredient_label, refs["section_name"], metadata.get("array_index")))
 	
 	var ingredients_container = refs["ingredients_container"]
 	

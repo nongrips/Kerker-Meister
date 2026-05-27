@@ -328,8 +328,8 @@ func _on_MouseDetection_mouse_exited():
 	$TextNameLabel.modulate = Color(1,1,1,0.5)
 	z_index = baseZindex
 
-func instance_was_selected(): update()
-func instance_was_deselected(): update()
+func instance_was_selected(): queue_redraw()
+func instance_was_deselected(): queue_redraw()
 func _draw():
 	if effectRange != null and (oSelection.cursorOnInstancesArray.has(self) or oInspector.inspectingInstance == self):
 		draw_arc(Vector2(0,0), (effectRange * 32)+16, 0, PI*2, 64, Color(0.75,1,0.75,1), 4, false)

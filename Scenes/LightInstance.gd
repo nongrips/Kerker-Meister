@@ -65,8 +65,8 @@ func set_lightrange(setval):
 	lightRange = setval
 	queue_redraw()
 
-func instance_was_selected(): update()
-func instance_was_deselected(): update()
+func instance_was_selected(): queue_redraw()
+func instance_was_deselected(): queue_redraw()
 func _draw():
 	if oSelection.cursorOnInstancesArray.has(self) or oInspector.inspectingInstance == self:
 		draw_arc(Vector2(0,0), (lightRange * 32)+16, 0, PI*2, 64, Color(1,1,0.5,1), 4, false)

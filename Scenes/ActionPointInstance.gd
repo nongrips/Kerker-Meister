@@ -15,7 +15,8 @@ var locationX = null:
 	set(_val): set_location_x(_val)
 var locationY = null:
 	set(_val): set_location_y(_val)
-var locationZ = null setget set_location_z # This is actually unused for action points, but its presence fixes errors
+var locationZ = null:
+	set(_val): set_location_z(_val) # This is actually unused for action points, but its presence fixes errors
 var pointRange = null:
 	set(_val): set_pointrange(_val)
 var pointNumber = null:
@@ -53,8 +54,8 @@ func set_pointrange(setval):
 	pointRange = setval
 	queue_redraw()
 
-func instance_was_selected(): update()
-func instance_was_deselected(): update()
+func instance_was_selected(): queue_redraw()
+func instance_was_deselected(): queue_redraw()
 func _draw():
 	if oSelection.cursorOnInstancesArray.has(self) or oInspector.inspectingInstance == self:
 		draw_arc(Vector2(0,0), (pointRange * 32)+16, 0, PI*2, 64, Color(1,0,0,1), 4, false)

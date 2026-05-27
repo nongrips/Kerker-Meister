@@ -213,7 +213,7 @@ func continue_load(map):
 	
 	# Update for Undo
 	
-	oDisplaySlxNumbers.update()
+	oDisplaySlxNumbers.queue_redraw()
 	
 	if oResizeCurrentMapSize.visible == true:
 		oResizeCurrentMapSize._on_ResizeCurrentMapSize_about_to_show()
@@ -231,7 +231,7 @@ func continue_load_openmap(map):
 	oDynamicMapTree.highlight_current_map()
 	oCurrentMap.set_path_and_title(map)
 	oUndoStates.clear_history()
-	oGuidelines.update()
+	oGuidelines.queue_redraw()
 	oMapSettingsWindow.visible = false
 	oSlabsetWindow.visible = false
 	oCfgEditor.visible = false

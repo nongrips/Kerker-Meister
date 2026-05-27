@@ -62,8 +62,8 @@ func _show_rename_dialog(node, script_path, old_name, new_name):
 	EditorInterface.get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2(450, 180))
 	
-	dialog.connect("confirmed", self, "_on_rename_confirmed", [node, script_path, new_name], CONNECT_ONESHOT)
-	dialog.connect("close_requested", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT)
+	dialog.confirmed.connect(_on_rename_confirmed.bind(node, script_path, new_name), CONNECT_ONE_SHOT)
+	dialog.close_requested.connect(_on_dialog_closed.bind(dialog), CONNECT_ONE_SHOT)
 
 func _on_rename_confirmed(node, old_script_path, new_name):
 	_rename_script_file(node, old_script_path, new_name)
@@ -90,14 +90,13 @@ func _rename_script_file(node, old_script_path, new_name):
 		_show_error_dialog("File '%s' already exists!" % new_script_path)
 		return
 	
-	var dir: DirAccess = null
-	var error = dir.copy(old_script_path, new_script_path)
-	
+	var error = DirAccess.copy_absolute(old_script_path, new_script_path)
+
 	if error != OK:
 		_show_error_dialog("Failed to copy script file. Error: " + str(error))
 		return
-	
-	error = dir.remove(old_script_path)
+
+	error = DirAccess.remove_absolute(old_script_path)
 	if error != OK:
 		_show_error_dialog("Failed to remove old script file. Error: " + str(error))
 		return
@@ -183,4 +182,4 @@ func _show_error_dialog(message):
 	
 	EditorInterface.get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2(400, 120))
-	dialog.connect("close_requested", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT) 
+	dialog.close_requested.connect(_on_dialog_closed.bind(dialog), CONNECT_ONE_SHOT)

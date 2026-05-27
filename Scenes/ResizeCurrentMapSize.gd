@@ -129,7 +129,7 @@ func _on_ResizeApplyButton_pressed():
 func update_editor_appearance():
 	oEditor.update_boundaries()
 	oOverheadOwnership.start()
-	oGuidelines.update()
+	oGuidelines.queue_redraw()
 
 
 func _on_SettingsXSizeLine_focus_exited():

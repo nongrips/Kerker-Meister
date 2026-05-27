@@ -61,7 +61,7 @@ func show_confirmation_dialog(message: String) -> bool:
 	_dialog_confirmed = false
 	confirmDialog.confirmed.connect(_on_dialog_confirmed)
 	confirmDialog.popup_centered()
-	await confirmDialog.popup_hide
+	await confirmDialog.popup_hidden
 	await get_tree().process_frame
 	var userConfirmed = _dialog_confirmed
 	confirmDialog.queue_free()
