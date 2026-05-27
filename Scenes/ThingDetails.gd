@@ -19,7 +19,7 @@ func update_details():
 	oThingListData.clear()
 	var id = get_selected_or_hovered_instance()
 	if is_instance_valid(id):
-		match id.filename.get_file():
+		match id.scene_file_path.get_file():
 			"ActionPointInstance.tscn": actionpoint_details(id)
 			"LightInstance.tscn": light_details(id)
 			"ThingInstance.tscn": thing_details(id)

@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 var scene_change_timer
@@ -16,7 +16,7 @@ func _exit_tree():
 		scene_change_timer.queue_free()
 
 func _check_node_changes():
-	var edited_scene = get_editor_interface().get_edited_scene_root()
+	var edited_scene = EditorInterface.get_edited_scene_root()
 	if not edited_scene:
 		return
 	
@@ -59,7 +59,7 @@ func _show_rename_dialog(node, script_path, old_name, new_name):
 	dialog.dialog_text = "Node '%s' was renamed to '%s'.\n\nDo you want to rename the script file from '%s.gd' to '%s.gd'?%s" % [old_name, new_name, old_name, new_name, script_open_warning]
 	dialog.exclusive = true
 	
-	get_editor_interface().get_base_control().add_child(dialog)
+	EditorInterface.get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2(450, 180))
 	
 	dialog.connect("confirmed", self, "_on_rename_confirmed", [node, script_path, new_name], CONNECT_ONESHOT)
@@ -72,7 +72,7 @@ func _on_dialog_closed(dialog):
 	dialog.queue_free()
 
 func _rename_script_file(node, old_script_path, new_name):
-	var file_system = get_editor_interface().get_resource_filesystem()
+	var file_system = EditorInterface.get_resource_filesystem()
 	var file: FileAccess = null
 	if not FileAccess.file_exists(old_script_path):
 		_show_error_dialog("Script file not found: " + old_script_path)
@@ -117,7 +117,7 @@ func _rename_script_file(node, old_script_path, new_name):
 		_show_error_dialog("Failed to load new script file")
 
 func _update_scene_references(old_path, new_path):
-	var current_scene_path = get_editor_interface().get_edited_scene_root().filename
+	var current_scene_path = EditorInterface.get_edited_scene_root().scene_file_path
 	if current_scene_path.is_empty():
 		return
 	
@@ -142,7 +142,7 @@ func _update_scene_references(old_path, new_path):
 			print("Updated scene references")
 
 func _is_script_open(script_path):
-	var script_editor = get_editor_interface().get_script_editor()
+	var script_editor = EditorInterface.get_script_editor()
 	if not script_editor:
 		return false
 	
@@ -153,7 +153,7 @@ func _is_script_open(script_path):
 	return false
 
 func _close_script_if_open(script_path):
-	var script_editor = get_editor_interface().get_script_editor()
+	var script_editor = EditorInterface.get_script_editor()
 	if not script_editor:
 		return
 	
@@ -181,6 +181,6 @@ func _show_error_dialog(message):
 	dialog.title = "Script Rename Error"
 	dialog.dialog_text = message
 	
-	get_editor_interface().get_base_control().add_child(dialog)
+	EditorInterface.get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2(400, 120))
 	dialog.connect("close_requested", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT) 

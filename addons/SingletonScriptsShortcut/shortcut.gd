@@ -1,5 +1,5 @@
 extends MenuButton
-tool
+@tool
 @onready var scriptIconTexture = get_icon("Script", "EditorIcons")
 var popup = get_popup()
 

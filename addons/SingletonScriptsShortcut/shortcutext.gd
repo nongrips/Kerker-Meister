@@ -1,5 +1,5 @@
 extends Button
-tool
+@tool
 
 @onready var scriptIconTexture = get_icon("Script", "EditorIcons")
 @onready var popup := $Popup

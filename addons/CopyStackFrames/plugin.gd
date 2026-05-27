@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 var copy_button: Button
@@ -37,7 +37,7 @@ func _find_child_by_class(p_node: Node, p_class: String) -> Node:
 
 func find_stack_tree() -> Tree:
 	print("Copy Stack Frames: Searching for stack tree using specific UI path...")
-	var editor_base: Control = get_editor_interface().get_base_control()
+	var editor_base: Control = EditorInterface.get_base_control()
 
 	var sed: Node = _find_node_by_class_recursive(editor_base, "ScriptEditorDebugger")
 	if not sed:
@@ -49,7 +49,7 @@ func find_stack_tree() -> Tree:
 		print("Copy Stack Frames: Failed to find 'TabContainer'")
 		return null
 
-	var dbg: Node = tc.find_node("Debugger", true, false)
+	var dbg: Node = tc.find_child("Debugger", true, false)
 	if not dbg:
 		print("Copy Stack Frames: Failed to find 'Debugger' VBox")
 		return null
@@ -95,7 +95,7 @@ func _print_node_ancestry(node: Node, node_type: String) -> void:
 		if current.get_parent():
 			parent_name = current.get_parent().name
 		print("  Node: '%s', Class: '%s', Parent: '%s'" % [current.name, current.get_class(), parent_name])
-		if current == get_editor_interface().get_base_control():
+		if current == EditorInterface.get_base_control():
 			break
 		current = current.get_parent()
 	print("-----------------------------------------")

@@ -1,4 +1,4 @@
-tool
+@tool
 extends HBoxContainer
 
 signal request_refresh_plugin(p_name)

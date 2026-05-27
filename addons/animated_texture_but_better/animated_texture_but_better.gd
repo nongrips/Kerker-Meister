@@ -14,7 +14,7 @@ extends AnimatedTexture
 #	update_sprites()
 #
 ##func set_sprites_dir_automatically():
-##	var plugin = Engine.get_main_loop().find_node("AnimatedTextureButBetterPlugin", true, false)
+##	var plugin = Engine.get_main_loop().find_child("AnimatedTextureButBetterPlugin", true, false)
 ##	if plugin:
 ##		sprites_dir = plugin.get_current_resource_directory()
 ##		update_sprites()

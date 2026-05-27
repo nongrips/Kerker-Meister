@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 const ADDONS_PATH = "res://addons/"
@@ -15,7 +15,7 @@ func _enter_tree():
 	add_control_to_container(CONTAINER_TOOLBAR, refresher)
 
 	# Watch whether any plugin is changed, added or removed on the filesystem
-	var efs = get_editor_interface().get_resource_filesystem()
+	var efs = EditorInterface.get_resource_filesystem()
 	efs.filesystem_changed.connect(_on_filesystem_changed)
 
 	refresher.request_refresh_plugin.connect(_on_request_refresh_plugin)
@@ -84,7 +84,7 @@ func _save_settings():
 
 
 func get_config_path():
-	var dir = get_editor_interface().get_editor_settings().get_project_settings_dir()
+	var dir = EditorInterface.get_editor_settings().get_project_settings_dir()
 	var home = dir.path_join(PLUGIN_CONFIG_DIR)
 	var path = home.path_join(PLUGIN_CONFIG)
 
@@ -108,7 +108,7 @@ func get_recent_plugin():
 func _on_request_refresh_plugin(p_name):
 	assert(not p_name.is_empty())
 
-	var disabled = not get_editor_interface().is_plugin_enabled(p_name)
+	var disabled = not EditorInterface.is_plugin_enabled(p_name)
 	if disabled:
 		refresher.show_warning(p_name)
 	else:
@@ -126,11 +126,11 @@ func get_plugin_path():
 func refresh_plugin(p_name):
 	print("Refreshing plugin: ", p_name)
 
-	var enabled = get_editor_interface().is_plugin_enabled(p_name)
+	var enabled = EditorInterface.is_plugin_enabled(p_name)
 	if enabled: # can only disable an active plugin
-		get_editor_interface().set_plugin_enabled(p_name, false)
+		EditorInterface.set_plugin_enabled(p_name, false)
 
-	get_editor_interface().set_plugin_enabled(p_name, true)
+	EditorInterface.set_plugin_enabled(p_name, true)
 
 	plugin_config.set_value(SETTINGS, SETTING_RECENT, p_name)
 	_save_settings()

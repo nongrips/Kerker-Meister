@@ -1,9 +1,8 @@
-tool
+@tool
 extends EditorPlugin
 
-var editorInterface = get_editor_interface()
-var scriptEditor = editorInterface.get_script_editor()
-var scriptEditorMenu = scriptEditor.get_child(0).get_child(0)
+var scriptEditor
+var scriptEditorMenu
 
 #const sceneShortcut = preload("res://addons/SingletonScriptsShortcut/shortcut.tscn")
 #var shortcuts
@@ -12,6 +11,8 @@ const sceneShortcutExt = preload("res://addons/SingletonScriptsShortcut/shortcut
 var shortcutext
 
 func _enter_tree():
+	scriptEditor = EditorInterface.get_script_editor()
+	scriptEditorMenu = scriptEditor.get_child(0).get_child(0)
 	#shortcuts = sceneShortcut.instantiate()
 	#shortcuts.pressed.connect(on_buttonpressed)
 	#shortcuts.get_popup().index_pressed.connect(index_pressed)
@@ -25,7 +26,7 @@ func _enter_tree():
 	shortcutext.itemlist.item_activated.connect(index_pressed)
 	#scriptEditorMenu.add_child(shortcuts)
 	#scriptEditorMenu.move_child(shortcuts,3)
-	update_shortcuts(shortcutext.find_node("ItemList"))
+	update_shortcuts(shortcutext.find_child("ItemList"))
 
 func _exit_tree():
 	#if is_instance_valid(shortcuts): shortcuts.queue_free()
@@ -47,7 +48,7 @@ func update_shortcuts(itemlist, tog=true):
 
 func index_pressed(idx):
 	var scriptPath = shortcutext.itemlist.get_item_metadata(idx)
-	editorInterface.edit_resource(load(scriptPath))
+	EditorInterface.edit_resource(load(scriptPath))
 	shortcutext.popup.hide()
 
 func getListOfSingletons():

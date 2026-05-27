@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorExportPlugin
 
  # You could make these into project settings
